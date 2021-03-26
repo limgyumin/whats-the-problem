@@ -18,6 +18,13 @@ export class User extends BaseEntity {
   @Column({
     length: 255,
     nullable: false,
+  })
+  name: string;
+
+  @Field(() => String)
+  @Column({
+    length: 255,
+    nullable: false,
     unique: true,
   })
   id: string;

@@ -4,6 +4,7 @@
 
 type User {
   idx: Float!
+  name: String!
   id: String!
   password: String!
   created_at: DateTime!
@@ -26,9 +27,17 @@ input QueryValue {
 type Mutation {
   register(user: CreateUserInput!): String!
   login(password: String!, id: String!): String!
+  updateUser(user: UpdateUserInput!): User!
+  deleteUser: User!
 }
 
 input CreateUserInput {
+  name: String!
   id: String!
   password: String!
+}
+
+input UpdateUserInput {
+  name: String
+  password: String
 }
