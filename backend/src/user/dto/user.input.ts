@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreateUserInput {
@@ -20,24 +20,24 @@ export class UpdateUserInput {
   @Field(() => String, {
     nullable: true,
   })
-  readonly name?: string;
+  readonly name: string;
 
   @Field(() => String, {
     nullable: true,
   })
-  readonly password?: string;
+  readonly password: string;
 
   @Field(() => String, {
     nullable: true,
   })
-  readonly bio?: string;
+  readonly bio: string;
 }
 
 @InputType()
 export class QueryValue {
-  @Field(() => Number)
+  @Field(() => Int)
   readonly page: number;
 
-  @Field(() => Number)
+  @Field(() => Int)
   readonly limit: number;
 }

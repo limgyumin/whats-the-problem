@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
-import { User } from './model/user.model';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -12,14 +12,13 @@ export class UserService {
   ) {}
 
   async create(data: CreateUserInput): Promise<User> {
-    const user = this.userRepository.create(data);
-    return await user.save();
+    return await this.userRepository.create(data).save();
   }
 
   async update(user: User, data: UpdateUserInput): Promise<User> {
-    user.name = data.name !== undefined ? data.name : user.name;
-    user.password = data.password !== undefined ? data.password : user.password;
-    user.bio = data.bio !== undefined ? data.bio : user.bio;
+    user.name = data.name || user.name;
+    user.password = data.password || user.password;
+    user.bio = data.bio || user.bio;
 
     return await this.userRepository.save(user);
   }
@@ -32,6 +31,13 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder()
       .where('id = :id', { id })
+      .getOne();
+  }
+
+  findOneByIdx(idx: number): Promise<User> {
+    return this.userRepository
+      .createQueryBuilder()
+      .where('idx = :idx', { idx })
       .getOne();
   }
 

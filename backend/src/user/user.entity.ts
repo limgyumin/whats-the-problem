@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import {
   BaseEntity,
   Column,
@@ -10,7 +10,7 @@ import {
 @ObjectType()
 @Entity('user')
 export class User extends BaseEntity {
-  @Field(() => Number)
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   idx: number;
 
@@ -36,7 +36,7 @@ export class User extends BaseEntity {
   })
   password: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({
     length: 255,
     nullable: true,
