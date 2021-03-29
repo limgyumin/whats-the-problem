@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { SignOptions } from 'jsonwebtoken';
-import { User } from 'src/user/model/user.model';
+import { User } from 'src/user/user.entity';
 import config from '../config';
 
 const JWT_SECRET = config.JWT.SECRET;

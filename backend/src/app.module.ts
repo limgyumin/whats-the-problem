@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { UserResolver } from './user/user.resolver';
 import { UserModule } from './user/user.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './user/user.module';
     }),
     TypeOrmModule.forRoot(),
     UserModule,
+    PostModule,
   ],
   providers: [UserResolver],
 })
