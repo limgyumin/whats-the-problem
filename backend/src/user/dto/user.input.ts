@@ -10,6 +10,9 @@ export class CreateUserInput {
 
   @Field(() => String)
   readonly password: string;
+
+  @Field(() => String)
+  readonly bio: string;
 }
 
 @InputType()
@@ -23,6 +26,11 @@ export class UpdateUserInput {
     nullable: true,
   })
   readonly password?: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  readonly bio?: string;
 }
 
 @InputType()

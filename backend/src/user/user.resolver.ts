@@ -1,27 +1,45 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserInput, QueryValue, UpdateUserInput } from './dto/user.input';
-import { User as UserType } from './model/user.model';
+import { User } from './model/user.model';
 import { UserService } from './user.service';
-import { User } from '../decorator/user.decorator';
-import { UseGuards } from '@nestjs/common';
+import { GetUser } from '../decorator/user.decorator';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
+import { createToken } from 'src/lib/token';
 
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => [UserType])
-  async users(
-    @Args('option') { page, limit }: QueryValue,
-  ): Promise<UserType[]> {
-    const users = await this.userService.getAllUsers(page, limit);
+  @Query(() => [User])
+  async users(@Args('option') { page, limit }: QueryValue): Promise<User[]> {
+    if (!page || !limit) {
+      throw new BadRequestException('Page or limit is null.');
+    }
+
+    if (page < 1) {
+      throw new BadRequestException('Page is invalid number');
+    }
+
+    const users = await this.userService.findAll(page, limit);
     return users;
   }
 
   @Mutation(() => String)
   async register(@Args('user') data: CreateUserInput): Promise<string> {
-    const token = await this.userService.registerUser(data);
-    return token;
+    const isExist = await this.userService.findOneById(data.id);
+
+    if (isExist) {
+      throw new ConflictException('User already exist.');
+    }
+
+    const user = await this.userService.create(data);
+    return createToken(user);
   }
 
   @Mutation(() => String)
@@ -29,24 +47,33 @@ export class UserResolver {
     @Args('id') id: string,
     @Args('password') password: string,
   ): Promise<string> {
-    const token = await this.userService.loginUser(id, password);
-    return token;
+    const user = await this.userService.findOneById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    const isMatch = password === user.password;
+
+    if (isMatch) {
+      return createToken(user);
+    } else {
+      throw new NotFoundException('Invalid password.');
+    }
   }
 
-  @Mutation(() => UserType)
-  @UseGuards(new AuthGuard())
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
   async updateUser(
-    @User() { id }: UserType,
+    @GetUser() user: User,
     @Args('user') data: UpdateUserInput,
-  ): Promise<UserType> {
-    const user = await this.userService.updateUser(id, data);
-    return user;
+  ): Promise<User> {
+    return await this.userService.update(user, data);
   }
 
-  @Mutation(() => UserType)
-  @UseGuards(new AuthGuard())
-  async deleteUser(@User() { id }: UserType) {
-    const user = await this.userService.deleteUser(id);
-    return user;
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async deleteUser(@GetUser() user: User) {
+    return this.userService.delete(user);
   }
 }

@@ -36,6 +36,13 @@ export class User extends BaseEntity {
   })
   password: string;
 
+  @Field(() => String)
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  bio: string;
+
   @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
