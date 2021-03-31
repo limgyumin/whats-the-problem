@@ -1,7 +1,7 @@
 import {
   BadRequestException,
+  ForbiddenException,
   NotFoundException,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
@@ -16,48 +16,16 @@ import { PostService } from './post.service';
 
 @Resolver()
 export class PostResolver {
-  constructor(
-    private postService: PostService,
-    private userService: UserService,
-  ) {}
+  constructor(private postService: PostService) {}
 
   @Query(() => [Post])
   async posts(@Args('option') { page, limit }: QueryValue): Promise<Post[]> {
-    if (!page || !limit) {
-      throw new BadRequestException('Page or limit is null.');
-    }
-
-    if (page < 1) {
-      throw new BadRequestException('Page is invalid number');
-    }
-
-    const posts = await this.postService.findAll(page, limit);
-
-    for (const post of posts) {
-      const user = await this.userService.findOneByIdx(post.fk_user_idx);
-      post.user = user;
-    }
-
-    return posts;
+    return await this.postService.posts(page, limit);
   }
 
   @Query(() => Post)
   async post(@Args('idx') idx: number): Promise<Post> {
-    const post = await this.postService.findOneByIdx(idx);
-
-    if (!post) {
-      throw new NotFoundException('Post not found.');
-    }
-
-    const user = await this.userService.findOneByIdx(post.fk_user_idx);
-
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
-
-    post.user = user;
-
-    return post;
+    return await this.postService.post(idx);
   }
 
   @UseGuards(AuthGuard)
@@ -76,32 +44,12 @@ export class PostResolver {
     @Args('idx') idx: number,
     @Args('post') data: UpdatePostInput,
   ) {
-    const post = await this.postService.findOneByIdx(idx);
-
-    if (!post) {
-      throw new NotFoundException('Post not found.');
-    }
-
-    if (post.fk_user_idx !== user.idx) {
-      throw new UnauthorizedException('No permission.');
-    }
-
-    return await this.postService.update(post, data, user);
+    return await this.postService.update(idx, data, user);
   }
 
   @UseGuards(AuthGuard)
   @Mutation(() => Post)
   async deletePost(@GetUser() user: User, @Args('idx') idx: number) {
-    const post = await this.postService.findOneByIdx(idx);
-
-    if (!post) {
-      throw new NotFoundException('Post not found.');
-    }
-
-    if (post.fk_user_idx !== user.idx) {
-      throw new UnauthorizedException('No permission.');
-    }
-
-    return await this.postService.delete(post, user);
+    return await this.postService.delete(idx, user);
   }
 }

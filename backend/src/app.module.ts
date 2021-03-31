@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { UserResolver } from './user/user.resolver';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
+import { NodeMailerLib } from './lib/nodemailer/nodemailer.lib';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { PostModule } from './post/post.module';
     TypeOrmModule.forRoot(),
     UserModule,
     PostModule,
+    MailerModule,
   ],
-  providers: [UserResolver],
+  providers: [],
 })
 export class AppModule {}

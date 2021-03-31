@@ -25,13 +25,6 @@ export class Post extends BaseEntity {
   title: string;
 
   @Field(() => String)
-  @Column({
-    length: 255,
-    nullable: false,
-  })
-  description: string;
-
-  @Field(() => String)
   @Column('text', {
     nullable: false,
   })
@@ -43,6 +36,18 @@ export class Post extends BaseEntity {
     nullable: true,
   })
   thumbnail: string;
+
+  @Field(() => Boolean, { defaultValue: false })
+  @Column({
+    default: false,
+  })
+  is_temp: boolean;
+
+  @Field(() => Int, { defaultValue: 0 })
+  @Column({
+    default: 0,
+  })
+  like: number;
 
   @Field(() => User)
   @ManyToOne(() => User, { onDelete: 'SET NULL' })
