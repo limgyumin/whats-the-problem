@@ -10,9 +10,9 @@ import config from '../config';
 
 const JWT_SECRET = config.JWT.SECRET;
 
-export const createToken = ({ id, password }: User) => {
+export const createToken = ({ email, password }: User) => {
   const payload = {
-    id,
+    email,
     password,
   };
 

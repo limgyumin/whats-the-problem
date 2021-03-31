@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import {
   BaseEntity,
   Column,
@@ -17,9 +17,9 @@ export class User extends BaseEntity {
   @Field(() => String)
   @Column({
     length: 255,
-    nullable: false,
+    nullable: true,
   })
-  name: string;
+  avatar: string;
 
   @Field(() => String)
   @Column({
@@ -27,14 +27,21 @@ export class User extends BaseEntity {
     nullable: false,
     unique: true,
   })
-  id: string;
+  email: string;
+
+  @Field(() => String)
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  password: string;
 
   @Field(() => String)
   @Column({
     length: 255,
     nullable: false,
   })
-  password: string;
+  name: string;
 
   @Field(() => String, { nullable: true })
   @Column({
@@ -42,6 +49,18 @@ export class User extends BaseEntity {
     nullable: true,
   })
   bio: string;
+
+  @Field(() => Int, { defaultValue: 0 })
+  @Column({
+    default: 0,
+  })
+  score: number;
+
+  @Field(() => Boolean, { defaultValue: false })
+  @Column({
+    default: false,
+  })
+  is_admin: boolean;
 
   @Field(() => Date)
   @Column('timestamptz')

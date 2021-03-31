@@ -20,4 +20,12 @@ export default {
   JWT: {
     SECRET: getEnv('JWT_SECRET'),
   },
+  GITHUB: {
+    CLIENT_ID: getEnv('CLIENT_ID'),
+    CLIENT_SECRET: getEnv('CLIENT_SECRET'),
+  },
+  NODEMAILER: {
+    USER: getEnv('NODEMAILER_USER'),
+    PASS: getEnv('NODEMAILER_PASS'),
+  },
 };

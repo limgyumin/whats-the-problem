@@ -6,12 +6,9 @@ export class CreatePostInput {
   readonly title: string;
 
   @Field(() => String)
-  readonly description: string;
-
-  @Field(() => String)
   readonly content: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   readonly thumbnail: string;
 }
 
@@ -19,9 +16,6 @@ export class CreatePostInput {
 export class UpdatePostInput {
   @Field(() => String, { nullable: true })
   readonly title: string;
-
-  @Field(() => String, { nullable: true })
-  readonly description: string;
 
   @Field(() => String, { nullable: true })
   readonly content: string;
