@@ -6,7 +6,7 @@ export class CreateUserInput {
   readonly name: string;
 
   @Field(() => String)
-  readonly id: string;
+  readonly email: string;
 
   @Field(() => String)
   readonly password: string;
