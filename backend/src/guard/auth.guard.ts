@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { validateToken } from 'src/lib/token';
+import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -19,7 +20,14 @@ export class AuthGuard implements CanActivate {
 
     if (token) {
       const decoded = validateToken(token);
-      const user = await this.userService.findOneByEmail(decoded.email);
+      let user: User;
+
+      if (decoded.github_id) {
+        user = await this.userService.findOneByGitHubId(decoded.github_id);
+      } else {
+        user = await this.userService.findOneByEmail(decoded.email);
+      }
+
       if (user) {
         ctx.user = user;
         return true;

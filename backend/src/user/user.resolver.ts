@@ -6,7 +6,6 @@ import { GetUser } from '../decorator/user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { createToken } from 'src/lib/token';
-import { GitHubUser } from './dto/user.object';
 
 @Resolver()
 export class UserResolver {
@@ -34,9 +33,10 @@ export class UserResolver {
     return createToken(user);
   }
 
-  @Mutation(() => GitHubUser)
-  async gitHubUser(@Args('code') code: string): Promise<GitHubUser> {
-    return await this.userService.gitHubUser(code);
+  @Mutation(() => String)
+  async gitHubUser(@Args('code') code: string): Promise<string> {
+    const user = await this.userService.gitHubUser(code);
+    return createToken(user);
   }
 
   @Mutation(() => String)

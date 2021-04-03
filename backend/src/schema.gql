@@ -2,14 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GitHubUser {
-  avatar_url: String!
-  email: String
-  login: String!
-  name: String
-  bio: String!
-}
-
 type Mailer {
   idx: ID!
   verify_code: String!
@@ -25,9 +17,10 @@ scalar DateTime
 
 type User {
   idx: ID!
-  avatar: String!
-  email: String!
-  password: String!
+  avatar: String
+  github_id: String
+  email: String
+  password: String
   name: String!
   bio: String
   score: Int!
@@ -64,12 +57,12 @@ input QueryValue {
 
 type Mutation {
   register(user: CreateUserInput!): String!
-  gitHubUser(code: String!): GitHubUser!
+  gitHubUser(code: String!): String!
   login(password: String!, email: String!): String!
   updateUser(user: UpdateUserInput!): User!
   deleteUser: User!
   createMailer(email: String!): Mailer!
-  verifyMailer(code: String!): Mailer!
+  verifyMailer(code: String!, email: String!): Mailer!
   createPost(post: CreatePostInput!): Post!
   updatePost(post: UpdatePostInput!, idx: Float!): Post!
   deletePost(idx: Float!): Post!

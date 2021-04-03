@@ -1,15 +1,9 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { QueryValue } from 'src/user/dto/user.input';
 import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
 import { CreatePostInput, UpdatePostInput } from './dto/post.input';
 import { Post } from './post.entity';
 import { PostService } from './post.service';

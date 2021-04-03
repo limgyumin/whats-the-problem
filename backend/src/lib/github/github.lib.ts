@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosResponse } from 'axios';
 import config from 'src/config';
-import { GitHubUser } from 'src/user/dto/user.object';
+import { IGitHubUser } from './github.interface';
 
 @Injectable()
 export class GitHubLib {
@@ -31,9 +25,9 @@ export class GitHubLib {
     return access_token;
   }
 
-  async getGitHubUser(access_token: string): Promise<GitHubUser | null> {
+  async getGitHubUser(access_token: string): Promise<IGitHubUser | null> {
     try {
-      const response: AxiosResponse = await axios.get(
+      const { data }: AxiosResponse = await axios.get(
         'https://api.github.com/user',
         {
           headers: {
@@ -42,7 +36,15 @@ export class GitHubLib {
         },
       );
 
-      return response.data;
+      const user: IGitHubUser = {
+        avatar: data.avatar_url,
+        email: data.email,
+        github_id: data.id,
+        name: data.name || data.login,
+        bio: data.bio,
+      };
+
+      return user;
     } catch (error) {
       Logger.error(error);
       return null;

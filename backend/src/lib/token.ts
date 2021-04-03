@@ -10,10 +10,11 @@ import config from '../config';
 
 const JWT_SECRET = config.JWT.SECRET;
 
-export const createToken = ({ email, password }: User) => {
+export const createToken = ({ email, password, github_id }: User) => {
   const payload = {
     email,
     password,
+    github_id,
   };
 
   const options: SignOptions = {

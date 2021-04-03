@@ -14,22 +14,30 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx: number;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({
     length: 255,
     nullable: true,
   })
   avatar: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  @Column({
+    length: 10,
+    nullable: true,
+    unique: true,
+  })
+  github_id: string;
+
+  @Field(() => String, { nullable: true })
   @Column({
     length: 255,
-    nullable: false,
+    nullable: true,
     unique: true,
   })
   email: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({
     length: 255,
     nullable: true,

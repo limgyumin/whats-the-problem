@@ -7,11 +7,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { emailReg } from 'src/common/emailReg';
-import { GitHubLib } from 'src/lib/gitHub.lib';
+import { GitHubLib } from 'src/lib/github/github.lib';
 import { MailerService } from 'src/mailer/mailer.service';
 import { Repository } from 'typeorm';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
-import { GitHubUser } from './dto/user.object';
 import { User } from './user.entity';
 
 @Injectable()
@@ -60,14 +59,10 @@ export class UserService {
       throw new BadRequestException('Invalid email.');
     }
 
-    const user = await this.findOneByEmail(email);
+    const user = await this.findOneByEmailAndPassword(email, password);
 
     if (!user) {
       throw new NotFoundException('User not found.');
-    }
-
-    if (password !== user.password) {
-      throw new NotFoundException('Invalid password.');
     }
 
     return user;
@@ -93,20 +88,37 @@ export class UserService {
     return users;
   }
 
-  async gitHubUser(code: string): Promise<GitHubUser> {
+  async gitHubUser(code: string): Promise<User> {
     const accessToken = await this.gitHubLib.getGitHubAccessToken(code);
 
-    const user = await this.gitHubLib.getGitHubUser(accessToken);
+    const gitHubUser = await this.gitHubLib.getGitHubUser(accessToken);
 
-    if (user === null) {
+    if (gitHubUser === null) {
       throw new NotFoundException('User not found.');
     }
 
-    if (user.email) {
-      await this.mailerService.create(user.email, true);
+    const existUser = await this.findOneByGitHubId(gitHubUser.github_id);
+
+    if (existUser) {
+      return existUser;
     }
 
-    return user;
+    return this.userRepository.create(gitHubUser).save();
+  }
+
+  findOneByGitHubId(githubId: string): Promise<User> {
+    return this.userRepository
+      .createQueryBuilder()
+      .where('github_id = :githubId', { githubId })
+      .getOne();
+  }
+
+  findOneByEmailAndPassword(email: string, password: string): Promise<User> {
+    return this.userRepository
+      .createQueryBuilder()
+      .where('email = :email', { email })
+      .andWhere('password = :password', { password })
+      .getOne();
   }
 
   findOneByEmail(email: string): Promise<User> {
