@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  GoneException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -50,21 +51,35 @@ export class MailerService {
     return mailer;
   }
 
-  async verify(verifyCode: string): Promise<Mailer> {
-    const mailer = await this.findOneByVerifyCode(verifyCode);
+  async verify(email: string, verifyCode: string): Promise<Mailer> {
+    const mailer = await this.findOneByEmailAndVerifyCode(email, verifyCode);
 
     if (!mailer) {
-      throw new NotFoundException('Mailer not found.');
+      throw new NotFoundException('Email not found.');
+    }
+
+    const currentTime = new Date();
+
+    if (mailer.expired_at <= currentTime) {
+      throw new GoneException('Expired email.');
+    }
+
+    if (mailer.is_verified) {
+      throw new BadRequestException('Email already verified.');
     }
 
     mailer.is_verified = true;
     return await mailer.save();
   }
 
-  findOneByVerifyCode(verifyCode: string): Promise<Mailer> {
+  findOneByEmailAndVerifyCode(
+    email: string,
+    verifyCode: string,
+  ): Promise<Mailer> {
     return this.mailerRepository
       .createQueryBuilder()
-      .where('verify_code = :verifyCode', { verifyCode })
+      .where('email = :email', { email })
+      .andWhere('verify_code = :verifyCode', { verifyCode })
       .getOne();
   }
 

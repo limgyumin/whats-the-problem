@@ -18,7 +18,6 @@ export class Mailer extends BaseEntity {
   @Column({
     length: 5,
     nullable: false,
-    unique: true,
   })
   verify_code: string;
 

@@ -1,4 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { User } from 'src/user/user.entity';
 import { Mailer } from './mailer.entity';
 import { MailerService } from './mailer.service';
 
@@ -17,7 +18,10 @@ export class MailerResolver {
   }
 
   @Mutation(() => Mailer)
-  async verifyMailer(@Args('code') verifyCode: string): Promise<Mailer> {
-    return await this.mailerService.verify(verifyCode);
+  async verifyMailer(
+    @Args('email') email: string,
+    @Args('code') verifyCode: string,
+  ): Promise<Mailer> {
+    return await this.mailerService.verify(email, verifyCode);
   }
 }
