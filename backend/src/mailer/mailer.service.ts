@@ -5,18 +5,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CODE_CHARS, CODE_LENGTH } from 'src/common/constants/verifyCode';
 import { emailReg } from 'src/common/emailReg';
 import { NodeMailerLib } from 'src/lib/nodemailer/nodemailer.lib';
-import { Repository } from 'typeorm';
 import { Mailer } from './mailer.entity';
+import { MailerRepository } from './mailer.repository';
 
 @Injectable()
 export class MailerService {
   constructor(
-    @InjectRepository(Mailer)
-    private mailerRepository: Repository<Mailer>,
+    private mailerRepository: MailerRepository,
     private nodeMailerLib: NodeMailerLib,
   ) {}
 
@@ -25,7 +23,7 @@ export class MailerService {
       throw new BadRequestException('Invalid email.');
     }
 
-    const existEmail = await this.findOneByEmail(email);
+    const existEmail = await this.mailerRepository.findOneByEmail(email);
 
     if (existEmail) {
       throw new ConflictException('Email already exist.');
@@ -52,7 +50,10 @@ export class MailerService {
   }
 
   async verify(email: string, verifyCode: string): Promise<Mailer> {
-    const mailer = await this.findOneByEmailAndVerifyCode(email, verifyCode);
+    const mailer = await this.mailerRepository.findOneByEmailAndVerifyCode(
+      email,
+      verifyCode,
+    );
 
     if (!mailer) {
       throw new NotFoundException('Email not found.');
@@ -70,24 +71,6 @@ export class MailerService {
 
     mailer.is_verified = true;
     return await mailer.save();
-  }
-
-  findOneByEmailAndVerifyCode(
-    email: string,
-    verifyCode: string,
-  ): Promise<Mailer> {
-    return this.mailerRepository
-      .createQueryBuilder()
-      .where('email = :email', { email })
-      .andWhere('verify_code = :verifyCode', { verifyCode })
-      .getOne();
-  }
-
-  findOneByEmail(email: string): Promise<Mailer> {
-    return this.mailerRepository
-      .createQueryBuilder()
-      .where('email = :email', { email })
-      .getOne();
   }
 
   createVerifyCode(): string {

@@ -5,20 +5,19 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { emailReg } from 'src/common/emailReg';
 import { GitHubLib } from 'src/lib/github/github.lib';
+import { MailerRepository } from 'src/mailer/mailer.repository';
 import { MailerService } from 'src/mailer/mailer.service';
-import { Repository } from 'typeorm';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { User } from './user.entity';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-    private mailerService: MailerService,
+    private userRepository: UserRepository,
+    private mailerRepository: MailerRepository,
     private gitHubLib: GitHubLib,
   ) {}
 
@@ -27,13 +26,13 @@ export class UserService {
       throw new BadRequestException('Invalid email.');
     }
 
-    const mailer = await this.mailerService.findOneByEmail(data.email);
+    const mailer = await this.mailerRepository.findOneByEmail(data.email);
 
     if (!mailer || !mailer.is_verified) {
       throw new UnauthorizedException('Unverified email.');
     }
 
-    const existUser = await this.findOneByEmail(data.email);
+    const existUser = await this.userRepository.findOneByEmail(data.email);
 
     if (existUser) {
       throw new ConflictException('User already exist.');
@@ -59,7 +58,10 @@ export class UserService {
       throw new BadRequestException('Invalid email.');
     }
 
-    const user = await this.findOneByEmailAndPassword(email, password);
+    const user = await this.userRepository.findOneByEmailAndPassword(
+      email,
+      password,
+    );
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -69,7 +71,7 @@ export class UserService {
   }
 
   async user(idx: number): Promise<User> {
-    const user = await this.findOneByIdx(idx);
+    const user = await this.userRepository.findOneByIdx(idx);
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -83,12 +85,12 @@ export class UserService {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const users = await this.findAll(page, limit);
+    const users = await this.userRepository.findAll(page, limit);
 
     return users;
   }
 
-  async gitHubUser(code: string): Promise<User> {
+  async gitHubAuth(code: string): Promise<User> {
     const accessToken = await this.gitHubLib.getGitHubAccessToken(code);
 
     const gitHubUser = await this.gitHubLib.getGitHubUser(accessToken);
@@ -97,7 +99,9 @@ export class UserService {
       throw new NotFoundException('User not found.');
     }
 
-    const existUser = await this.findOneByGitHubId(gitHubUser.github_id);
+    const existUser = await this.userRepository.findOneByGitHubId(
+      gitHubUser.github_id,
+    );
 
     if (existUser) {
       return existUser;
@@ -106,41 +110,19 @@ export class UserService {
     return this.userRepository.create(gitHubUser).save();
   }
 
-  findOneByGitHubId(githubId: string): Promise<User> {
-    return this.userRepository
-      .createQueryBuilder()
-      .where('github_id = :githubId', { githubId })
-      .getOne();
-  }
+  async findUserByEmailOrGitHubId(decodedUser: User): Promise<User> {
+    let user: User;
 
-  findOneByEmailAndPassword(email: string, password: string): Promise<User> {
-    return this.userRepository
-      .createQueryBuilder()
-      .where('email = :email', { email })
-      .andWhere('password = :password', { password })
-      .getOne();
-  }
+    if (decodedUser.github_id) {
+      user = await this.userRepository.findOneByGitHubId(decodedUser.github_id);
+    } else {
+      user = await this.userRepository.findOneByEmail(decodedUser.email);
+    }
 
-  findOneByEmail(email: string): Promise<User> {
-    return this.userRepository
-      .createQueryBuilder()
-      .where('email = :email', { email })
-      .getOne();
-  }
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
 
-  findOneByIdx(idx: number): Promise<User> {
-    return this.userRepository
-      .createQueryBuilder()
-      .where('idx = :idx', { idx })
-      .getOne();
-  }
-
-  findAll(page: number, limit: number): Promise<User[]> {
-    return this.userRepository
-      .createQueryBuilder()
-      .orderBy('created_at', 'ASC')
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getMany();
+    return user;
   }
 }

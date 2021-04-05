@@ -4,19 +4,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
-import { Repository } from 'typeorm';
+import { UserRepository } from 'src/user/user.repository';
 import { CreatePostInput, UpdatePostInput } from './dto/post.input';
 import { Post } from './post.entity';
+import { PostRepository } from './post.repository';
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectRepository(Post)
-    private postRepository: Repository<Post>,
-    private userService: UserService,
+    private postRepository: PostRepository,
+    private userRepository: UserRepository,
   ) {}
 
   async create(data: CreatePostInput, user: User): Promise<Post> {
@@ -26,7 +24,7 @@ export class PostService {
   }
 
   async update(idx: number, data: UpdatePostInput, user: User) {
-    const post = await this.findOneByIdx(idx);
+    const post = await this.postRepository.findOneByIdx(idx);
 
     if (!post) {
       throw new NotFoundException('Post not found.');
@@ -45,7 +43,7 @@ export class PostService {
   }
 
   async delete(idx: number, user: User) {
-    const post = await this.findOneByIdx(idx);
+    const post = await this.postRepository.findOneByIdx(idx);
 
     if (!post) {
       throw new NotFoundException('Post not found.');
@@ -60,13 +58,13 @@ export class PostService {
   }
 
   async post(idx: number): Promise<Post> {
-    const post = await this.findOneByIdx(idx);
+    const post = await this.postRepository.findOneByIdx(idx);
 
     if (!post) {
       throw new NotFoundException('Post not found.');
     }
 
-    const user = await this.userService.findOneByIdx(post.fk_user_idx);
+    const user = await this.userRepository.findOneByIdx(post.fk_user_idx);
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -82,29 +80,13 @@ export class PostService {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const posts = await this.findAll(page, limit);
+    const posts = await this.postRepository.findAll(page, limit);
 
     for (const post of posts) {
-      const user = await this.userService.findOneByIdx(post.fk_user_idx);
+      const user = await this.userRepository.findOneByIdx(post.fk_user_idx);
       post.user = user;
     }
 
     return posts;
-  }
-
-  findOneByIdx(idx: number): Promise<Post> {
-    return this.postRepository
-      .createQueryBuilder()
-      .where('idx = :idx', { idx })
-      .getOne();
-  }
-
-  findAll(page: number, limit: number): Promise<Post[]> {
-    return this.postRepository
-      .createQueryBuilder()
-      .orderBy('created_at', 'ASC')
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getMany();
   }
 }

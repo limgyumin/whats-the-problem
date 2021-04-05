@@ -19,21 +19,14 @@ export class AuthGuard implements CanActivate {
     const token = ctx.headers.authorization;
 
     if (token) {
-      const decoded = validateToken(token);
-      let user: User;
+      // decodedUser는 token을 생성할 때 payload로 넣었던 데이터만 가지고 있음.
+      const decodedUser: User = validateToken(token);
+      const user = await this.userService.findUserByEmailOrGitHubId(
+        decodedUser,
+      );
 
-      if (decoded.github_id) {
-        user = await this.userService.findOneByGitHubId(decoded.github_id);
-      } else {
-        user = await this.userService.findOneByEmail(decoded.email);
-      }
-
-      if (user) {
-        ctx.user = user;
-        return true;
-      } else {
-        throw new NotFoundException('User not found.');
-      }
+      ctx.user = user;
+      return true;
     } else {
       return false;
     }

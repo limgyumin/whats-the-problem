@@ -34,8 +34,8 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  async gitHubUser(@Args('code') code: string): Promise<string> {
-    const user = await this.userService.gitHubUser(code);
+  async gitHubAuth(@Args('code') code: string): Promise<string> {
+    const user = await this.userService.gitHubAuth(code);
     return createToken(user);
   }
 

@@ -57,7 +57,7 @@ input QueryValue {
 
 type Mutation {
   register(user: CreateUserInput!): String!
-  gitHubUser(code: String!): String!
+  gitHubAuth(code: String!): String!
   login(password: String!, email: String!): String!
   updateUser(user: UpdateUserInput!): User!
   deleteUser: User!

@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
-import { NodeMailerLib } from './lib/nodemailer/nodemailer.lib';
 import { MailerModule } from './mailer/mailer.module';
 
 @Module({
