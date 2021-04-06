@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   BaseEntity,
   Column,
@@ -6,11 +6,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Post } from '../post/post.entity';
 
 @ObjectType()
 @Entity('user')
 export class User extends BaseEntity {
-  @Field(() => ID)
+  @Field(() => Number)
   @PrimaryGeneratedColumn()
   idx: number;
 

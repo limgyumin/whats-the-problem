@@ -1,13 +1,8 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { validateToken } from 'src/lib/token';
-import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
+import { User } from 'src/module/user/user.entity';
+import { UserService } from 'src/module/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Mailer {
-  idx: ID!
+  idx: Float!
   verify_code: String!
   email: String!
   expired_at: DateTime!
@@ -16,7 +16,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type User {
-  idx: ID!
+  idx: Float!
   avatar: String
   github_id: String
   email: String
@@ -28,15 +28,47 @@ type User {
   created_at: DateTime!
 }
 
+type Category {
+  idx: Int!
+  name: String!
+  post_count: Int!
+}
+
 type Post {
-  idx: ID!
+  idx: Float!
   title: String!
   content: String!
   thumbnail: String
   is_temp: Boolean!
-  like: Int!
+  like_count: Int!
+  comment_count: Int!
   user: User!
-  fk_user_idx: Float!
+  fk_user_idx: Int!
+  category: Category!
+  fk_category_idx: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type Comment {
+  idx: Float!
+  content: String!
+  user: User!
+  fk_user_idx: Int!
+  post: Post!
+  fk_post_idx: Int!
+  reply_count: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type Reply {
+  idx: Float!
+  content: String!
+  user: User!
+  fk_user_idx: Int!
+  comment: Comment!
+  fk_comment_idx: Int!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -44,13 +76,28 @@ type Post {
 type Query {
   me: User!
   user(idx: Float!): User!
-  users(option: QueryValue!): [User!]!
-  sayHello: String!
-  posts(option: QueryValue!): [Post!]!
+  users(option: UserQueryValue!): [User!]!
+  mailers(option: MailerQueryValue!): [Mailer!]!
   post(idx: Float!): Post!
+  commentCount(idx: Float!): Int!
+  userPosts(option: PostQueryValue!, idx: Float!): [Post!]!
+  posts(option: PostQueryValue!): [Post!]!
+  comments(postIdx: Float!): [Comment!]!
+  replies(commentIdx: Float!): [Reply!]!
+  categories: [Category!]!
 }
 
-input QueryValue {
+input UserQueryValue {
+  page: Int!
+  limit: Int!
+}
+
+input MailerQueryValue {
+  page: Int!
+  limit: Int!
+}
+
+input PostQueryValue {
   page: Int!
   limit: Int!
 }
@@ -66,6 +113,13 @@ type Mutation {
   createPost(post: CreatePostInput!): Post!
   updatePost(post: UpdatePostInput!, idx: Float!): Post!
   deletePost(idx: Float!): Post!
+  createComment(content: String!, postIdx: Float!): Comment!
+  updateComment(content: String!, idx: Float!): Comment!
+  deleteComment(idx: Float!): Comment!
+  createReply(content: String!, commentIdx: Float!): Reply!
+  updateReply(content: String!, idx: Float!): Reply!
+  deleteReply(idx: Float!): Reply!
+  createCategory(name: String!): Category!
 }
 
 input CreateUserInput {
@@ -85,10 +139,12 @@ input CreatePostInput {
   title: String!
   content: String!
   thumbnail: String
+  isTemp: Boolean = false
 }
 
 input UpdatePostInput {
   title: String
   content: String
   thumbnail: String
+  isTemp: Boolean
 }

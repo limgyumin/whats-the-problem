@@ -1,8 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateUserInput, QueryValue, UpdateUserInput } from './dto/user.input';
+import {
+  CreateUserInput,
+  UserQueryValue,
+  UpdateUserInput,
+} from './dto/user.input';
 import { User } from './user.entity';
 import { UserService } from './user.service';
-import { GetUser } from '../decorator/user.decorator';
+import { GetUser } from '../../decorator/user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { createToken } from 'src/lib/token';
@@ -23,19 +27,21 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async users(@Args('option') { page, limit }: QueryValue): Promise<User[]> {
+  async users(
+    @Args('option') { page, limit }: UserQueryValue,
+  ): Promise<User[]> {
     return await this.userService.users(page, limit);
   }
 
   @Mutation(() => String)
   async register(@Args('user') data: CreateUserInput): Promise<string> {
-    const user = await this.userService.create(data);
+    const user: User = await this.userService.create(data);
     return createToken(user);
   }
 
   @Mutation(() => String)
   async gitHubAuth(@Args('code') code: string): Promise<string> {
-    const user = await this.userService.gitHubAuth(code);
+    const user: User = await this.userService.gitHubAuth(code);
     return createToken(user);
   }
 
@@ -44,7 +50,7 @@ export class UserResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ): Promise<string> {
-    const user = await this.userService.match(email, password);
+    const user: User = await this.userService.match(email, password);
     return createToken(user);
   }
 

@@ -34,7 +34,7 @@ export class UpdateUserInput {
 }
 
 @InputType()
-export class QueryValue {
+export class UserQueryValue {
   @Field(() => Int)
   readonly page: number;
 

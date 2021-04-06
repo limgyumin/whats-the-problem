@@ -6,9 +6,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { emailReg } from 'src/common/emailReg';
+import { IGitHubUser } from 'src/lib/github/github.interface';
 import { GitHubLib } from 'src/lib/github/github.lib';
-import { MailerRepository } from 'src/mailer/mailer.repository';
-import { MailerService } from 'src/mailer/mailer.service';
+import { Mailer } from 'src/module/mailer/mailer.entity';
+import { MailerRepository } from 'src/module/mailer/mailer.repository';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -26,17 +27,23 @@ export class UserService {
       throw new BadRequestException('Invalid email.');
     }
 
-    const mailer = await this.mailerRepository.findOneByEmail(data.email);
+    const mailer: Mailer = await this.mailerRepository.findOneByEmail(
+      data.email,
+    );
 
     if (!mailer || !mailer.is_verified) {
       throw new UnauthorizedException('Unverified email.');
     }
 
-    const existUser = await this.userRepository.findOneByEmail(data.email);
+    const existUser: User = await this.userRepository.findOneByEmail(
+      data.email,
+    );
 
     if (existUser) {
       throw new ConflictException('User already exist.');
     }
+
+    await mailer.remove();
 
     return await this.userRepository.create(data).save();
   }
@@ -58,7 +65,7 @@ export class UserService {
       throw new BadRequestException('Invalid email.');
     }
 
-    const user = await this.userRepository.findOneByEmailAndPassword(
+    const user: User = await this.userRepository.findOneByEmailAndPassword(
       email,
       password,
     );
@@ -71,7 +78,7 @@ export class UserService {
   }
 
   async user(idx: number): Promise<User> {
-    const user = await this.userRepository.findOneByIdx(idx);
+    const user: User = await this.userRepository.findOneByIdx(idx);
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -85,21 +92,23 @@ export class UserService {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const users = await this.userRepository.findAll(page, limit);
+    const users: User[] = await this.userRepository.findAll(page, limit);
 
     return users;
   }
 
   async gitHubAuth(code: string): Promise<User> {
-    const accessToken = await this.gitHubLib.getGitHubAccessToken(code);
+    const accessToken: string = await this.gitHubLib.getGitHubAccessToken(code);
 
-    const gitHubUser = await this.gitHubLib.getGitHubUser(accessToken);
+    const gitHubUser: IGitHubUser = await this.gitHubLib.getGitHubUser(
+      accessToken,
+    );
 
     if (gitHubUser === null) {
       throw new NotFoundException('User not found.');
     }
 
-    const existUser = await this.userRepository.findOneByGitHubId(
+    const existUser: User = await this.userRepository.findOneByGitHubId(
       gitHubUser.github_id,
     );
 

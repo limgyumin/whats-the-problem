@@ -10,6 +10,9 @@ export class CreatePostInput {
 
   @Field(() => String, { nullable: true })
   readonly thumbnail: string;
+
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  readonly isTemp: boolean;
 }
 
 @InputType()
@@ -22,10 +25,13 @@ export class UpdatePostInput {
 
   @Field(() => String, { nullable: true })
   readonly thumbnail: string;
+
+  @Field(() => Boolean, { nullable: true })
+  readonly isTemp: boolean;
 }
 
 @InputType()
-export class QueryValue {
+export class PostQueryValue {
   @Field(() => Int)
   readonly page: number;
 

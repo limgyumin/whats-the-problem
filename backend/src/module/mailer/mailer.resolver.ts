@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from 'src/user/user.entity';
+import { MailerQueryValue } from './dto/mailer.input';
 import { Mailer } from './mailer.entity';
 import { MailerService } from './mailer.service';
 
@@ -7,9 +7,11 @@ import { MailerService } from './mailer.service';
 export class MailerResolver {
   constructor(private mailerService: MailerService) {}
 
-  @Query(() => String)
-  sayHello(): string {
-    return 'hello';
+  @Query(() => [Mailer])
+  async mailers(
+    @Args('option') { page, limit }: MailerQueryValue,
+  ): Promise<Mailer[]> {
+    return this.mailerService.mailers(page, limit);
   }
 
   @Mutation(() => Mailer)
