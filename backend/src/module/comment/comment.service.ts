@@ -7,7 +7,6 @@ import { Post } from 'src/module/post/post.entity';
 import { PostRepository } from 'src/module/post/post.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { User } from '../user/user.entity';
-import { UserRepository } from '../user/user.repository';
 import { Comment } from './comment.entity';
 import { CommentRepository } from './comment.repository';
 
@@ -15,7 +14,6 @@ import { CommentRepository } from './comment.repository';
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
-    private userRepository: UserRepository,
     private postRepository: PostRepository,
     private replyRepository: ReplyRepository,
   ) {}
@@ -76,18 +74,15 @@ export class CommentService {
       throw new NotFoundException('Post not found.');
     }
 
-    const comments: Comment[] = await this.commentRepository.findAll(post.idx);
+    const comments: Comment[] = await this.commentRepository.findAllWithUser(
+      post.idx,
+    );
 
     for (const comment of comments) {
-      const user: User = await this.userRepository.findOneByIdx(
-        comment.fk_user_idx,
-      );
-
       const replyCount: number = await this.replyRepository.findAllAndCount(
         comment.idx,
       );
 
-      comment.user = user;
       comment.reply_count = replyCount;
     }
 

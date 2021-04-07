@@ -7,10 +7,11 @@ export class CommentRepository extends Repository<Comment> {
     return this.createQueryBuilder().where('idx = :idx', { idx }).getOne();
   }
 
-  findAll(postIdx: number): Promise<Comment[]> {
-    return this.createQueryBuilder()
-      .where('fk_post_idx = :postIdx', { postIdx })
-      .orderBy('created_at', 'ASC')
+  findAllWithUser(postIdx: number): Promise<Comment[]> {
+    return this.createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.user', 'user')
+      .where('comment.fk_post_idx = :postIdx', { postIdx })
+      .orderBy('comment.created_at', 'ASC')
       .getMany();
   }
 
