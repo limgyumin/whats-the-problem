@@ -8,9 +8,10 @@ export class ReplyRepository extends Repository<Reply> {
   }
 
   findAll(commentIdx: number): Promise<Reply[]> {
-    return this.createQueryBuilder()
-      .where('fk_comment_idx = :commentIdx', { commentIdx })
-      .orderBy('created_at', 'ASC')
+    return this.createQueryBuilder('reply')
+      .leftJoinAndSelect('reply.user', 'user')
+      .where('reply.fk_comment_idx = :commentIdx', { commentIdx })
+      .orderBy('reply.created_at', 'ASC')
       .getMany();
   }
 

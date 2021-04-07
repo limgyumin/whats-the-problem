@@ -6,15 +6,10 @@ import { ReplyRepository } from './reply.repository';
 import { CommentRepository } from '../comment/comment.repository';
 import { CommentModule } from '../comment/comment.module';
 import { UserModule } from '../user/user.module';
-import { UserRepository } from '../user/user.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      ReplyRepository,
-      UserRepository,
-      CommentRepository,
-    ]),
+    TypeOrmModule.forFeature([ReplyRepository, CommentRepository]),
     UserModule,
     CommentModule,
   ],

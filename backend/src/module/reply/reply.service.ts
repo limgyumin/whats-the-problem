@@ -6,7 +6,6 @@ import {
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
 import { User } from '../user/user.entity';
-import { UserRepository } from '../user/user.repository';
 import { Reply } from './reply.entity';
 import { ReplyRepository } from './reply.repository';
 
@@ -14,7 +13,6 @@ import { ReplyRepository } from './reply.repository';
 export class ReplyService {
   constructor(
     private replyRepository: ReplyRepository,
-    private userRepository: UserRepository,
     private commentRepository: CommentRepository,
   ) {}
 
@@ -83,11 +81,6 @@ export class ReplyService {
     }
 
     const replies: Reply[] = await this.replyRepository.findAll(comment.idx);
-
-    for (const reply of replies) {
-      const user = await this.userRepository.findOneByIdx(reply.fk_user_idx);
-      reply.user = user;
-    }
 
     return replies;
   }
