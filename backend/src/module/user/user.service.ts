@@ -49,6 +49,7 @@ export class UserService {
   }
 
   async update(user: User, data: UpdateUserInput): Promise<User> {
+    user.avatar = data.avatar || user.avatar;
     user.name = data.name || user.name;
     user.password = data.password || user.password;
     user.bio = data.bio || user.bio;
@@ -61,10 +62,6 @@ export class UserService {
   }
 
   async match(email: string, password: string): Promise<User> {
-    if (!emailReg.test(email)) {
-      throw new BadRequestException('Invalid email.');
-    }
-
     const user: User = await this.userRepository.findOneByEmailAndPassword(
       email,
       password,
