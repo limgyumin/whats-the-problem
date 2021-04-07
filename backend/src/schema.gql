@@ -28,10 +28,16 @@ type User {
   created_at: DateTime!
 }
 
-type Category {
+type Tag {
   idx: Int!
   name: String!
+  posts(option: TagQueryValue!): [Post!]!
   post_count: Int!
+}
+
+input TagQueryValue {
+  page: Int!
+  limit: Int!
 }
 
 type Post {
@@ -44,8 +50,7 @@ type Post {
   comment_count: Int!
   user: User!
   fk_user_idx: Int!
-  category: Category!
-  fk_category_idx: Int!
+  tags: [Tag!]!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -84,7 +89,8 @@ type Query {
   posts(option: PostQueryValue!): [Post!]!
   comments(postIdx: Float!): [Comment!]!
   replies(commentIdx: Float!): [Reply!]!
-  categories: [Category!]!
+  tag(idx: Float!): Tag!
+  tags: [Tag!]!
 }
 
 input UserQueryValue {
@@ -119,10 +125,13 @@ type Mutation {
   createReply(content: String!, commentIdx: Float!): Reply!
   updateReply(content: String!, idx: Float!): Reply!
   deleteReply(idx: Float!): Reply!
-  createCategory(name: String!): Category!
+  createTag(name: String!): Tag!
+  updateTag(name: String!, idx: Float!): Tag!
+  deleteTag(idx: Float!): Tag!
 }
 
 input CreateUserInput {
+  avatar: String
   name: String!
   email: String!
   password: String!
@@ -130,6 +139,7 @@ input CreateUserInput {
 }
 
 input UpdateUserInput {
+  avatar: String
   name: String
   password: String
   bio: String
@@ -140,6 +150,11 @@ input CreatePostInput {
   content: String!
   thumbnail: String
   isTemp: Boolean = false
+  tags: [TagInput!]
+}
+
+input TagInput {
+  name: String!
 }
 
 input UpdatePostInput {

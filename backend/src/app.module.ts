@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { UserModule } from './user/user.module';
-import { PostModule } from './post/post.module';
-import { MailerModule } from './mailer/mailer.module';
+import { UserModule } from './module/user/user.module';
+import { PostModule } from './module/post/post.module';
+import { MailerModule } from './module/mailer/mailer.module';
+import { CommentModule } from './module/comment/comment.module';
+import { ReplyModule } from './module/reply/reply.module';
+import { TagModule } from './module/tag/tag.module';
 
 @Module({
   imports: [
@@ -16,7 +19,9 @@ import { MailerModule } from './mailer/mailer.module';
     UserModule,
     PostModule,
     MailerModule,
+    CommentModule,
+    ReplyModule,
+    TagModule,
   ],
-  providers: [],
 })
 export class AppModule {}

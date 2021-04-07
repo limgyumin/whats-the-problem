@@ -7,6 +7,7 @@ import { UserModule } from 'src/module/user/user.module';
 import { PostRepository } from './post.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { CommentRepository } from '../comment/comment.repository';
+import { TagRepository } from '../tag/tag.repository';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CommentRepository } from '../comment/comment.repository';
       UserRepository,
       CommentRepository,
       ReplyRepository,
+      TagRepository,
     ]),
     UserModule,
   ],

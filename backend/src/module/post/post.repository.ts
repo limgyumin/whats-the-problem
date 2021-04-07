@@ -10,32 +10,65 @@ export class PostRepository extends Repository<Post> {
       .getOne();
   }
 
-  findAll(page: number, limit: number, isTemp: boolean): Promise<Post[]> {
-    return this.createQueryBuilder()
-      .where('is_temp = :isTemp', { isTemp })
-      .orderBy('created_at', 'ASC')
+  findOneWithTagsAndUserByIdx(idx: number, isTemp: boolean): Promise<Post> {
+    return this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.tags', 'tag')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.idx = :idx', { idx })
+      .andWhere('post.is_temp = :isTemp', { isTemp })
+      .getOne();
+  }
+
+  findAllWithUserByTagIdx(
+    tagIdx: number,
+    page: number,
+    limit: number,
+  ): Promise<Post[]> {
+    return this.createQueryBuilder('post')
+      .leftJoin('post.tags', 'tag')
+      .leftJoinAndSelect('post.tags', 'tagSelect')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('tag.idx = :tagIdx', { tagIdx })
       .skip((page - 1) * limit)
       .take(limit)
+      .orderBy('post.created_at', 'ASC')
       .getMany();
   }
 
-  findAllByCategoryIdxAndCount(categoryIdx: number): Promise<number> {
-    return this.createQueryBuilder()
-      .where('is_temp = :is_temp', { is_temp: false })
-      .andWhere('fk_category_idx = :categoryIdx', { categoryIdx })
+  findCountByTagIdx(tagIdx: number): Promise<number> {
+    return this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.tags', 'tag')
+      .where('tag.idx = :tagIdx', { tagIdx })
       .getCount();
   }
 
-  findAllByUserIdx(
+  findAllWithTagsAndUser(
+    page: number,
+    limit: number,
+    isTemp: boolean,
+  ): Promise<Post[]> {
+    return this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.tags', 'tag')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.is_temp = :isTemp', { isTemp })
+      .skip((page - 1) * limit)
+      .take(limit)
+      .orderBy('post.created_at', 'ASC')
+      .getMany();
+  }
+
+  findAllWithTagsAndUserByUserIdx(
     page: number,
     limit: number,
     userIdx: number,
     isTemp: boolean,
   ): Promise<Post[]> {
-    return this.createQueryBuilder()
-      .where('is_temp = :isTemp', { isTemp })
-      .andWhere('fk_user_idx = :userIdx', { userIdx })
-      .orderBy('created_at', 'ASC')
+    return this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.tags', 'tag')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.is_temp = :isTemp', { isTemp })
+      .andWhere('post.fk_user_idx = :userIdx', { userIdx })
+      .orderBy('post.created_at', 'ASC')
       .skip((page - 1) * limit)
       .take(limit)
       .getMany();

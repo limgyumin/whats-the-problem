@@ -6,10 +6,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Category } from '../category/category.entity';
+import { Tag } from '../tag/tag.entity';
 
 @ObjectType()
 @Entity('post')
@@ -60,14 +62,10 @@ export class Post extends BaseEntity {
   @Column({ nullable: true })
   fk_user_idx: number;
 
-  @Field(() => Category)
-  @ManyToOne(() => Category, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_category_idx' })
-  category: Category;
-
-  @Field(() => Int)
-  @Column({ nullable: true })
-  fk_category_idx: number;
+  @Field(() => [Tag])
+  @ManyToMany(() => Tag, (tag) => tag.posts, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: Tag[];
 
   @Field(() => Date)
   @Column('timestamptz')

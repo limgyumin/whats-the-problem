@@ -9,6 +9,8 @@ import { UserRepository } from 'src/module/user/user.repository';
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
 import { ReplyRepository } from '../reply/reply.repository';
+import { Tag } from '../tag/tag.entity';
+import { TagRepository } from '../tag/tag.repository';
 import { CreatePostInput, UpdatePostInput } from './dto/post.input';
 import { Post } from './post.entity';
 import { PostRepository } from './post.repository';
@@ -20,10 +22,25 @@ export class PostService {
     private userRepository: UserRepository,
     private commentRepository: CommentRepository,
     private replyRepository: ReplyRepository,
+    private tagRepository: TagRepository,
   ) {}
 
   async create(data: CreatePostInput, user: User): Promise<Post> {
     const post: Post = this.postRepository.create(data);
+
+    const tags = data.tags;
+
+    if (tags.length) {
+      for (const { name } of tags) {
+        let tag: Tag = await this.tagRepository.findOneByName(name);
+
+        if (!tag) {
+          tag = await this.tagRepository.create({ name }).save();
+        }
+        post.tags = [...post.tags, tag];
+      }
+    }
+
     post.user = user;
     return await post.save();
   }
@@ -69,7 +86,7 @@ export class PostService {
       throw new NotFoundException('User not found.');
     }
 
-    const posts: Post[] = await this.postRepository.findAllByUserIdx(
+    const posts: Post[] = await this.postRepository.findAllWithTagsAndUserByUserIdx(
       page,
       limit,
       user.idx,
@@ -77,15 +94,10 @@ export class PostService {
     );
 
     for (const post of posts) {
-      const user: User = await this.userRepository.findOneByIdx(
-        post.fk_user_idx,
-      );
-
       const commentCount: number = await this.getCommentCountByPostIdx(
         post.idx,
       );
 
-      post.user = user;
       post.comment_count = commentCount;
     }
 
@@ -103,15 +115,14 @@ export class PostService {
   }
 
   async post(idx: number): Promise<Post> {
-    const post: Post = await this.postRepository.findOneByIdx(idx, false);
+    const post: Post = await this.postRepository.findOneWithTagsAndUserByIdx(
+      idx,
+      false,
+    );
 
     if (!post) {
       throw new NotFoundException('Post not found.');
     }
-
-    const user: User = await this.userRepository.findOneByIdx(post.fk_user_idx);
-
-    post.user = user;
 
     return post;
   }
@@ -121,18 +132,16 @@ export class PostService {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const posts: Post[] = await this.postRepository.findAll(page, limit, false);
+    const posts: Post[] = await this.postRepository.findAllWithTagsAndUser(
+      page,
+      limit,
+      false,
+    );
 
     for (const post of posts) {
-      const user: User = await this.userRepository.findOneByIdx(
-        post.fk_user_idx,
-      );
-
       const commentCount: number = await this.getCommentCountByPostIdx(
         post.idx,
       );
-
-      post.user = user;
       post.comment_count = commentCount;
     }
 
@@ -140,7 +149,9 @@ export class PostService {
   }
 
   async getCommentCountByPostIdx(postIdx: number): Promise<number> {
-    const comments: Comment[] = await this.commentRepository.findAll(postIdx);
+    const comments: Comment[] = await this.commentRepository.findAllWithUser(
+      postIdx,
+    );
 
     let commentCount: number = comments.length;
 

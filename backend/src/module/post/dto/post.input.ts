@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
+import { Tag } from 'src/module/tag/tag.entity';
 
 @InputType()
 export class CreatePostInput {
@@ -13,6 +14,15 @@ export class CreatePostInput {
 
   @Field(() => Boolean, { nullable: true, defaultValue: false })
   readonly isTemp: boolean;
+
+  @Field(() => [TagInput], { nullable: true })
+  readonly tags: TagInput[];
+}
+
+@InputType()
+export class TagInput {
+  @Field(() => String)
+  readonly name: string;
 }
 
 @InputType()
