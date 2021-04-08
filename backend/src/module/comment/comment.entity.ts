@@ -29,7 +29,7 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'fk_user_idx' })
   user: User;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'userIdx' })
   @Column({ nullable: true })
   fk_user_idx: number;
 
@@ -38,19 +38,19 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'fk_post_idx' })
   post: Post;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'postIdx' })
   @Column({ nullable: true })
   fk_post_idx: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'replyCount' })
   reply_count: number;
 
-  @Field(() => Date)
+  @Field(() => Date, { name: 'createdAt' })
   @Column('timestamptz')
   @CreateDateColumn()
   created_at: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { name: 'updatedAt' })
   @Column('timestamptz')
   @CreateDateColumn()
   updated_at: Date;

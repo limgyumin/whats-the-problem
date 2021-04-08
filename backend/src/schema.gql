@@ -4,10 +4,10 @@
 
 type Mailer {
   idx: Float!
-  verify_code: String!
+  verifyCode: String!
   email: String!
-  expired_at: DateTime!
-  is_verified: Boolean!
+  expiredAt: DateTime!
+  isVerified: Boolean!
 }
 
 """
@@ -18,21 +18,28 @@ scalar DateTime
 type User {
   idx: Float!
   avatar: String
-  github_id: String
+  gitHubId: String
   email: String
   password: String
   name: String!
   bio: String
   score: Int!
-  is_admin: Boolean!
-  created_at: DateTime!
+  isAdmin: Boolean!
+  createdAt: DateTime!
+}
+
+type Like {
+  idx: Int!
+  user: User!
+  userIdx: Int!
+  post: Post!
 }
 
 type Tag {
   idx: Int!
   name: String!
   posts(option: TagQueryValue!): [Post!]!
-  post_count: Int!
+  postCount: Int!
 }
 
 input TagQueryValue {
@@ -45,37 +52,38 @@ type Post {
   title: String!
   content: String!
   thumbnail: String
-  is_temp: Boolean!
-  like_count: Int!
-  comment_count: Int!
+  isTemp: Boolean!
+  likeCount: Int!
+  commentCount: Int!
   user: User!
-  fk_user_idx: Int!
+  userIdx: Int!
   tags: [Tag!]!
-  created_at: DateTime!
-  updated_at: DateTime!
+  likes: [Like!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Comment {
   idx: Float!
   content: String!
   user: User!
-  fk_user_idx: Int!
+  userIdx: Int!
   post: Post!
-  fk_post_idx: Int!
-  reply_count: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
+  postIdx: Int!
+  replyCount: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Reply {
   idx: Float!
   content: String!
   user: User!
-  fk_user_idx: Int!
+  userIdx: Int!
   comment: Comment!
-  fk_comment_idx: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
+  commentIdx: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Query {

@@ -6,7 +6,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Post } from '../post/post.entity';
 
 @ObjectType()
 @Entity('user')
@@ -22,7 +21,7 @@ export class User extends BaseEntity {
   })
   avatar: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, name: 'gitHubId' })
   @Column({
     length: 10,
     nullable: true,
@@ -65,13 +64,13 @@ export class User extends BaseEntity {
   })
   score: number;
 
-  @Field(() => Boolean, { defaultValue: false })
+  @Field(() => Boolean, { defaultValue: false, name: 'isAdmin' })
   @Column({
     default: false,
   })
   is_admin: boolean;
 
-  @Field(() => Date)
+  @Field(() => Date, { name: 'createdAt' })
   @Column('timestamptz')
   @CreateDateColumn()
   created_at: Date;

@@ -27,6 +27,6 @@ export class Tag extends BaseEntity {
   @ManyToMany(() => Post, (post) => post.tags)
   posts: Post[];
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'postCount' })
   post_count: number;
 }

@@ -14,7 +14,7 @@ export class Mailer extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx: number;
 
-  @Field(() => String)
+  @Field(() => String, { name: 'verifyCode' })
   @Column({
     length: 5,
     nullable: false,
@@ -29,12 +29,12 @@ export class Mailer extends BaseEntity {
   })
   email: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { name: 'expiredAt' })
   @Column('datetime')
   @CreateDateColumn()
   expired_at: Date;
 
-  @Field(() => Boolean, { defaultValue: false })
+  @Field(() => Boolean, { defaultValue: false, name: 'isVerified' })
   @Column({
     default: false,
     nullable: false,

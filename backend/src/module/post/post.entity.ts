@@ -9,8 +9,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Like } from '../like/like.entity';
 import { Tag } from '../tag/tag.entity';
 
 @ObjectType()
@@ -40,17 +42,17 @@ export class Post extends BaseEntity {
   })
   thumbnail: string;
 
-  @Field(() => Boolean, { defaultValue: false })
+  @Field(() => Boolean, { defaultValue: false, name: 'isTemp' })
   @Column({
     default: false,
     nullable: false,
   })
   is_temp: boolean;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'likeCount' })
   like_count: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'commentCount' })
   comment_count: number;
 
   @Field(() => User)
@@ -58,7 +60,7 @@ export class Post extends BaseEntity {
   @JoinColumn({ name: 'fk_user_idx' })
   user: User;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'userIdx' })
   @Column({ nullable: true })
   fk_user_idx: number;
 
@@ -67,12 +69,16 @@ export class Post extends BaseEntity {
   @JoinTable()
   tags: Tag[];
 
-  @Field(() => Date)
+  @Field(() => [Like])
+  @OneToMany(() => Like, (like) => like.post, { onDelete: 'SET NULL' })
+  likes: Like[];
+
+  @Field(() => Date, { name: 'createdAt' })
   @Column('timestamptz')
   @CreateDateColumn()
   created_at: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { name: 'updatedAt' })
   @Column('timestamptz')
   @CreateDateColumn()
   updated_at: Date;
