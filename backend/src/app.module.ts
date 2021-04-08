@@ -8,6 +8,7 @@ import { MailerModule } from './module/mailer/mailer.module';
 import { CommentModule } from './module/comment/comment.module';
 import { ReplyModule } from './module/reply/reply.module';
 import { TagModule } from './module/tag/tag.module';
+import { LikeModule } from './module/like/like.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TagModule } from './module/tag/tag.module';
     CommentModule,
     ReplyModule,
     TagModule,
+    LikeModule,
   ],
 })
 export class AppModule {}

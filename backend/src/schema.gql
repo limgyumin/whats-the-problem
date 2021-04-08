@@ -30,9 +30,12 @@ type User {
 
 type Like {
   idx: Int!
+  likeCount: Int!
+  liked: Boolean!
   user: User!
   userIdx: Int!
   post: Post!
+  postIdx: Int!
 }
 
 type Tag {
@@ -92,13 +95,13 @@ type Query {
   users(option: UserQueryValue!): [User!]!
   mailers(option: MailerQueryValue!): [Mailer!]!
   post(idx: Float!): Post!
-  commentCount(idx: Float!): Int!
   userPosts(option: PostQueryValue!, idx: Float!): [Post!]!
   posts(option: PostQueryValue!): [Post!]!
   comments(postIdx: Float!): [Comment!]!
   replies(commentIdx: Float!): [Reply!]!
   tag(idx: Float!): Tag!
   tags: [Tag!]!
+  likes(postIdx: Float!): [Like!]!
 }
 
 input UserQueryValue {
@@ -136,6 +139,7 @@ type Mutation {
   createTag(name: String!): Tag!
   updateTag(name: String!, idx: Float!): Tag!
   deleteTag(idx: Float!): Tag!
+  postLike(postIdx: Float!): Like!
 }
 
 input CreateUserInput {
