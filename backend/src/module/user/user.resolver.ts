@@ -10,12 +10,14 @@ import { GetUser } from '../../decorator/user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { createToken } from 'src/lib/token';
+import { Roles } from 'src/decorator/role.decorator';
 
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) {}
 
   @Query(() => User)
+  @Roles('Client')
   @UseGuards(AuthGuard)
   async me(@GetUser() user: User): Promise<User> {
     return user;
@@ -55,6 +57,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @Roles('Client')
   @UseGuards(AuthGuard)
   async updateUser(
     @GetUser() user: User,
@@ -64,6 +67,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @Roles('Client')
   @UseGuards(AuthGuard)
   async deleteUser(@GetUser() user: User) {
     return this.userService.delete(user);

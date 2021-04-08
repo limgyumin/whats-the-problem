@@ -3,7 +3,7 @@ import { MailerQueryValue } from './dto/mailer.input';
 import { Mailer } from './mailer.entity';
 import { MailerService } from './mailer.service';
 
-@Resolver()
+@Resolver(Mailer)
 export class MailerResolver {
   constructor(private mailerService: MailerService) {}
 

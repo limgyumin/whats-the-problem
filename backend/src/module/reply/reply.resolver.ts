@@ -1,12 +1,13 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from '../user/user.entity';
 import { Reply } from './reply.entity';
 import { ReplyService } from './reply.service';
 
-@Resolver()
+@Resolver(Reply)
 export class ReplyResolver {
   constructor(private replyService: ReplyService) {}
 
@@ -16,6 +17,7 @@ export class ReplyResolver {
   }
 
   @Mutation(() => Reply)
+  @Roles('Client')
   @UseGuards(AuthGuard)
   async createReply(
     @Args('commentIdx') commentIdx: number,
@@ -26,6 +28,7 @@ export class ReplyResolver {
   }
 
   @Mutation(() => Reply)
+  @Roles('Client')
   @UseGuards(AuthGuard)
   async updateReply(
     @Args('idx') idx: number,
@@ -36,6 +39,7 @@ export class ReplyResolver {
   }
 
   @Mutation(() => Reply)
+  @Roles('Client')
   @UseGuards(AuthGuard)
   async deleteReply(
     @Args('idx') idx: number,
