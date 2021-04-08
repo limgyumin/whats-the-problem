@@ -78,14 +78,18 @@ export class CommentService {
       post.idx,
     );
 
-    for (const comment of comments) {
-      const replyCount: number = await this.replyRepository.findAllAndCount(
-        comment.idx,
-      );
+    return comments;
+  }
 
-      comment.reply_count = replyCount;
+  async replyCount(commentIdx: number): Promise<number> {
+    const comment: Comment = await this.commentRepository.findOneByIdx(
+      commentIdx,
+    );
+
+    if (!comment) {
+      throw new NotFoundException('Comment not found.');
     }
 
-    return comments;
+    return await this.replyRepository.findAllAndCount(comment.idx);
   }
 }

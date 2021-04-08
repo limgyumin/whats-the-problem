@@ -35,7 +35,7 @@ export class PostRepository extends Repository<Post> {
       .getMany();
   }
 
-  findCountByTagIdx(tagIdx: number): Promise<number> {
+  findAllAndCountWithTagsByTagIdx(tagIdx: number): Promise<number> {
     return this.createQueryBuilder('post')
       .leftJoinAndSelect('post.tags', 'tag')
       .where('tag.idx = :tagIdx', { tagIdx })

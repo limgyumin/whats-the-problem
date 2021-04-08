@@ -93,25 +93,7 @@ export class PostService {
       false,
     );
 
-    for (const post of posts) {
-      const commentCount: number = await this.getCommentCountByPostIdx(
-        post.idx,
-      );
-
-      post.comment_count = commentCount;
-    }
-
     return posts;
-  }
-
-  async commentCount(idx: number): Promise<number> {
-    const post: Post = await this.postRepository.findOneByIdx(idx, false);
-
-    if (!post) {
-      throw new NotFoundException('Post not found.');
-    }
-
-    return await this.getCommentCountByPostIdx(post.idx);
   }
 
   async post(idx: number): Promise<Post> {
@@ -138,14 +120,17 @@ export class PostService {
       false,
     );
 
-    for (const post of posts) {
-      const commentCount: number = await this.getCommentCountByPostIdx(
-        post.idx,
-      );
-      post.comment_count = commentCount;
+    return posts;
+  }
+
+  async commentCount(idx: number): Promise<number> {
+    const post: Post = await this.postRepository.findOneByIdx(idx, false);
+
+    if (!post) {
+      throw new NotFoundException('Post not found.');
     }
 
-    return posts;
+    return await this.getCommentCountByPostIdx(post.idx);
   }
 
   async getCommentCountByPostIdx(postIdx: number): Promise<number> {
@@ -155,12 +140,25 @@ export class PostService {
 
     let commentCount: number = comments.length;
 
+    // 비동기 작업 동시 실행.
+    const promises: Promise<void>[] = [];
+
     for (const comment of comments) {
-      const replyCount: number = await this.replyRepository.findAllAndCount(
-        comment.idx,
-      );
-      commentCount += replyCount;
+      const promise: Promise<void> = new Promise(async (resolve, reject) => {
+        if (!comment) resolve();
+
+        const replyCount: number = await this.replyRepository.findAllAndCount(
+          comment.idx,
+        );
+        commentCount += replyCount;
+
+        resolve();
+      });
+
+      promises.push(promise);
     }
+
+    await Promise.all(promises);
 
     return commentCount;
   }

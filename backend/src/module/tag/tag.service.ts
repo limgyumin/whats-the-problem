@@ -57,10 +57,6 @@ export class TagService {
       throw new NotFoundException('Tag not found.');
     }
 
-    const postCount: number = await this.postRepository.findCountByTagIdx(idx);
-
-    tag.post_count = postCount;
-
     return tag;
   }
 
@@ -81,12 +77,16 @@ export class TagService {
   }
 
   async tags(): Promise<Tag[]> {
-    const tags: Tag[] = await this.tagRepository.findAll();
+    return await this.tagRepository.findAll();
+  }
 
-    for (const tag of tags) {
-      tag.post_count = await this.postRepository.findCountByTagIdx(tag.idx);
+  async postCount(tagIdx: number): Promise<number> {
+    const tag: Tag = await this.tagRepository.findOneByIdx(tagIdx);
+
+    if (!tag) {
+      throw new NotFoundException('Tag not found.');
     }
 
-    return tags;
+    return await this.postRepository.findAllAndCountWithTagsByTagIdx(tag.idx);
   }
 }

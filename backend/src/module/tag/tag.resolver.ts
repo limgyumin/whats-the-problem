@@ -5,6 +5,7 @@ import {
   Args,
   ResolveField,
   Parent,
+  Int,
 } from '@nestjs/graphql';
 import { Post } from '../post/post.entity';
 import { TagQueryValue } from './dto/tag.input';
@@ -31,6 +32,11 @@ export class TagResolver {
     @Parent() parent: Tag,
   ): Promise<Post[]> {
     return await this.tagService.tagPosts(parent.idx, page, limit);
+  }
+
+  @ResolveField(() => Int)
+  async postCount(@Parent() parent: Tag): Promise<number> {
+    return await this.tagService.postCount(parent.idx);
   }
 
   @Mutation(() => Tag)

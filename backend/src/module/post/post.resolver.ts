@@ -1,5 +1,14 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from 'src/module/user/user.entity';
@@ -11,7 +20,7 @@ import {
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 
-@Resolver()
+@Resolver(Post)
 export class PostResolver {
   constructor(private postService: PostService) {}
 
@@ -20,9 +29,9 @@ export class PostResolver {
     return await this.postService.post(idx);
   }
 
-  @Query(() => Int)
-  async commentCount(@Args('idx') idx: number): Promise<number> {
-    return await this.postService.commentCount(idx);
+  @ResolveField(() => Int)
+  async commentCount(@Parent() parent: Post): Promise<number> {
+    return await this.postService.commentCount(parent.idx);
   }
 
   @Query(() => [Post])
@@ -40,8 +49,9 @@ export class PostResolver {
     return await this.postService.posts(page, limit);
   }
 
-  @UseGuards(AuthGuard)
   @Mutation(() => Post)
+  @Roles('Client')
+  @UseGuards(AuthGuard)
   async createPost(
     @GetUser() user: User,
     @Args('post') data: CreatePostInput,
@@ -49,8 +59,9 @@ export class PostResolver {
     return await this.postService.create(data, user);
   }
 
-  @UseGuards(AuthGuard)
   @Mutation(() => Post)
+  @Roles('Client')
+  @UseGuards(AuthGuard)
   async updatePost(
     @GetUser() user: User,
     @Args('idx') idx: number,
@@ -59,8 +70,9 @@ export class PostResolver {
     return await this.postService.update(idx, data, user);
   }
 
-  @UseGuards(AuthGuard)
   @Mutation(() => Post)
+  @Roles('Client')
+  @UseGuards(AuthGuard)
   async deletePost(@GetUser() user: User, @Args('idx') idx: number) {
     return await this.postService.delete(idx, user);
   }
