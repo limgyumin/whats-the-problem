@@ -4,6 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { generateURL } from 'src/lib/url';
+import { sliceURL } from 'src/lib/url';
 import { User } from 'src/module/user/user.entity';
 import { UserRepository } from 'src/module/user/user.repository';
 import { Comment } from '../comment/comment.entity';
@@ -43,6 +45,7 @@ export class PostService {
       }
     }
 
+    post.thumbnail = sliceURL(data.thumbnail);
     post.user = user;
     return await post.save();
   }
@@ -137,6 +140,14 @@ export class PostService {
     }
 
     return await this.getCommentCountByPostIdx(post.idx);
+  }
+
+  thumbnail(thumbnail: string): string {
+    if (!thumbnail) {
+      return null;
+    }
+
+    return generateURL(thumbnail);
   }
 
   async getCommentCountByPostIdx(postIdx: number): Promise<number> {

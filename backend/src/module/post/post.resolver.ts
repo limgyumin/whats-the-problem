@@ -54,6 +54,11 @@ export class PostResolver {
     return await this.postService.posts(page, limit);
   }
 
+  @ResolveField(() => String)
+  thumbnail(@Parent() parent: Post): string {
+    return this.postService.thumbnail(parent.thumbnail);
+  }
+
   @Mutation(() => Post)
   @Roles('Client')
   @UseGuards(AuthGuard)
