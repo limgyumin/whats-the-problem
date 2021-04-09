@@ -18,4 +18,10 @@ export class LikeRepository extends Repository<Like> {
       .andWhere('like.fk_user_idx = :userIdx', { userIdx })
       .getOne();
   }
+
+  findAllAndCountByPostIdx(postIdx: number): Promise<number> {
+    return this.createQueryBuilder()
+      .where('fk_post_idx = :postIdx', { postIdx })
+      .getCount();
+  }
 }

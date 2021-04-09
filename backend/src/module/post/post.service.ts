@@ -8,6 +8,7 @@ import { User } from 'src/module/user/user.entity';
 import { UserRepository } from 'src/module/user/user.repository';
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
+import { LikeRepository } from '../like/like.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { Tag } from '../tag/tag.entity';
 import { TagRepository } from '../tag/tag.repository';
@@ -23,6 +24,7 @@ export class PostService {
     private commentRepository: CommentRepository,
     private replyRepository: ReplyRepository,
     private tagRepository: TagRepository,
+    private likeRepository: LikeRepository,
   ) {}
 
   async create(data: CreatePostInput, user: User): Promise<Post> {
@@ -121,6 +123,10 @@ export class PostService {
     );
 
     return posts;
+  }
+
+  async likeCount(idx: number): Promise<number> {
+    return await this.likeRepository.findAllAndCountByPostIdx(idx);
   }
 
   async commentCount(idx: number): Promise<number> {

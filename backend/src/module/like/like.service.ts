@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Post } from '../post/post.entity';
 import { PostRepository } from '../post/post.repository';
 import { User } from '../user/user.entity';
+import { LikeObject } from './dto/like.object';
 import { Like } from './like.entity';
 import { LikeRepository } from './like.repository';
 
@@ -36,23 +37,27 @@ export class LikeService {
     return await like.save();
   }
 
-  async likes(postIdx: number): Promise<Like[]> {
+  async like(postIdx: number): Promise<LikeObject> {
     const post: Post = await this.postRepository.findOneByIdx(postIdx, false);
 
     if (!post) {
       throw new NotFoundException('Post not found.');
     }
 
-    return await this.likeRepository.findAllWithUserByPostIdx(postIdx);
+    const likes: Like[] = await this.likeRepository.findAllWithUserByPostIdx(
+      postIdx,
+    );
+    const likeCount: number = likes.length;
+
+    const likeObject: LikeObject = {
+      likes,
+      likeCount,
+    };
+
+    return likeObject;
   }
 
   async liked(postIdx: number, user: User): Promise<boolean> {
-    const post: Post = await this.postRepository.findOneByIdx(postIdx, false);
-
-    if (!post) {
-      throw new NotFoundException('Post not found.');
-    }
-
     if (!user) {
       return false;
     }

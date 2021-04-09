@@ -34,6 +34,11 @@ export class PostResolver {
     return await this.postService.commentCount(parent.idx);
   }
 
+  @ResolveField(() => Int)
+  async likeCount(@Parent() parent: Post): Promise<number> {
+    return await this.postService.likeCount(parent.idx);
+  }
+
   @Query(() => [Post])
   async userPosts(
     @Args('idx') userIdx: number,
