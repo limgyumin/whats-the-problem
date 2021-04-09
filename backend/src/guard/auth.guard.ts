@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AllowedRole } from 'src/enum/role.enum';
-import { validateToken } from 'src/lib/token';
+import { validateToken } from 'src/lib/jwt/token';
 import { User } from 'src/module/user/user.entity';
 import { UserService } from 'src/module/user/user.service';
 

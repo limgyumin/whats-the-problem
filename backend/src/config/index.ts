@@ -16,6 +16,7 @@ const getEnv = (name: string) => {
 export default {
   APP: {
     PORT: parseInt(getEnv('PORT')),
+    SERVER: getEnv('SERVER'),
   },
   JWT: {
     SECRET: getEnv('JWT_SECRET'),

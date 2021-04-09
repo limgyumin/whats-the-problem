@@ -89,6 +89,11 @@ type Reply {
   updatedAt: DateTime!
 }
 
+type LikeObject {
+  likeCount: Int!
+  likes: [Like!]!
+}
+
 type Query {
   me: User!
   user(idx: Float!): User!
@@ -101,7 +106,7 @@ type Query {
   replies(commentIdx: Float!): [Reply!]!
   tag(idx: Float!): Tag!
   tags: [Tag!]!
-  likes(postIdx: Float!): [Like!]!
+  like(postIdx: Float!): LikeObject!
 }
 
 input UserQueryValue {

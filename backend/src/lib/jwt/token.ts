@@ -6,7 +6,7 @@ import {
 import * as jwt from 'jsonwebtoken';
 import { SignOptions } from 'jsonwebtoken';
 import { User } from 'src/module/user/user.entity';
-import config from '../config';
+import config from '../../config';
 
 const JWT_SECRET = config.JWT.SECRET;
 

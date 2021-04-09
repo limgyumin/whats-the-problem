@@ -1,5 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as express from 'express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import config from './config';
 
@@ -10,6 +12,7 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   });
+  app.use('/public', express.static(join(__dirname, '../public')));
 
   await app.listen(port);
 

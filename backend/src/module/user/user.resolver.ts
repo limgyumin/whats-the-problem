@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 import { GetUser } from '../../decorator/user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
-import { createToken } from 'src/lib/token';
+import { createToken } from 'src/lib/jwt/token';
 import { Roles } from 'src/decorator/role.decorator';
 
 @Resolver()
