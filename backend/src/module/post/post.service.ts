@@ -7,14 +7,17 @@ import {
 import { generateURL } from 'src/lib/url';
 import { sliceURL } from 'src/lib/url';
 import { User } from 'src/module/user/user.entity';
-import { UserRepository } from 'src/module/user/user.repository';
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
 import { LikeRepository } from '../like/like.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { Tag } from '../tag/tag.entity';
 import { TagRepository } from '../tag/tag.repository';
-import { CreatePostInput, UpdatePostInput } from './dto/post.input';
+import {
+  CreatePostInput,
+  PostTagInput,
+  UpdatePostInput,
+} from './dto/post.input';
 import { Post } from './post.entity';
 import { PostRepository } from './post.repository';
 
@@ -22,7 +25,6 @@ import { PostRepository } from './post.repository';
 export class PostService {
   constructor(
     private postRepository: PostRepository,
-    private userRepository: UserRepository,
     private commentRepository: CommentRepository,
     private replyRepository: ReplyRepository,
     private tagRepository: TagRepository,
@@ -30,27 +32,25 @@ export class PostService {
   ) {}
 
   async create(data: CreatePostInput, user: User): Promise<Post> {
-    const post: Post = this.postRepository.create(data);
+    const { title, content, thumbnail, isTemp, tags } = data;
 
-    const tags = data.tags;
+    const post: Post = this.postRepository.create();
 
-    if (tags.length) {
-      for (const { name } of tags) {
-        let tag: Tag = await this.tagRepository.findOneByName(name);
+    const tagList: Tag[] = await this.findOrCreateTagsAndGet(tags);
 
-        if (!tag) {
-          tag = await this.tagRepository.create({ name }).save();
-        }
-        post.tags = [...post.tags, tag];
-      }
-    }
-
-    post.thumbnail = sliceURL(data.thumbnail);
+    post.title = title;
+    post.content = content;
+    post.is_temp = isTemp;
+    post.thumbnail = sliceURL(thumbnail);
+    post.tags = tagList;
     post.user = user;
+
     return await post.save();
   }
 
   async update(idx: number, data: UpdatePostInput, user: User) {
+    const { title, content, thumbnail, tags, isTemp } = data;
+
     const post: Post = await this.postRepository.findOneByIdx(idx, false);
 
     if (!post) {
@@ -61,10 +61,15 @@ export class PostService {
       throw new ForbiddenException('No permission.');
     }
 
-    post.title = data.title || post.title;
-    post.content = data.content || post.content;
-    post.thumbnail = data.thumbnail || post.thumbnail;
+    const tagList: Tag[] = await this.findOrCreateTagsAndGet(tags);
+
+    post.title = title || post.title;
+    post.content = content || post.content;
+    post.thumbnail = sliceURL(thumbnail) || post.thumbnail;
+    post.is_temp = isTemp;
+    post.tags = tagList;
     post.user = user;
+    post.updated_at = new Date();
 
     return await post.save();
   }
@@ -81,24 +86,8 @@ export class PostService {
     }
 
     post.user = user;
+
     return await post.remove();
-  }
-
-  async userPosts(userIdx: number, page: number, limit: number) {
-    const user: User = await this.userRepository.findOneByIdx(userIdx);
-
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
-
-    const posts: Post[] = await this.postRepository.findAllWithTagsAndUserByUserIdx(
-      page,
-      limit,
-      user.idx,
-      false,
-    );
-
-    return posts;
   }
 
   async post(idx: number): Promise<Post> {
@@ -151,7 +140,7 @@ export class PostService {
   }
 
   async getCommentCountByPostIdx(postIdx: number): Promise<number> {
-    const comments: Comment[] = await this.commentRepository.findAllWithUser(
+    const comments: Comment[] = await this.commentRepository.findAllWithUserByPostIdx(
       postIdx,
     );
 
@@ -178,5 +167,23 @@ export class PostService {
     await Promise.all(promises);
 
     return commentCount;
+  }
+
+  async findOrCreateTagsAndGet(tags: PostTagInput[]): Promise<Tag[]> {
+    let insertTags: Tag[] = [];
+
+    if (tags && tags.length) {
+      for (const tag of tags) {
+        let insertTag: Tag = await this.tagRepository.findOneByName(tag.name);
+
+        if (!insertTag) {
+          insertTag = await this.tagRepository.create(tag).save();
+        }
+
+        insertTags = [...insertTags, insertTag];
+      }
+    }
+
+    return insertTags;
   }
 }

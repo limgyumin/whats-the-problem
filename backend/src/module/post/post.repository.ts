@@ -68,9 +68,9 @@ export class PostRepository extends Repository<Post> {
       .leftJoinAndSelect('post.user', 'user')
       .where('post.is_temp = :isTemp', { isTemp })
       .andWhere('post.fk_user_idx = :userIdx', { userIdx })
-      .orderBy('post.created_at', 'ASC')
       .skip((page - 1) * limit)
       .take(limit)
+      .orderBy('post.created_at', 'ASC')
       .getMany();
   }
 }

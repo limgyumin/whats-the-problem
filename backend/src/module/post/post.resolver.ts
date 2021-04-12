@@ -12,11 +12,7 @@ import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from 'src/module/user/user.entity';
-import {
-  CreatePostInput,
-  PostQueryValue,
-  UpdatePostInput,
-} from './dto/post.input';
+import { CreatePostInput, UpdatePostInput, PostOption } from './dto/post.input';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 
@@ -29,6 +25,11 @@ export class PostResolver {
     return await this.postService.post(idx);
   }
 
+  @Query(() => [Post])
+  async posts(@Args('option') { page, limit }: PostOption): Promise<Post[]> {
+    return await this.postService.posts(page, limit);
+  }
+
   @ResolveField(() => Int)
   async commentCount(@Parent() parent: Post): Promise<number> {
     return await this.postService.commentCount(parent.idx);
@@ -37,21 +38,6 @@ export class PostResolver {
   @ResolveField(() => Int)
   async likeCount(@Parent() parent: Post): Promise<number> {
     return await this.postService.likeCount(parent.idx);
-  }
-
-  @Query(() => [Post])
-  async userPosts(
-    @Args('idx') userIdx: number,
-    @Args('option') { page, limit }: PostQueryValue,
-  ): Promise<Post[]> {
-    return await this.postService.userPosts(userIdx, page, limit);
-  }
-
-  @Query(() => [Post])
-  async posts(
-    @Args('option') { page, limit }: PostQueryValue,
-  ): Promise<Post[]> {
-    return await this.postService.posts(page, limit);
   }
 
   @ResolveField(() => String)
