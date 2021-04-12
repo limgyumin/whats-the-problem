@@ -44,10 +44,16 @@ export class UpdateUserInput {
 }
 
 @InputType()
-export class UserQueryValue {
+export class UserOption {
   @Field(() => Int)
   readonly page: number;
 
   @Field(() => Int)
   readonly limit: number;
 }
+
+@InputType()
+export class UserPostOption extends UserOption {}
+
+@InputType()
+export class UserQuestionOption extends UserOption {}

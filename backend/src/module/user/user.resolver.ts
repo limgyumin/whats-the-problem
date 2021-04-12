@@ -1,8 +1,17 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   CreateUserInput,
-  UserQueryValue,
   UpdateUserInput,
+  UserOption,
+  UserPostOption,
+  UserQuestionOption,
 } from './dto/user.input';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -11,8 +20,10 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { createToken } from 'src/lib/jwt/token';
 import { Roles } from 'src/decorator/role.decorator';
+import { Post } from '../post/post.entity';
+import { Question } from '../question/question.entity';
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
   constructor(private userService: UserService) {}
 
@@ -29,10 +40,24 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async users(
-    @Args('option') { page, limit }: UserQueryValue,
-  ): Promise<User[]> {
+  async users(@Args('option') { page, limit }: UserOption): Promise<User[]> {
     return await this.userService.users(page, limit);
+  }
+
+  @ResolveField(() => [Post])
+  async posts(
+    @Parent() parent: User,
+    @Args('option') { page, limit }: UserPostOption,
+  ): Promise<Post[]> {
+    return await this.userService.posts(parent.idx, page, limit);
+  }
+
+  @ResolveField(() => [Question])
+  async questions(
+    @Parent() parent: User,
+    @Args('option') { page, limit }: UserQuestionOption,
+  ): Promise<Question[]> {
+    return await this.userService.questions(parent.idx, page, limit);
   }
 
   @Mutation(() => String)

@@ -10,6 +10,10 @@ import { IGitHubUser } from 'src/lib/github/github.interface';
 import { GitHubLib } from 'src/lib/github/github.lib';
 import { Mailer } from 'src/module/mailer/mailer.entity';
 import { MailerRepository } from 'src/module/mailer/mailer.repository';
+import { Post } from '../post/post.entity';
+import { PostRepository } from '../post/post.repository';
+import { Question } from '../question/question.entity';
+import { QuestionRepository } from '../question/question.repository';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -19,6 +23,8 @@ export class UserService {
   constructor(
     private userRepository: UserRepository,
     private mailerRepository: MailerRepository,
+    private postRepository: PostRepository,
+    private questionRepository: QuestionRepository,
     private gitHubLib: GitHubLib,
   ) {}
 
@@ -92,6 +98,32 @@ export class UserService {
     const users: User[] = await this.userRepository.findAll(page, limit);
 
     return users;
+  }
+
+  async posts(userIdx: number, page: number, limit: number) {
+    const posts: Post[] = await this.postRepository.findAllWithTagsAndUserByUserIdx(
+      page,
+      limit,
+      userIdx,
+      false,
+    );
+
+    return posts;
+  }
+
+  async questions(
+    userIdx: number,
+    page: number,
+    limit: number,
+  ): Promise<Question[]> {
+    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUserByUserIdx(
+      page,
+      limit,
+      userIdx,
+      false,
+    );
+
+    return questions;
   }
 
   async gitHubAuth(code: string): Promise<User> {
