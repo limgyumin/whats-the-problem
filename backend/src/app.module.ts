@@ -10,6 +10,8 @@ import { ReplyModule } from './module/reply/reply.module';
 import { TagModule } from './module/tag/tag.module';
 import { LikeModule } from './module/like/like.module';
 import { UploadModule } from './module/upload/upload.module';
+import { QuestionModule } from './module/question/question.module';
+import { AnswerModule } from './module/answer/answer.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { UploadModule } from './module/upload/upload.module';
     TagModule,
     LikeModule,
     UploadModule,
+    QuestionModule,
+    AnswerModule,
   ],
 })
 export class AppModule {}

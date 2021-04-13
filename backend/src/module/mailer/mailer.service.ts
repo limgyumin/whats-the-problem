@@ -18,7 +18,7 @@ export class MailerService {
     private nodeMailerLib: NodeMailerLib,
   ) {}
 
-  async create(email: string, verified: boolean): Promise<Mailer> {
+  async create(email: string): Promise<Mailer> {
     if (!emailReg.test(email)) {
       throw new BadRequestException('Invalid email.');
     }
@@ -40,13 +40,11 @@ export class MailerService {
     mailer.email = email;
     mailer.verify_code = verifyCode;
     mailer.expired_at = expireDate;
-    mailer.is_verified = verified;
+    mailer.is_verified = false;
 
     await mailer.save();
 
-    if (!verified) {
-      await this.nodeMailerLib.sendAuthMail(email, verifyCode);
-    }
+    await this.nodeMailerLib.sendAuthMail(email, verifyCode);
 
     return mailer;
   }

@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as express from 'express';
 import { join } from 'path';
@@ -12,6 +12,13 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   app.use('/public', express.static(join(__dirname, '../public')));
 
   await app.listen(port);

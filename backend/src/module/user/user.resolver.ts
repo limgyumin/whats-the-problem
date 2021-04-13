@@ -22,6 +22,7 @@ import { createToken } from 'src/lib/jwt/token';
 import { Roles } from 'src/decorator/role.decorator';
 import { Post } from '../post/post.entity';
 import { Question } from '../question/question.entity';
+import { LoginArgs } from './dto/user.args';
 
 @Resolver(User)
 export class UserResolver {
@@ -73,10 +74,7 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  async login(
-    @Args('email') email: string,
-    @Args('password') password: string,
-  ): Promise<string> {
+  async login(@Args() { email, password }: LoginArgs): Promise<string> {
     const user: User = await this.userService.match(email, password);
     return createToken(user);
   }

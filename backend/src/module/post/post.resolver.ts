@@ -12,6 +12,7 @@ import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from 'src/module/user/user.entity';
+import { DeletePostArgs, GetPostArgs, UpdatePostArgs } from './dto/post.args';
 import { CreatePostInput, UpdatePostInput, PostOption } from './dto/post.input';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
@@ -21,7 +22,7 @@ export class PostResolver {
   constructor(private postService: PostService) {}
 
   @Query(() => Post)
-  async post(@Args('idx') idx: number): Promise<Post> {
+  async post(@Args() { idx }: GetPostArgs): Promise<Post> {
     return await this.postService.post(idx);
   }
 
@@ -60,16 +61,15 @@ export class PostResolver {
   @UseGuards(AuthGuard)
   async updatePost(
     @GetUser() user: User,
-    @Args('idx') idx: number,
-    @Args('post') data: UpdatePostInput,
+    @Args() { idx, post }: UpdatePostArgs,
   ) {
-    return await this.postService.update(idx, data, user);
+    return await this.postService.update(idx, post, user);
   }
 
   @Mutation(() => Post)
   @Roles('Client')
   @UseGuards(AuthGuard)
-  async deletePost(@GetUser() user: User, @Args('idx') idx: number) {
+  async deletePost(@GetUser() user: User, @Args() { idx }: DeletePostArgs) {
     return await this.postService.delete(idx, user);
   }
 }

@@ -122,13 +122,7 @@ export class PostService {
   }
 
   async commentCount(idx: number): Promise<number> {
-    const post: Post = await this.postRepository.findOneByIdx(idx, false);
-
-    if (!post) {
-      throw new NotFoundException('Post not found.');
-    }
-
-    return await this.getCommentCountByPostIdx(post.idx);
+    return await this.getCommentCountByPostIdx(idx);
   }
 
   thumbnail(thumbnail: string): string {
@@ -140,7 +134,7 @@ export class PostService {
   }
 
   async getCommentCountByPostIdx(postIdx: number): Promise<number> {
-    const comments: Comment[] = await this.commentRepository.findAllWithUserByPostIdx(
+    const comments: Comment[] = await this.commentRepository.findAllByPostIdx(
       postIdx,
     );
 

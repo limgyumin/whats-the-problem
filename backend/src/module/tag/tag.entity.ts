@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Post } from '../post/post.entity';
+import { Question } from '../question/question.entity';
 
 @ObjectType()
 @Entity('tag')
@@ -17,7 +18,7 @@ export class Tag extends BaseEntity {
 
   @Field(() => String)
   @Column({
-    length: 255,
+    length: 100,
     nullable: false,
     unique: true,
   })
@@ -26,6 +27,10 @@ export class Tag extends BaseEntity {
   @Field(() => [Post])
   @ManyToMany(() => Post, (post) => post.tags)
   posts: Post[];
+
+  @Field(() => [Question])
+  @ManyToMany(() => Question, (question) => question.tags)
+  questions: Question[];
 
   @Field(() => Int, { name: 'postCount' })
   post_count: number;

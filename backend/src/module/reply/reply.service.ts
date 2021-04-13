@@ -51,6 +51,7 @@ export class ReplyService {
 
     reply.content = content;
     reply.user = user;
+    reply.updated_at = new Date();
 
     return reply.save();
   }

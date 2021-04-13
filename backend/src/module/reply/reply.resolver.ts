@@ -4,6 +4,12 @@ import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from '../user/user.entity';
+import {
+  CreateReplyArgs,
+  DeleteReplyArgs,
+  GetRepliesArgs,
+  UpdateReplyArgs,
+} from './dto/reply.args';
 import { Reply } from './reply.entity';
 import { ReplyService } from './reply.service';
 
@@ -12,7 +18,7 @@ export class ReplyResolver {
   constructor(private replyService: ReplyService) {}
 
   @Query(() => [Reply])
-  async replies(@Args('commentIdx') commentIdx: number): Promise<Reply[]> {
+  async replies(@Args() { commentIdx }: GetRepliesArgs): Promise<Reply[]> {
     return this.replyService.replies(commentIdx);
   }
 
@@ -20,8 +26,7 @@ export class ReplyResolver {
   @Roles('Client')
   @UseGuards(AuthGuard)
   async createReply(
-    @Args('commentIdx') commentIdx: number,
-    @Args('content') content: string,
+    @Args() { commentIdx, content }: CreateReplyArgs,
     @GetUser() user: User,
   ): Promise<Reply> {
     return await this.replyService.create(commentIdx, content, user);
@@ -31,8 +36,7 @@ export class ReplyResolver {
   @Roles('Client')
   @UseGuards(AuthGuard)
   async updateReply(
-    @Args('idx') idx: number,
-    @Args('content') content: string,
+    @Args() { idx, content }: UpdateReplyArgs,
     @GetUser() user: User,
   ): Promise<Reply> {
     return await this.replyService.update(idx, content, user);
@@ -42,7 +46,7 @@ export class ReplyResolver {
   @Roles('Client')
   @UseGuards(AuthGuard)
   async deleteReply(
-    @Args('idx') idx: number,
+    @Args() { idx }: DeleteReplyArgs,
     @GetUser() user: User,
   ): Promise<Reply> {
     return await this.replyService.delete(idx, user);

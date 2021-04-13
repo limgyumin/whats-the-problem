@@ -8,7 +8,8 @@ import {
   Int,
 } from '@nestjs/graphql';
 import { Post } from '../post/post.entity';
-import { TagQueryValue } from './dto/tag.input';
+import { DeleteTagArgs, GetTagArgs, UpdateTagArgs } from './dto/tag.args';
+import { TagOption } from './dto/tag.input';
 import { Tag } from './tag.entity';
 import { TagService } from './tag.service';
 
@@ -17,7 +18,7 @@ export class TagResolver {
   constructor(private tagService: TagService) {}
 
   @Query(() => Tag)
-  async tag(@Args('idx') idx: number): Promise<Tag> {
+  async tag(@Args() { idx }: GetTagArgs): Promise<Tag> {
     return await this.tagService.tag(idx);
   }
 
@@ -28,7 +29,7 @@ export class TagResolver {
 
   @ResolveField(() => [Post])
   async posts(
-    @Args('option') { page, limit }: TagQueryValue,
+    @Args('option') { page, limit }: TagOption,
     @Parent() parent: Tag,
   ): Promise<Post[]> {
     return await this.tagService.tagPosts(parent.idx, page, limit);
@@ -45,15 +46,12 @@ export class TagResolver {
   }
 
   @Mutation(() => Tag)
-  async updateTag(
-    @Args('idx') idx: number,
-    @Args('name') name: string,
-  ): Promise<Tag> {
+  async updateTag(@Args() { idx, name }: UpdateTagArgs): Promise<Tag> {
     return await this.tagService.update(idx, name);
   }
 
   @Mutation(() => Tag)
-  async deleteTag(@Args('idx') idx: number): Promise<Tag> {
+  async deleteTag(@Args() { idx }: DeleteTagArgs): Promise<Tag> {
     return await this.tagService.delete(idx);
   }
 }

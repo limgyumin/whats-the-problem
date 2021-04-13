@@ -39,7 +39,7 @@ export class User extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   @Column({
-    length: 255,
+    length: 100,
     nullable: true,
   })
   password: string;

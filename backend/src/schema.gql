@@ -26,6 +26,18 @@ type User {
   score: Int!
   isAdmin: Boolean!
   createdAt: DateTime!
+  posts(option: UserPostOption!): [Post!]!
+  questions(option: UserQuestionOption!): [Question!]!
+}
+
+input UserPostOption {
+  page: Int!
+  limit: Int!
+}
+
+input UserQuestionOption {
+  page: Int!
+  limit: Int!
 }
 
 type Like {
@@ -38,14 +50,41 @@ type Like {
   postIdx: Int!
 }
 
+type Answer {
+  idx: Int!
+  content: String!
+  user: User!
+  userIdx: Int!
+  question: Question!
+  fk_question_idx: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  commentCount: Int!
+}
+
+type Question {
+  idx: Int!
+  title: String!
+  content: String!
+  isTemp: Boolean!
+  user: User!
+  userIdx: Int!
+  answers: [Answer!]!
+  tags: [Tag!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  answerCount: Int!
+}
+
 type Tag {
   idx: Int!
   name: String!
-  posts(option: TagQueryValue!): [Post!]!
+  posts(option: TagOption!): [Post!]!
+  questions: [Question!]!
   postCount: Int!
 }
 
-input TagQueryValue {
+input TagOption {
   page: Int!
   limit: Int!
 }
@@ -73,9 +112,17 @@ type Comment {
   userIdx: Int!
   post: Post!
   postIdx: Int!
+  answer: Answer!
+  answerIdx: Int!
+  commentType: CommentType!
   replyCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+enum CommentType {
+  Post
+  Answer
 }
 
 type Reply {
@@ -97,29 +144,36 @@ type LikeObject {
 type Query {
   me: User!
   user(idx: Float!): User!
-  users(option: UserQueryValue!): [User!]!
-  mailers(option: MailerQueryValue!): [Mailer!]!
-  post(idx: Float!): Post!
-  userPosts(option: PostQueryValue!, idx: Float!): [Post!]!
-  posts(option: PostQueryValue!): [Post!]!
-  comments(postIdx: Float!): [Comment!]!
-  replies(commentIdx: Float!): [Reply!]!
-  tag(idx: Float!): Tag!
+  users(option: UserOption!): [User!]!
+  mailers(option: MailerOption!): [Mailer!]!
+  post(idx: Int!): Post!
+  posts(option: PostOption!): [Post!]!
+  comments(parentIdx: Int!, commentType: CommentType!): [Comment!]!
+  replies(commentIdx: Int!): [Reply!]!
+  tag(idx: Int!): Tag!
   tags: [Tag!]!
   like(postIdx: Float!): LikeObject!
+  question(idx: Int!): Question!
+  questions(option: QuestionOption!): [Question!]!
+  answers(questionIdx: Int!): [Answer!]!
 }
 
-input UserQueryValue {
+input UserOption {
   page: Int!
   limit: Int!
 }
 
-input MailerQueryValue {
+input MailerOption {
   page: Int!
   limit: Int!
 }
 
-input PostQueryValue {
+input PostOption {
+  page: Int!
+  limit: Int!
+}
+
+input QuestionOption {
   page: Int!
   limit: Int!
 }
@@ -127,24 +181,30 @@ input PostQueryValue {
 type Mutation {
   register(user: CreateUserInput!): String!
   gitHubAuth(code: String!): String!
-  login(password: String!, email: String!): String!
+  login(email: String!, password: String!): String!
   updateUser(user: UpdateUserInput!): User!
   deleteUser: User!
   createMailer(email: String!): Mailer!
-  verifyMailer(code: String!, email: String!): Mailer!
+  verifyMailer(email: String!, verifyCode: String!): Mailer!
   createPost(post: CreatePostInput!): Post!
-  updatePost(post: UpdatePostInput!, idx: Float!): Post!
-  deletePost(idx: Float!): Post!
-  createComment(content: String!, postIdx: Float!): Comment!
-  updateComment(content: String!, idx: Float!): Comment!
-  deleteComment(idx: Float!): Comment!
-  createReply(content: String!, commentIdx: Float!): Reply!
-  updateReply(content: String!, idx: Float!): Reply!
-  deleteReply(idx: Float!): Reply!
+  updatePost(idx: Int!, post: UpdatePostInput!): Post!
+  deletePost(idx: Int!): Post!
+  createComment(parentIdx: Int!, commentType: CommentType!, content: String!): Comment!
+  updateComment(idx: Int!, content: String!): Comment!
+  deleteComment(idx: Int!): Comment!
+  createReply(commentIdx: Int!, content: String!): Reply!
+  updateReply(idx: Int!, content: String!): Reply!
+  deleteReply(idx: Int!): Reply!
   createTag(name: String!): Tag!
-  updateTag(name: String!, idx: Float!): Tag!
-  deleteTag(idx: Float!): Tag!
+  updateTag(idx: Int!, name: String!): Tag!
+  deleteTag(idx: Int!): Tag!
   postLike(postIdx: Float!): Like!
+  createQuestion(question: CreateQuestionInput!): Question!
+  updateQuestion(idx: Int!, question: UpdateQuestionInput!): Question!
+  deleteQuestion(idx: Int!): Question!
+  createAnswer(questionIdx: Int!, content: String!): Answer!
+  updateAnswer(idx: Int!, content: String!): Answer!
+  deleteAnswer(idx: Int!): Answer!
 }
 
 input CreateUserInput {
@@ -166,17 +226,36 @@ input CreatePostInput {
   title: String!
   content: String!
   thumbnail: String
-  isTemp: Boolean = false
-  tags: [TagInput!]
+  isTemp: Boolean
+  tags: [PostTagInput!]
 }
 
-input TagInput {
+input PostTagInput {
   name: String!
 }
 
 input UpdatePostInput {
-  title: String
-  content: String
+  title: String!
+  content: String!
   thumbnail: String
   isTemp: Boolean
+  tags: [PostTagInput!]
+}
+
+input CreateQuestionInput {
+  title: String!
+  content: String!
+  isTemp: Boolean
+  tags: [QuestionTagInput!]
+}
+
+input QuestionTagInput {
+  name: String!
+}
+
+input UpdateQuestionInput {
+  title: String!
+  content: String!
+  isTemp: Boolean
+  tags: [QuestionTagInput!]
 }
