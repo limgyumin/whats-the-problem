@@ -15,7 +15,7 @@ export class QuestionRepository extends Repository<Question> {
       .leftJoinAndSelect('question.tags', 'tag')
       .leftJoinAndSelect('question.user', 'user')
       .where('question.idx = :idx', { idx })
-      .andWhere('post.is_temp = :isTemp', { isTemp })
+      .andWhere('question.is_temp = :isTemp', { isTemp })
       .getOne();
   }
 

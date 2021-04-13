@@ -1,23 +1,32 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from '../user/user.entity';
 import {
-  CreateQuestionInput,
-  QuestionOption,
-  UpdateQuestionInput,
-} from './dto/question.input';
+  DeleteQuestionArgs,
+  GetQuestionArgs,
+  UpdateQuestionArgs,
+} from './dto/question.args';
+import { CreateQuestionInput, QuestionOption } from './dto/question.input';
 import { Question } from './question.entity';
 import { QuestionService } from './question.service';
 
-@Resolver()
+@Resolver(Question)
 export class QuestionResolver {
   constructor(private questionService: QuestionService) {}
 
   @Query(() => Question)
-  async question(@Args('idx') idx: number): Promise<Question> {
+  async question(@Args() { idx }: GetQuestionArgs): Promise<Question> {
     return await this.questionService.question(idx);
   }
 
@@ -26,6 +35,11 @@ export class QuestionResolver {
     @Args('option') { page, limit }: QuestionOption,
   ): Promise<Question[]> {
     return await this.questionService.questions(page, limit);
+  }
+
+  @ResolveField(() => Int)
+  async answerCount(@Parent() parent: Question): Promise<number> {
+    return await this.questionService.answerCount(parent.idx);
   }
 
   @Mutation(() => Question)
@@ -43,16 +57,18 @@ export class QuestionResolver {
   @UseGuards(AuthGuard)
   async updateQuestion(
     @GetUser() user: User,
-    @Args('idx') idx: number,
-    @Args('question') data: UpdateQuestionInput,
+    @Args() { idx, question }: UpdateQuestionArgs,
   ) {
-    return await this.questionService.update(idx, data, user);
+    return await this.questionService.update(idx, question, user);
   }
 
   @Mutation(() => Question)
   @Roles('Client')
   @UseGuards(AuthGuard)
-  async deleteQuestion(@GetUser() user: User, @Args('idx') idx: number) {
+  async deleteQuestion(
+    @GetUser() user: User,
+    @Args() { idx }: DeleteQuestionArgs,
+  ) {
     return await this.questionService.delete(idx, user);
   }
 }

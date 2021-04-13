@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { AnswerRepository } from '../answer/answer.repository';
 import { Tag } from '../tag/tag.entity';
 import { TagRepository } from '../tag/tag.repository';
 import { User } from '../user/user.entity';
@@ -19,6 +20,7 @@ import { QuestionRepository } from './question.repository';
 export class QuestionService {
   constructor(
     private questionRepository: QuestionRepository,
+    private answerRepository: AnswerRepository,
     private tagRepository: TagRepository,
   ) {}
 
@@ -116,9 +118,9 @@ export class QuestionService {
     return questions;
   }
 
-  async answerCount() {}
-
-  async answers() {}
+  async answerCount(idx: number): Promise<number> {
+    return await this.answerRepository.findAllAndCountByQuestionIdx(idx);
+  }
 
   async findOrCreateTagsAndGet(tags: QuestionTagInput[]): Promise<Tag[]> {
     // data.tags를 바로 넣지 않고, tag를 조회 또는 추가하여

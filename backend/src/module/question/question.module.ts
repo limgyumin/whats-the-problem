@@ -5,10 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { QuestionRepository } from './question.repository';
 import { UserModule } from '../user/user.module';
 import { TagRepository } from '../tag/tag.repository';
+import { AnswerRepository } from '../answer/answer.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([QuestionRepository, TagRepository]),
+    TypeOrmModule.forFeature([
+      QuestionRepository,
+      AnswerRepository,
+      TagRepository,
+    ]),
     UserModule,
   ],
   exports: [QuestionService],
