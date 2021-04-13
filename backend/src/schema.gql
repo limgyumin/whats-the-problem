@@ -144,7 +144,7 @@ type LikeObject {
 type Query {
   me: User!
   user(idx: Float!): User!
-  users(option: UserOption!): [User!]!
+  users(userType: UserType!, option: UserOption!): [User!]!
   mailers(option: MailerOption!): [Mailer!]!
   post(idx: Int!): Post!
   posts(option: PostOption!): [Post!]!
@@ -156,6 +156,11 @@ type Query {
   question(idx: Int!): Question!
   questions(option: QuestionOption!): [Question!]!
   answers(questionIdx: Int!): [Answer!]!
+}
+
+enum UserType {
+  CreatedAt
+  Score
 }
 
 input UserOption {

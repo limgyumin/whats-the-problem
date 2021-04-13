@@ -1,5 +1,15 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { IsEmail, IsString, Length, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsEmail,
+  IsEnum,
+  IsString,
+  Length,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
+import { UserType } from 'src/enum/user.enum';
+import { UserOption } from './user.input';
 
 @ArgsType()
 export class LoginArgs {
@@ -12,4 +22,16 @@ export class LoginArgs {
   @IsString()
   @Length(8, 100)
   readonly password: string;
+}
+
+@ArgsType()
+export class GetUsersArgs {
+  @Field(() => UserType)
+  @IsEnum(UserType)
+  readonly userType: UserType;
+
+  @Field(() => UserOption)
+  @Type(() => UserOption)
+  @ValidateNested()
+  readonly option: UserOption;
 }

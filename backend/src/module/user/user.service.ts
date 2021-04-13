@@ -5,7 +5,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { emailReg } from 'src/common/emailReg';
+import { emailReg } from 'src/common/email-reg';
+import { UserType } from 'src/enum/user.enum';
 import { IGitHubUser } from 'src/lib/github/github.interface';
 import { GitHubLib } from 'src/lib/github/github.lib';
 import { Mailer } from 'src/module/mailer/mailer.entity';
@@ -90,12 +91,28 @@ export class UserService {
     return user;
   }
 
-  async users(page: number, limit: number): Promise<User[]> {
+  async users(
+    page: number,
+    limit: number,
+    userType: UserType,
+  ): Promise<User[]> {
     if (page < 1 || limit < 1) {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const users: User[] = await this.userRepository.findAll(page, limit);
+    let users: User[] = [];
+
+    switch (userType) {
+      case UserType.CreatedAt:
+        users = await this.userRepository.findAllOrderByCreatedAtAsc(
+          page,
+          limit,
+        );
+        break;
+      case UserType.Score:
+        users = await this.userRepository.findAllOrderByScoreDesc(page, limit);
+        break;
+    }
 
     return users;
   }
@@ -162,5 +179,19 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async handleScore(userIdx: number, score: number): Promise<void> {
+    const validUser: User = await this.userRepository.findOneByIdx(userIdx);
+
+    if (!validUser) {
+      throw new NotFoundException('User not found.');
+    }
+
+    if (validUser.score + score >= 0) {
+      validUser.score += score;
+    }
+
+    await validUser.save();
   }
 }

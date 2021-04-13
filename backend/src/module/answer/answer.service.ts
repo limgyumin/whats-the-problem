@@ -3,12 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { CREATE_ANSWER, DELETE_ANSWER } from 'src/common/constants/user-scores';
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
 import { Question } from '../question/question.entity';
 import { QuestionRepository } from '../question/question.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 import { Answer } from './answer.entity';
 import { AnswerRepository } from './answer.repository';
 
@@ -19,6 +21,7 @@ export class AnswerService {
     private questionRepository: QuestionRepository,
     private commentRepository: CommentRepository,
     private replyRepository: ReplyRepository,
+    private userService: UserService,
   ) {}
 
   async create(
@@ -40,6 +43,8 @@ export class AnswerService {
     answer.content = content;
     answer.question = question;
     answer.user = user;
+
+    await this.userService.handleScore(user.idx, CREATE_ANSWER);
 
     return await answer.save();
   }
@@ -74,6 +79,8 @@ export class AnswerService {
     }
 
     answer.user = user;
+
+    await this.userService.handleScore(user.idx, DELETE_ANSWER);
 
     return await answer.remove();
   }

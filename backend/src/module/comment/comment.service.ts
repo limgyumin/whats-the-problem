@@ -3,6 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  CREATE_COMMENT,
+  DELETE_COMMENT,
+} from 'src/common/constants/user-scores';
 import { CommentType } from 'src/enum/comment.enum';
 import { Post } from 'src/module/post/post.entity';
 import { PostRepository } from 'src/module/post/post.repository';
@@ -10,6 +14,7 @@ import { Answer } from '../answer/answer.entity';
 import { AnswerRepository } from '../answer/answer.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 import { Comment } from './comment.entity';
 import { CommentRepository } from './comment.repository';
 
@@ -20,6 +25,7 @@ export class CommentService {
     private postRepository: PostRepository,
     private answerRepository: AnswerRepository,
     private replyRepository: ReplyRepository,
+    private userService: UserService,
   ) {}
 
   async create(
@@ -51,6 +57,8 @@ export class CommentService {
     comment.answer = answer;
     comment.comment_type = commentType;
     comment.user = user;
+
+    await this.userService.handleScore(user.idx, CREATE_COMMENT);
 
     return await comment.save();
   }
@@ -85,6 +93,8 @@ export class CommentService {
     }
 
     comment.user = user;
+
+    await this.userService.handleScore(user.idx, DELETE_COMMENT);
 
     return await comment.remove();
   }

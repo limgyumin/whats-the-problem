@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { CREATE_POST, DELETE_POST } from 'src/common/constants/user-scores';
 import { generateURL } from 'src/lib/url';
 import { sliceURL } from 'src/lib/url';
 import { User } from 'src/module/user/user.entity';
@@ -13,6 +14,7 @@ import { LikeRepository } from '../like/like.repository';
 import { ReplyRepository } from '../reply/reply.repository';
 import { Tag } from '../tag/tag.entity';
 import { TagRepository } from '../tag/tag.repository';
+import { UserService } from '../user/user.service';
 import {
   CreatePostInput,
   PostTagInput,
@@ -29,6 +31,7 @@ export class PostService {
     private replyRepository: ReplyRepository,
     private tagRepository: TagRepository,
     private likeRepository: LikeRepository,
+    private userService: UserService,
   ) {}
 
   async create(data: CreatePostInput, user: User): Promise<Post> {
@@ -44,6 +47,8 @@ export class PostService {
     post.thumbnail = sliceURL(thumbnail);
     post.tags = tagList;
     post.user = user;
+
+    await this.userService.handleScore(user.idx, CREATE_POST);
 
     return await post.save();
   }
@@ -86,6 +91,8 @@ export class PostService {
     }
 
     post.user = user;
+
+    await this.userService.handleScore(user.idx, DELETE_POST);
 
     return await post.remove();
   }

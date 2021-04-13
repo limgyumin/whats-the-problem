@@ -5,8 +5,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CODE_CHARS, CODE_LENGTH } from 'src/common/constants/verifyCode';
-import { emailReg } from 'src/common/emailReg';
+import { CODE_CHARS, CODE_LENGTH } from 'src/common/constants/verify-code';
+import { emailReg } from 'src/common/email-reg';
 import { NodeMailerLib } from 'src/lib/nodemailer/nodemailer.lib';
 import { Mailer } from './mailer.entity';
 import { MailerRepository } from './mailer.repository';

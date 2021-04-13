@@ -22,7 +22,7 @@ import { createToken } from 'src/lib/jwt/token';
 import { Roles } from 'src/decorator/role.decorator';
 import { Post } from '../post/post.entity';
 import { Question } from '../question/question.entity';
-import { LoginArgs } from './dto/user.args';
+import { GetUsersArgs, LoginArgs } from './dto/user.args';
 
 @Resolver(User)
 export class UserResolver {
@@ -41,8 +41,10 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async users(@Args('option') { page, limit }: UserOption): Promise<User[]> {
-    return await this.userService.users(page, limit);
+  async users(
+    @Args() { userType, option: { page, limit } }: GetUsersArgs,
+  ): Promise<User[]> {
+    return await this.userService.users(page, limit, userType);
   }
 
   @ResolveField(() => [Post])

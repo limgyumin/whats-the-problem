@@ -26,11 +26,19 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder().where('idx = :idx', { idx }).getOne();
   }
 
-  findAll(page: number, limit: number): Promise<User[]> {
+  findAllOrderByScoreDesc(page: number, limit: number): Promise<User[]> {
     return this.createQueryBuilder()
-      .orderBy('created_at', 'ASC')
       .skip((page - 1) * limit)
       .take(limit)
+      .orderBy('score', 'DESC')
+      .getMany();
+  }
+
+  findAllOrderByCreatedAtAsc(page: number, limit: number): Promise<User[]> {
+    return this.createQueryBuilder()
+      .skip((page - 1) * limit)
+      .take(limit)
+      .orderBy('created_at', 'ASC')
       .getMany();
   }
 }
