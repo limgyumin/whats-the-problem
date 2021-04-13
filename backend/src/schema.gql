@@ -147,7 +147,7 @@ type Query {
   users(userType: UserType!, option: UserOption!): [User!]!
   mailers(option: MailerOption!): [Mailer!]!
   post(idx: Int!): Post!
-  posts(option: PostOption!): [Post!]!
+  posts(postType: PostType!, option: PostOption!): [Post!]!
   comments(parentIdx: Int!, commentType: CommentType!): [Comment!]!
   replies(commentIdx: Int!): [Reply!]!
   tag(idx: Int!): Tag!
@@ -171,6 +171,11 @@ input UserOption {
 input MailerOption {
   page: Int!
   limit: Int!
+}
+
+enum PostType {
+  CreatedAt
+  Like
 }
 
 input PostOption {

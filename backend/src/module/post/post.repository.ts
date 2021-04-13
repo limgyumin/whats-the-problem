@@ -42,7 +42,7 @@ export class PostRepository extends Repository<Post> {
       .getCount();
   }
 
-  findAllWithTagsAndUser(
+  findAllWithTagsAndUserOrderByCreatedAtASC(
     page: number,
     limit: number,
     isTemp: boolean,
@@ -57,7 +57,25 @@ export class PostRepository extends Repository<Post> {
       .getMany();
   }
 
-  findAllWithTagsAndUserByUserIdx(
+  findAllWithTagsAndUserOrderByLikeCountDESC(
+    page: number,
+    limit: number,
+    isTemp: boolean,
+  ): Promise<Post[]> {
+    return this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.tags', 'tag')
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoin('post.likes', 'like')
+      .addSelect('COUNT(like.idx) as likeCount')
+      .groupBy('post.idx')
+      .where('post.is_temp = :isTemp', { isTemp })
+      .skip((page - 1) * limit)
+      .take(limit)
+      .orderBy('likeCount', 'DESC')
+      .getMany();
+  }
+
+  findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
     page: number,
     limit: number,
     userIdx: number,

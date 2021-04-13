@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CREATE_POST, DELETE_POST } from 'src/common/constants/user-scores';
+import { PostType } from 'src/enum/post.enum';
 import { generateURL } from 'src/lib/url';
 import { sliceURL } from 'src/lib/url';
 import { User } from 'src/module/user/user.entity';
@@ -110,16 +111,33 @@ export class PostService {
     return post;
   }
 
-  async posts(page: number, limit: number): Promise<Post[]> {
+  async posts(
+    page: number,
+    limit: number,
+    postType: PostType,
+  ): Promise<Post[]> {
     if (page < 1 || limit < 1) {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const posts: Post[] = await this.postRepository.findAllWithTagsAndUser(
-      page,
-      limit,
-      false,
-    );
+    let posts: Post[] = [];
+
+    switch (postType) {
+      case PostType.CreatedAt:
+        posts = await this.postRepository.findAllWithTagsAndUserOrderByCreatedAtASC(
+          page,
+          limit,
+          false,
+        );
+        break;
+      case PostType.Like:
+        posts = await this.postRepository.findAllWithTagsAndUserOrderByLikeCountDESC(
+          page,
+          limit,
+          false,
+        );
+        break;
+    }
 
     return posts;
   }
@@ -141,7 +159,7 @@ export class PostService {
   }
 
   async getCommentCountByPostIdx(postIdx: number): Promise<number> {
-    const comments: Comment[] = await this.commentRepository.findAllByPostIdx(
+    const comments: Comment[] = await this.commentRepository.findAllByPostIdxOrderByCreatedAtASC(
       postIdx,
     );
 

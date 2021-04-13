@@ -12,8 +12,13 @@ import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from 'src/module/user/user.entity';
-import { DeletePostArgs, GetPostArgs, UpdatePostArgs } from './dto/post.args';
-import { CreatePostInput, UpdatePostInput, PostOption } from './dto/post.input';
+import {
+  DeletePostArgs,
+  GetPostArgs,
+  GetPostsArgs,
+  UpdatePostArgs,
+} from './dto/post.args';
+import { CreatePostInput } from './dto/post.input';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 
@@ -27,8 +32,10 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
-  async posts(@Args('option') { page, limit }: PostOption): Promise<Post[]> {
-    return await this.postService.posts(page, limit);
+  async posts(
+    @Args() { postType, option: { page, limit } }: GetPostsArgs,
+  ): Promise<Post[]> {
+    return await this.postService.posts(page, limit, postType);
   }
 
   @ResolveField(() => Int)
