@@ -19,7 +19,7 @@ export class QuestionRepository extends Repository<Question> {
       .getOne();
   }
 
-  findAllWithTagsAndUserByUserIdx(
+  findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
     page: number,
     limit: number,
     userIdx: number,
@@ -36,7 +36,7 @@ export class QuestionRepository extends Repository<Question> {
       .getMany();
   }
 
-  findAllWithTagsAndUser(
+  findAllWithTagsAndUserOrderByCreatedAtASC(
     page: number,
     limit: number,
     isTemp: boolean,

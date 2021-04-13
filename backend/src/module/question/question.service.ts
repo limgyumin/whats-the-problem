@@ -109,7 +109,7 @@ export class QuestionService {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUser(
+    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUserOrderByCreatedAtASC(
       page,
       limit,
       false,
@@ -119,7 +119,9 @@ export class QuestionService {
   }
 
   async answerCount(idx: number): Promise<number> {
-    return await this.answerRepository.findAllAndCountByQuestionIdx(idx);
+    return await this.answerRepository.findAllAndCountByQuestionIdxOrderByCreatedAtASC(
+      idx,
+    );
   }
 
   async findOrCreateTagsAndGet(tags: QuestionTagInput[]): Promise<Tag[]> {

@@ -7,7 +7,7 @@ export class ReplyRepository extends Repository<Reply> {
     return this.createQueryBuilder().where('idx = :idx', { idx }).getOne();
   }
 
-  findAll(commentIdx: number): Promise<Reply[]> {
+  findAllWithUserOrderByCreatedAtASC(commentIdx: number): Promise<Reply[]> {
     return this.createQueryBuilder('reply')
       .leftJoinAndSelect('reply.user', 'user')
       .where('reply.fk_comment_idx = :commentIdx', { commentIdx })

@@ -116,7 +116,7 @@ export class CommentService {
           throw new NotFoundException('Post not found.');
         }
 
-        comments = await this.commentRepository.findAllWithUserByPostIdx(
+        comments = await this.commentRepository.findAllWithUserByPostIdxOrderByCreatedAtASC(
           post.idx,
         );
 
@@ -131,7 +131,7 @@ export class CommentService {
           throw new NotFoundException('Answer not found.');
         }
 
-        comments = await this.commentRepository.findAllWithUserByAnswerIdx(
+        comments = await this.commentRepository.findAllWithUserByAnswerIdxOrderByCreatedAtASC(
           answer.idx,
         );
 

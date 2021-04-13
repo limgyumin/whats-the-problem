@@ -81,7 +81,9 @@ export class ReplyService {
       throw new NotFoundException('Comment not found.');
     }
 
-    const replies: Reply[] = await this.replyRepository.findAll(comment.idx);
+    const replies: Reply[] = await this.replyRepository.findAllWithUserOrderByCreatedAtASC(
+      comment.idx,
+    );
 
     return replies;
   }

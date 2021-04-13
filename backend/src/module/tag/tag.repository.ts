@@ -19,7 +19,7 @@ export class TagRepository extends Repository<Tag> {
       .getOne();
   }
 
-  findAll(): Promise<Tag[]> {
+  findAllOrderByIdxASC(): Promise<Tag[]> {
     return this.createQueryBuilder('tag').orderBy('tag.idx', 'ASC').getMany();
   }
 }

@@ -78,7 +78,7 @@ export class MailerService {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    return this.mailerRepository.findAll(page, limit);
+    return this.mailerRepository.findAllOrderByCreatedAtASC(page, limit);
   }
 
   createVerifyCode(): string {

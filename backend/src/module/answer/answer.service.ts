@@ -99,7 +99,7 @@ export class AnswerService {
       throw new NotFoundException('Question not found.');
     }
 
-    const answers: Answer[] = await this.answerRepository.findAllWithUserByQuestionIdx(
+    const answers: Answer[] = await this.answerRepository.findAllWithUserByQuestionIdxOrderByCreatedAtASC(
       question.idx,
     );
 
@@ -107,7 +107,7 @@ export class AnswerService {
   }
 
   async getCommentCountByAnswerIdx(answerIdx: number): Promise<number> {
-    const comments: Comment[] = await this.commentRepository.findAllByAnswerIdx(
+    const comments: Comment[] = await this.commentRepository.findAllByAnswerIdxOrderByCreatedAtASC(
       answerIdx,
     );
 

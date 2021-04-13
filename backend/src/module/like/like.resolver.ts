@@ -1,5 +1,12 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
@@ -17,6 +24,11 @@ export class LikeResolver {
   @UseGuards(AuthGuard)
   async like(@Args('postIdx') postIdx: number) {
     return await this.likeService.like(postIdx);
+  }
+
+  @ResolveField(() => Boolean)
+  async liked(@Parent() parent: Like, @GetUser() user: User): Promise<boolean> {
+    return await this.likeService.liked(parent.fk_post_idx, user);
   }
 
   @Mutation(() => Like)

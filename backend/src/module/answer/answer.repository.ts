@@ -7,7 +7,9 @@ export class AnswerRepository extends Repository<Answer> {
     return this.createQueryBuilder().where('idx = :idx', { idx }).getOne();
   }
 
-  findAllWithUserByQuestionIdx(questionIdx: number): Promise<Answer[]> {
+  findAllWithUserByQuestionIdxOrderByCreatedAtASC(
+    questionIdx: number,
+  ): Promise<Answer[]> {
     return this.createQueryBuilder('answer')
       .leftJoinAndSelect('answer.user', 'user')
       .where('answer.fk_question_idx = :questionIdx', { questionIdx })
@@ -15,7 +17,9 @@ export class AnswerRepository extends Repository<Answer> {
       .getMany();
   }
 
-  findAllAndCountByQuestionIdx(questionIdx: number): Promise<number> {
+  findAllAndCountByQuestionIdxOrderByCreatedAtASC(
+    questionIdx: number,
+  ): Promise<number> {
     return this.createQueryBuilder()
       .where('fk_question_idx = :questionIdx', { questionIdx })
       .getCount();

@@ -104,13 +104,13 @@ export class UserService {
 
     switch (userType) {
       case UserType.CreatedAt:
-        users = await this.userRepository.findAllOrderByCreatedAtAsc(
+        users = await this.userRepository.findAllOrderByCreatedAtASC(
           page,
           limit,
         );
         break;
       case UserType.Score:
-        users = await this.userRepository.findAllOrderByScoreDesc(page, limit);
+        users = await this.userRepository.findAllOrderByScoreDESC(page, limit);
         break;
     }
 
@@ -118,7 +118,7 @@ export class UserService {
   }
 
   async posts(userIdx: number, page: number, limit: number) {
-    const posts: Post[] = await this.postRepository.findAllWithTagsAndUserByUserIdx(
+    const posts: Post[] = await this.postRepository.findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
       page,
       limit,
       userIdx,
@@ -133,7 +133,7 @@ export class UserService {
     page: number,
     limit: number,
   ): Promise<Question[]> {
-    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUserByUserIdx(
+    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
       page,
       limit,
       userIdx,

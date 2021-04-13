@@ -19,11 +19,11 @@ export class MailerRepository extends Repository<Mailer> {
       .getOne();
   }
 
-  findAll(page: number, limit: number): Promise<Mailer[]> {
+  findAllOrderByCreatedAtASC(page: number, limit: number): Promise<Mailer[]> {
     return this.createQueryBuilder()
-      .orderBy('created_at', 'ASC')
       .skip((page - 1) * limit)
       .take(limit)
+      .orderBy('created_at', 'ASC')
       .getMany();
   }
 }

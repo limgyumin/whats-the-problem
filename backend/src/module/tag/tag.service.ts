@@ -77,7 +77,7 @@ export class TagService {
   }
 
   async tags(): Promise<Tag[]> {
-    return await this.tagRepository.findAll();
+    return await this.tagRepository.findAllOrderByIdxASC();
   }
 
   async postCount(tagIdx: number): Promise<number> {

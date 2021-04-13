@@ -26,7 +26,7 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder().where('idx = :idx', { idx }).getOne();
   }
 
-  findAllOrderByScoreDesc(page: number, limit: number): Promise<User[]> {
+  findAllOrderByScoreDESC(page: number, limit: number): Promise<User[]> {
     return this.createQueryBuilder()
       .skip((page - 1) * limit)
       .take(limit)
@@ -34,7 +34,7 @@ export class UserRepository extends Repository<User> {
       .getMany();
   }
 
-  findAllOrderByCreatedAtAsc(page: number, limit: number): Promise<User[]> {
+  findAllOrderByCreatedAtASC(page: number, limit: number): Promise<User[]> {
     return this.createQueryBuilder()
       .skip((page - 1) * limit)
       .take(limit)
