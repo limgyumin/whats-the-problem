@@ -7,12 +7,14 @@ import { PostRepository } from 'src/module/post/post.repository';
 import { PostModule } from 'src/module/post/post.module';
 import { UserModule } from '../user/user.module';
 import { ReplyRepository } from '../reply/reply.repository';
+import { AnswerRepository } from '../answer/answer.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CommentRepository,
       PostRepository,
+      AnswerRepository,
       ReplyRepository,
     ]),
     PostModule,

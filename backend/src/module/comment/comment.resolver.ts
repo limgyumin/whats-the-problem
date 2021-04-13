@@ -14,14 +14,22 @@ import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
+import {
+  CreateCommentArgs,
+  DeleteCommentArgs,
+  GetCommentsArgs,
+  UpdateCommentArgs,
+} from './dto/comment.args';
 
 @Resolver(Comment)
 export class CommentResolver {
   constructor(private commentService: CommentService) {}
 
   @Query(() => [Comment])
-  async comments(@Args('postIdx') postIdx: number): Promise<Comment[]> {
-    return await this.commentService.comments(postIdx);
+  async comments(
+    @Args() { parentIdx, commentType }: GetCommentsArgs,
+  ): Promise<Comment[]> {
+    return await this.commentService.comments(parentIdx, commentType);
   }
 
   @ResolveField(() => Int)
@@ -33,19 +41,22 @@ export class CommentResolver {
   @Roles('Client')
   @UseGuards(AuthGuard)
   async createComment(
-    @Args('postIdx') postIdx: number,
-    @Args('content') content: string,
+    @Args() { parentIdx, content, commentType }: CreateCommentArgs,
     @GetUser() user: User,
   ): Promise<Comment> {
-    return await this.commentService.create(postIdx, content, user);
+    return await this.commentService.create(
+      parentIdx,
+      content,
+      commentType,
+      user,
+    );
   }
 
   @Mutation(() => Comment)
   @Roles('Client')
   @UseGuards(AuthGuard)
   async updateComment(
-    @Args('idx') idx: number,
-    @Args('content') content: string,
+    @Args() { idx, content }: UpdateCommentArgs,
     @GetUser() user: User,
   ): Promise<Comment> {
     return await this.commentService.update(idx, content, user);
@@ -55,7 +66,7 @@ export class CommentResolver {
   @Roles('Client')
   @UseGuards(AuthGuard)
   async deleteComment(
-    @Args('idx') idx: number,
+    @Args() { idx }: DeleteCommentArgs,
     @GetUser() user: User,
   ): Promise<Comment> {
     return await this.commentService.delete(idx, user);
