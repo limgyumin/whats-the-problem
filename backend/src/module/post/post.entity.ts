@@ -18,7 +18,7 @@ import { Tag } from '../tag/tag.entity';
 @ObjectType()
 @Entity('post')
 export class Post extends BaseEntity {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   idx: number;
 

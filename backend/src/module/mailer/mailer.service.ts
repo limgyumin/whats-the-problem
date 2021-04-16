@@ -5,8 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CODE_CHARS, CODE_LENGTH } from 'src/common/constants/verify-code';
-import { emailReg } from 'src/common/email-reg';
+import { CODE_CHARS, CODE_LENGTH } from 'src/constants/verify-code';
 import { NodeMailerLib } from 'src/lib/nodemailer/nodemailer.lib';
 import { Mailer } from './mailer.entity';
 import { MailerRepository } from './mailer.repository';
@@ -19,10 +18,6 @@ export class MailerService {
   ) {}
 
   async create(email: string): Promise<Mailer> {
-    if (!emailReg.test(email)) {
-      throw new BadRequestException('Invalid email.');
-    }
-
     const existEmail: Mailer = await this.mailerRepository.findOneByEmail(
       email,
     );

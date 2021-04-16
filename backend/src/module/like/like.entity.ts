@@ -17,12 +17,6 @@ export class Like extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx: number;
 
-  @Field(() => Int, {
-    name: 'likeCount',
-    defaultValue: 0,
-  })
-  like_count: number;
-
   @Field(() => Boolean, {
     defaultValue: false,
   })

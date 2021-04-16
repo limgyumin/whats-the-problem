@@ -3,10 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  CREATE_COMMENT,
-  DELETE_COMMENT,
-} from 'src/common/constants/user-scores';
+import { CREATE_COMMENT, DELETE_COMMENT } from 'src/constants/user-scores';
 import { CommentType } from 'src/enum/comment.enum';
 import { Post } from 'src/module/post/post.entity';
 import { PostRepository } from 'src/module/post/post.repository';

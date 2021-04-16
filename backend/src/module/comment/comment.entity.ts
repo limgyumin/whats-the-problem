@@ -16,7 +16,7 @@ import { Answer } from '../answer/answer.entity';
 @ObjectType()
 @Entity('comment')
 export class Comment extends BaseEntity {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   idx: number;
 

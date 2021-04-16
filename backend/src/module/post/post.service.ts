@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CREATE_POST, DELETE_POST } from 'src/common/constants/user-scores';
+import { CREATE_POST, DELETE_POST } from 'src/constants/user-scores';
 import { PostType } from 'src/enum/post.enum';
 import { generateURL } from 'src/lib/url';
 import { sliceURL } from 'src/lib/url';

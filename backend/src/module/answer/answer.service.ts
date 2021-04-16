@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CREATE_ANSWER, DELETE_ANSWER } from 'src/common/constants/user-scores';
+import { CREATE_ANSWER, DELETE_ANSWER } from 'src/constants/user-scores';
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
 import { Question } from '../question/question.entity';

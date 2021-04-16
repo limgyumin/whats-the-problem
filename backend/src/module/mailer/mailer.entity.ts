@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   BaseEntity,
   Column,
@@ -10,7 +10,7 @@ import {
 @ObjectType()
 @Entity('mailer')
 export class Mailer extends BaseEntity {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   idx: number;
 

@@ -40,7 +40,7 @@ export class Answer extends BaseEntity {
   @JoinColumn({ name: 'fk_question_idx' })
   question: Question;
 
-  @Field(() => Int)
+  @Field(() => Int, { name: 'questionIdx' })
   @Column({ nullable: true })
   fk_question_idx: number;
 

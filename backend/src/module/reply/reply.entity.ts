@@ -14,7 +14,7 @@ import { User } from '../user/user.entity';
 @ObjectType()
 @Entity('reply')
 export class Reply extends BaseEntity {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   idx: number;
 
