@@ -1,0 +1,59 @@
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-wrapper {
+    width: 100%;
+    max-width: 1500px;
+    padding: 1.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-logo {
+      width: 15rem;
+      height: auto;
+    }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+
+      &-signin,
+      &-signup {
+        padding: 0.53rem 0.8rem;
+        text-decoration: none;
+
+        &-text {
+          font-weight: normal;
+          font-family: inherit;
+          font-size: 1.025rem;
+        }
+      }
+
+      &-signin {
+        margin-right: 1rem;
+
+        &-text {
+          color: var(--main-point-1);
+        }
+      }
+
+      &-signup {
+        cursor: pointer;
+        background-color: var(--main-point-1);
+        border-radius: 0.4rem;
+
+        &:hover {
+          background-color: var(--main-point-2);
+        }
+
+        &-text {
+          color: var(--main-point-0);
+        }
+      }
+    }
+  }
+}
