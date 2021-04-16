@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Mailer {
-  idx: Float!
+  idx: Int!
   verifyCode: String!
   email: String!
   expiredAt: DateTime!
@@ -16,7 +16,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type User {
-  idx: Float!
+  idx: Int!
   avatar: String
   gitHubId: String
   email: String
@@ -42,7 +42,6 @@ input UserQuestionOption {
 
 type Like {
   idx: Int!
-  likeCount: Int!
   liked: Boolean!
   user: User!
   userIdx: Int!
@@ -56,7 +55,7 @@ type Answer {
   user: User!
   userIdx: Int!
   question: Question!
-  fk_question_idx: Int!
+  questionIdx: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   commentCount: Int!
@@ -90,7 +89,7 @@ input TagOption {
 }
 
 type Post {
-  idx: Float!
+  idx: Int!
   title: String!
   content: String!
   thumbnail: String
@@ -105,8 +104,16 @@ type Post {
   updatedAt: DateTime!
 }
 
+type GitHubUser {
+  avatar: String!
+  email: String
+  gitHubId: String!
+  name: String!
+  bio: String!
+}
+
 type Comment {
-  idx: Float!
+  idx: Int!
   content: String!
   user: User!
   userIdx: Int!
@@ -126,7 +133,7 @@ enum CommentType {
 }
 
 type Reply {
-  idx: Float!
+  idx: Int!
   content: String!
   user: User!
   userIdx: Int!
@@ -190,7 +197,8 @@ input QuestionOption {
 
 type Mutation {
   register(user: CreateUserInput!): String!
-  gitHubAuth(code: String!): String!
+  gitHubUser(code: String!): GitHubUser!
+  gitHubAuth(user: GitHubUserInput!): String!
   login(email: String!, password: String!): String!
   updateUser(user: UpdateUserInput!): User!
   deleteUser: User!
@@ -220,9 +228,17 @@ type Mutation {
 input CreateUserInput {
   avatar: String
   name: String!
+  bio: String!
   email: String!
   password: String!
+}
+
+input GitHubUserInput {
+  avatar: String
+  name: String!
   bio: String!
+  email: String
+  gitHubId: String!
 }
 
 input UpdateUserInput {

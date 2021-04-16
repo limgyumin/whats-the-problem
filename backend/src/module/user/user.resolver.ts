@@ -8,8 +8,8 @@ import {
 } from '@nestjs/graphql';
 import {
   CreateUserInput,
+  GitHubUserInput,
   UpdateUserInput,
-  UserOption,
   UserPostOption,
   UserQuestionOption,
 } from './dto/user.input';
@@ -23,6 +23,7 @@ import { Roles } from 'src/decorator/role.decorator';
 import { Post } from '../post/post.entity';
 import { Question } from '../question/question.entity';
 import { GetUsersArgs, LoginArgs } from './dto/user.args';
+import { GitHubUser } from './dto/user.object';
 
 @Resolver(User)
 export class UserResolver {
@@ -69,9 +70,14 @@ export class UserResolver {
     return createToken(user);
   }
 
+  @Mutation(() => GitHubUser)
+  async gitHubUser(@Args('code') code: string): Promise<GitHubUser> {
+    return await this.userService.gitHubUser(code);
+  }
+
   @Mutation(() => String)
-  async gitHubAuth(@Args('code') code: string): Promise<string> {
-    const user: User = await this.userService.gitHubAuth(code);
+  async gitHubAuth(@Args('user') data: GitHubUserInput): Promise<string> {
+    const user: User = await this.userService.gitHubAuth(data);
     return createToken(user);
   }
 

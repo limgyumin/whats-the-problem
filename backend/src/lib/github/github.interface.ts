@@ -1,7 +1,7 @@
 export interface IGitHubUser {
   avatar: string;
   email: string;
-  github_id: string;
+  gitHubId: string;
   name: string;
   bio: string;
 }

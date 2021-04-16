@@ -5,7 +5,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { emailReg } from 'src/common/email-reg';
 import { UserType } from 'src/enum/user.enum';
 import { IGitHubUser } from 'src/lib/github/github.interface';
 import { GitHubLib } from 'src/lib/github/github.lib';
@@ -15,7 +14,12 @@ import { Post } from '../post/post.entity';
 import { PostRepository } from '../post/post.repository';
 import { Question } from '../question/question.entity';
 import { QuestionRepository } from '../question/question.repository';
-import { CreateUserInput, UpdateUserInput } from './dto/user.input';
+import {
+  CreateUserInput,
+  GitHubUserInput,
+  UpdateUserInput,
+} from './dto/user.input';
+import { GitHubUser } from './dto/user.object';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 
@@ -30,10 +34,6 @@ export class UserService {
   ) {}
 
   async create(data: CreateUserInput): Promise<User> {
-    if (!emailReg.test(data.email)) {
-      throw new BadRequestException('Invalid email.');
-    }
-
     const mailer: Mailer = await this.mailerRepository.findOneByEmail(
       data.email,
     );
@@ -143,7 +143,7 @@ export class UserService {
     return questions;
   }
 
-  async gitHubAuth(code: string): Promise<User> {
+  async gitHubUser(code: string): Promise<GitHubUser> {
     const accessToken: string = await this.gitHubLib.getGitHubAccessToken(code);
 
     const gitHubUser: IGitHubUser = await this.gitHubLib.getGitHubUser(
@@ -154,15 +154,23 @@ export class UserService {
       throw new NotFoundException('User not found.');
     }
 
+    return gitHubUser;
+  }
+
+  async gitHubAuth(data: GitHubUserInput): Promise<User> {
     const existUser: User = await this.userRepository.findOneByGitHubId(
-      gitHubUser.github_id,
+      data.gitHubId,
     );
 
     if (existUser) {
       return existUser;
     }
 
-    return this.userRepository.create(gitHubUser).save();
+    const user: User = this.userRepository.create(data);
+
+    user.github_id = data.gitHubId;
+
+    return user.save();
   }
 
   async findUserByEmailOrGitHubId(decodedUser: User): Promise<User> {
@@ -188,7 +196,9 @@ export class UserService {
       throw new NotFoundException('User not found.');
     }
 
-    if (validUser.score + score >= 0) {
+    if (validUser.score + score <= 0) {
+      validUser.score = 0;
+    } else {
       validUser.score += score;
     }
 

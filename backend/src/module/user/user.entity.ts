@@ -10,7 +10,7 @@ import {
 @ObjectType()
 @Entity('user')
 export class User extends BaseEntity {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   idx: number;
 
@@ -46,7 +46,7 @@ export class User extends BaseEntity {
 
   @Field(() => String)
   @Column({
-    length: 255,
+    length: 50,
     nullable: false,
   })
   name: string;

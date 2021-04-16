@@ -39,7 +39,7 @@ export class GitHubLib {
       const user: IGitHubUser = {
         avatar: data.avatar_url,
         email: data.email,
-        github_id: data.id,
+        gitHubId: data.id,
         name: data.name || data.login,
         bio: data.bio,
       };

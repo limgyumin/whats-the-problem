@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 
 @InputType()
-export class CreateUserInput {
+class BaseUserInput {
   @Field(() => String, {
     nullable: true,
   })
@@ -20,9 +20,30 @@ export class CreateUserInput {
 
   @Field(() => String)
   @IsString()
-  @MaxLength(255)
+  @MaxLength(50)
   readonly name: string;
 
+  @Field(() => String)
+  @IsString()
+  @MaxLength(255)
+  readonly bio: string;
+}
+
+@InputType()
+export class GitHubUserInput extends BaseUserInput {
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsEmail()
+  @MaxLength(255)
+  readonly email: string;
+
+  @Field(() => String)
+  @IsString()
+  readonly gitHubId: string;
+}
+
+@InputType()
+export class CreateUserInput extends BaseUserInput {
   @Field(() => String)
   @IsEmail()
   @MaxLength(255)
@@ -32,11 +53,6 @@ export class CreateUserInput {
   @IsString()
   @Length(8, 100)
   readonly password: string;
-
-  @Field(() => String)
-  @IsString()
-  @MaxLength(255)
-  readonly bio: string;
 }
 
 @InputType()
@@ -54,7 +70,7 @@ export class UpdateUserInput {
   })
   @IsOptional()
   @IsString()
-  @MaxLength(255)
+  @MaxLength(50)
   readonly name: string;
 
   @Field(() => String, {
