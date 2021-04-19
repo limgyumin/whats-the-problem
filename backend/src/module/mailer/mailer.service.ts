@@ -3,27 +3,35 @@ import {
   ConflictException,
   GoneException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { CODE_CHARS, CODE_LENGTH } from 'src/constants/verify-code';
 import { NodeMailerLib } from 'src/lib/nodemailer/nodemailer.lib';
+import { User } from '../user/user.entity';
+import { UserRepository } from '../user/user.repository';
 import { Mailer } from './mailer.entity';
 import { MailerRepository } from './mailer.repository';
 
 @Injectable()
 export class MailerService {
   constructor(
+    private userRepository: UserRepository,
     private mailerRepository: MailerRepository,
     private nodeMailerLib: NodeMailerLib,
   ) {}
 
   async create(email: string): Promise<Mailer> {
+    const existUser: User = await this.userRepository.findOneByEmail(email);
+
+    if (existUser) {
+      throw new ConflictException('Email already verified.');
+    }
+
     const existEmail: Mailer = await this.mailerRepository.findOneByEmail(
       email,
     );
 
     if (existEmail) {
-      throw new ConflictException('Email already exist.');
+      await existEmail.remove();
     }
 
     const mailer: Mailer = this.mailerRepository.create();
@@ -51,17 +59,13 @@ export class MailerService {
     );
 
     if (!mailer) {
-      throw new NotFoundException('Email not found.');
+      throw new BadRequestException('Invalid email or verify code.');
     }
 
     const currentTime: Date = new Date();
 
     if (mailer.expired_at <= currentTime) {
       throw new GoneException('Expired email.');
-    }
-
-    if (mailer.is_verified) {
-      throw new BadRequestException('Email already verified.');
     }
 
     mailer.is_verified = true;
