@@ -1,19 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
 import { FlagSpinner } from "react-spinners-kit";
-import useGitHubAuth from "hooks/auth/useGitHubAuth";
 
 const styles = require("./GitHubLoading.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
 const GitHubLoading = () => {
-  const { gitHubUserHandler } = useGitHubAuth();
-
-  useEffect(() => {
-    gitHubUserHandler();
-  }, [gitHubUserHandler]);
-
   return (
     <div className={cx("github-auth-loading")}>
       <h1 className={cx("github-auth-loading-title")}>
