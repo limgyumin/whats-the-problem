@@ -26,3 +26,18 @@
     }
   }
 }
+
+@mixin big-small($before, $after) {
+  animation: big-small-animation ease 0.5s infinite;
+  @keyframes big-small-animation {
+    0% {
+      transform: scale($before, $before);
+    }
+    50% {
+      transform: scale($after, $after);
+    }
+    100% {
+      transform: scale($before, $before);
+    }
+  }
+}

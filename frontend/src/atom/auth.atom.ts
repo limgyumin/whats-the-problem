@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { ICreateUser, IGitHubUser } from "types/user.type";
+import { ICreateUser, IGitHubUser } from "types/user/user.type";
 
 export const gitHubUserState = atom<IGitHubUser>({
   key: "gitHubUserState",
