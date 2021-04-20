@@ -1,3 +1,6 @@
-export const isEmpty = (content: string) => {
-  return content.replace(/^\s+|\s+$/g, "") === "" ? true : false;
+export const isEmpty = (content: string | undefined): boolean => {
+  if (!content) {
+    return true;
+  }
+  return content.replace(/^\s+|\s+$/g, "") === "";
 };
