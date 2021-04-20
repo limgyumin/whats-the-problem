@@ -1,0 +1,201 @@
+@import "../../styles/animations.scss";
+
+.signin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+
+  &-sidebar {
+    height: 100%;
+    background-color: var(--main-point-light-1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9rem 3rem 12rem 3rem;
+
+    @media screen and (max-width: 1040px) {
+      display: none;
+    }
+
+    @media screen and (max-height: 814px) {
+      padding: 6rem 3rem 8rem 3rem;
+    }
+
+    @media screen and (max-height: 768px) {
+      padding: 7rem 3rem 2rem 3rem;
+    }
+
+    &-header {
+      padding-right: 2rem;
+
+      &-logo {
+        width: 12rem;
+        height: auto;
+      }
+
+      &-title {
+        font-weight: bold;
+        font-size: 2.125rem;
+        color: var(--main-point-2);
+        margin-top: 1rem;
+      }
+    }
+
+    &-picture {
+      max-width: 25rem;
+      height: auto;
+
+      @media screen and (max-height: 768px) {
+        display: none;
+      }
+    }
+  }
+
+  &-content {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    height: 100%;
+
+    &-wrapper {
+      width: 100%;
+      max-width: 500px;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      @include fade-in-up(7rem, 0rem);
+
+      &-header {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &-text {
+          &-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--main-point);
+            margin-bottom: 0.6rem;
+            word-break: break-all;
+            padding-right: 1rem;
+          }
+
+          &-subtitle {
+            word-break: keep-all;
+            font-size: 1.125rem;
+            font-weight: normal;
+            color: var(--main-point-2);
+          }
+        }
+      }
+
+      &-inputs {
+        width: 100%;
+        margin-top: 2rem;
+
+        &-wrapper {
+          margin: 2rem 0;
+
+          &-text {
+            color: var(--main-point-3);
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+          }
+
+          & > input {
+            width: 100%;
+            color: var(--main-point-1);
+            font-weight: normal;
+            font-size: 1.425rem;
+            padding: 0.8rem 1.2rem;
+            outline: none;
+            border: 1px solid var(--main-point-border);
+            border-radius: 0.6rem;
+            background-color: var(--main-point-light);
+
+            &:focus {
+              &::placeholder {
+                color: transparent;
+              }
+            }
+
+            &::placeholder {
+              color: var(--main-point-4);
+              font-weight: normal;
+              font-size: 1.425rem;
+            }
+          }
+
+          &-warning {
+            margin-top: 0.6rem;
+            font-size: 0.925rem;
+            color: var(--main-warning);
+          }
+        }
+      }
+
+      &-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+
+        &-submit,
+        &-github {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 4rem;
+          height: 4rem;
+          cursor: pointer;
+          outline: none;
+          border: none;
+          border-radius: 0.6rem;
+        }
+
+        &-github {
+          background-color: #24292e;
+          margin-right: 1rem;
+
+          &:hover {
+            background-color: #373e44;
+          }
+
+          &:hover > &-icon {
+            @include big-small(1, 1.05);
+          }
+
+          &-icon {
+            font-size: 2.4rem;
+            color: var(--main-point-0);
+          }
+        }
+
+        &-submit {
+          background-color: var(--main-point-1);
+
+          &:hover {
+            background-color: var(--main-point-2);
+          }
+
+          &:hover > &-icon {
+            @include floating-side(-0.1rem, 0.1rem);
+          }
+
+          &-icon {
+            font-size: 2.4rem;
+            color: var(--main-point-0);
+          }
+        }
+      }
+    }
+  }
+}

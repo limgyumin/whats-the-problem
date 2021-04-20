@@ -42,48 +42,7 @@
 
   &-inputs {
     width: 100%;
-    margin-top: 5rem;
-
-    &-wrapper {
-      margin: 2rem 0;
-
-      &-text {
-        color: var(--main-point-3);
-        font-weight: bold;
-        font-size: 1.125rem;
-        margin-bottom: 1rem;
-      }
-
-      & > input {
-        width: 100%;
-        color: var(--main-point-1);
-        font-weight: normal;
-        font-size: 1.425rem;
-        padding: 0.8rem 1.2rem;
-        outline: none;
-        border: 1px solid var(--main-point-border);
-        border-radius: 0.6rem;
-        background-color: var(--main-point-light);
-
-        &:focus {
-          &::placeholder {
-            color: transparent;
-          }
-        }
-
-        &::placeholder {
-          color: var(--main-point-4);
-          font-weight: normal;
-          font-size: 1.425rem;
-        }
-      }
-
-      &-warning {
-        margin-top: 0.6rem;
-        font-size: 0.925rem;
-        color: var(--main-warning);
-      }
-    }
+    margin-top: 2rem;
   }
 
   &-bottom {
@@ -105,13 +64,13 @@
         background-color: var(--main-point-2);
       }
 
+      &:hover > &-icon {
+        @include floating-side(-0.1rem, 0.1rem);
+      }
+
       &-icon {
         font-size: 2.4rem;
         color: var(--main-point-0);
-
-        &:hover {
-          @include floating-side(-0.1rem, 0.1rem);
-        }
       }
     }
   }

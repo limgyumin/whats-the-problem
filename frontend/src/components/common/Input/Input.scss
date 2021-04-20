@@ -1,0 +1,41 @@
+.input {
+  width: 100%;
+  margin: 2rem 0;
+
+  &-text {
+    color: var(--main-point-3);
+    font-weight: bold;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  &-element {
+    width: 100%;
+    color: var(--main-point-1);
+    font-weight: normal;
+    font-size: 1.425rem;
+    padding: 0.8rem 1.2rem;
+    outline: none;
+    border: 1px solid var(--main-point-border);
+    border-radius: 0.6rem;
+    background-color: var(--main-point-light);
+
+    &:focus {
+      &::placeholder {
+        color: transparent;
+      }
+    }
+
+    &::placeholder {
+      color: var(--main-point-4);
+      font-weight: normal;
+      font-size: 1.425rem;
+    }
+  }
+
+  &-warning {
+    margin-top: 0.6rem;
+    font-size: 0.925rem;
+    color: var(--main-warning);
+  }
+}

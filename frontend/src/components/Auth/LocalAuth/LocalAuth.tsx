@@ -3,9 +3,10 @@ import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
 import profile from "assets/images/profile.svg";
 import { FiArrowRight } from "react-icons/fi";
-import useLocalAuth from "hooks/auth/useLocalAuth";
+import useRegister from "hooks/auth/useRegister";
 import { isEmpty } from "lib/isEmpty";
 import { IoMdLock } from "react-icons/io";
+import Input from "components/common/Input";
 
 const styles = require("./LocalAuth.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
@@ -19,8 +20,8 @@ const LocalAuth = () => {
     changeNameHandler,
     changeBioHandler,
     submitUserHandler,
-  } = useLocalAuth();
-  const { email } = user;
+  } = useRegister();
+  const { email, password, name, bio } = user;
 
   return (
     <div className={cx("local-auth")}>
@@ -42,9 +43,9 @@ const LocalAuth = () => {
           <h4 className={cx("local-auth-inputs-wrapper-text")}>이메일</h4>
           <div className={cx("local-auth-inputs-wrapper-input")}>
             <input
+              value={email}
               className={cx("local-auth-inputs-wrapper-input-element")}
               readOnly={!isEmpty(email)}
-              value={email}
               type="text"
               placeholder="이메일을 입력해주세요."
             />
@@ -55,41 +56,28 @@ const LocalAuth = () => {
             )}
           </div>
         </div>
-        <div className={cx("local-auth-inputs-wrapper")}>
-          <h4 className={cx("local-auth-inputs-wrapper-text")}>비밀번호</h4>
-          <input
-            type="password"
-            placeholder="비밀번호를 입력해주세요."
-            onChange={(e) => changePasswordHandler(e)}
-          />
-          {passwordWarning && (
-            <h4 className={cx("local-auth-inputs-wrapper-warning")}>
-              {passwordWarning}
-            </h4>
-          )}
-        </div>
-        <div className={cx("local-auth-inputs-wrapper")}>
-          <h4 className={cx("local-auth-inputs-wrapper-text")}>이름</h4>
-          <input
-            type="text"
-            placeholder="이름을 입력해주세요."
-            maxLength={16}
-            onChange={(e) => changeNameHandler(e)}
-          />
-          {nameWarning && (
-            <h4 className={cx("local-auth-inputs-wrapper-warning")}>
-              {nameWarning}
-            </h4>
-          )}
-        </div>
-        <div className={cx("local-auth-inputs-wrapper")}>
-          <h4 className={cx("local-auth-inputs-wrapper-text")}>한 줄 소개</h4>
-          <input
-            type="text"
-            placeholder="본인을 한 줄로 소개해보세요."
-            onChange={(e) => changeBioHandler(e)}
-          />
-        </div>
+        <Input
+          name="비밀번호"
+          value={password}
+          type="password"
+          placeholder="비밀번호을 입력해주세요."
+          onChangeHandler={changePasswordHandler}
+          warning={passwordWarning}
+        />
+        <Input
+          name="이름"
+          value={name}
+          placeholder="이름을 입력해주세요."
+          maxLength={16}
+          onChangeHandler={changeNameHandler}
+          warning={nameWarning}
+        />
+        <Input
+          name="한 줄 소개"
+          value={bio}
+          placeholder="본인을 한 줄로 소개해보세요."
+          onChangeHandler={changeBioHandler}
+        />
       </div>
       <div className={cx("local-auth-bottom")}>
         <button

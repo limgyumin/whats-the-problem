@@ -12,8 +12,8 @@ function App() {
         <Route exact path="/signup" render={() => <Pages.SignUp />} />
         <Route path="/signup/email" render={() => <Pages.InsertEmail />} />
         <Route path="/signup/verify" render={() => <Pages.VerifyEmail />} />
-        <Route path="/signup/github" render={() => <Pages.GitHubAuth />} />
         <Route path="/signup/auth" render={() => <Pages.LocalAuth />} />
+        <Route path="/github/auth" render={() => <Pages.GitHubAuth />} />
       </Switch>
     </div>
   );

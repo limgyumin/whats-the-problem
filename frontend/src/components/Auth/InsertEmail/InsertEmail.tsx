@@ -4,6 +4,7 @@ import { ClassNamesFn } from "classnames/types";
 import useSendEmail from "hooks/auth/useSendEmail";
 import { FiArrowRight } from "react-icons/fi";
 import { MetroSpinner } from "react-spinners-kit";
+import Input from "components/common/Input";
 
 const styles = require("./InsertEmail.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
@@ -27,16 +28,13 @@ const InsertEmail = () => {
         </p>
       </div>
       <div className={cx("insert-email-input")}>
-        <h4 className={cx("insert-email-input-text")}>이메일</h4>
-        <input
-          value={email || ""}
-          type="text"
+        <Input
+          name="이메일"
+          value={email}
           placeholder="이메일을 입력해주세요."
-          onChange={(e) => changeEmailHandler(e)}
+          onChangeHandler={changeEmailHandler}
+          warning={warning}
         />
-        {warning && (
-          <h4 className={cx("insert-email-input-warning")}>{warning}</h4>
-        )}
       </div>
       <div className={cx("insert-email-bottom")}>
         <button
