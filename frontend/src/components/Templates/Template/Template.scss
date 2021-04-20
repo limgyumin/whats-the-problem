@@ -1,4 +1,4 @@
-.auth-template {
+.template {
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -6,9 +6,10 @@
 
   &-wrapper {
     width: 100%;
-    max-width: 500px;
+    max-width: 1500px;
     padding: 0 1rem;
     display: flex;
+    justify-content: center;
     align-items: center;
   }
 }
