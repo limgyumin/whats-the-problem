@@ -41,9 +41,9 @@ export class MailerService {
     expireDate.setDate(expireDate.getDate() + 1);
 
     mailer.email = email;
-    mailer.verify_code = verifyCode;
-    mailer.expired_at = expireDate;
-    mailer.is_verified = false;
+    mailer.verifyCode = verifyCode;
+    mailer.expiredAt = expireDate;
+    mailer.isVerified = false;
 
     await mailer.save();
 
@@ -64,11 +64,11 @@ export class MailerService {
 
     const currentTime: Date = new Date();
 
-    if (mailer.expired_at <= currentTime) {
+    if (mailer.expiredAt <= currentTime) {
       throw new GoneException('Expired email.');
     }
 
-    mailer.is_verified = true;
+    mailer.isVerified = true;
     return await mailer.save();
   }
 

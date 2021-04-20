@@ -10,11 +10,11 @@ import config from '../../config';
 
 const JWT_SECRET = config.JWT.SECRET;
 
-export const createToken = ({ email, password, github_id }: User) => {
+export const createToken = ({ email, password, gitHubId }: User) => {
   const payload = {
     email,
     password,
-    github_id,
+    gitHubId,
   };
 
   const options: SignOptions = {
@@ -36,7 +36,7 @@ export const validateToken = (auth: string) => {
   const token = auth.split(' ')[1];
 
   try {
-    return verifyToken(token);
+    return verifyToken(token) as User;
   } catch (error) {
     switch (error.message) {
       case 'INVALID_TOKEN':

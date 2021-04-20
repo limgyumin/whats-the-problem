@@ -31,7 +31,4 @@ export class Tag extends BaseEntity {
   @Field(() => [Question])
   @ManyToMany(() => Question, (question) => question.tags)
   questions: Question[];
-
-  @Field(() => Int, { name: 'postCount' })
-  post_count: number;
 }

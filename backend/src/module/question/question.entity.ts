@@ -37,22 +37,21 @@ export class Question extends BaseEntity {
   content: string;
 
   @Field(() => Boolean, {
-    name: 'isTemp',
     defaultValue: false,
   })
   @Column({ nullable: false, default: false })
-  is_temp: boolean;
+  isTemp: boolean;
 
   @Field(() => User)
   @ManyToOne(() => User, {
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'fk_user_idx' })
+  @JoinColumn({ name: 'userIdx' })
   user: User;
 
-  @Field(() => Int, { name: 'userIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_user_idx: number;
+  userIdx: number;
 
   @Field(() => [Answer])
   @OneToMany(() => Answer, (answer) => answer.question, {
@@ -67,13 +66,13 @@ export class Question extends BaseEntity {
   @JoinTable()
   tags: Tag[];
 
-  @Field(() => Date, { name: 'createdAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
-  @Field(() => Date, { name: 'updatedAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

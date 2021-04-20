@@ -28,45 +28,42 @@ export class Comment extends BaseEntity {
 
   @Field(() => User)
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_user_idx' })
+  @JoinColumn({ name: 'userIdx' })
   user: User;
 
-  @Field(() => Int, { name: 'userIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_user_idx: number;
+  userIdx: number;
 
   @Field(() => Post)
   @ManyToOne(() => Post, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_post_idx' })
+  @JoinColumn({ name: 'postIdx' })
   post: Post;
 
-  @Field(() => Int, { name: 'postIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_post_idx: number;
+  postIdx: number;
 
   @Field(() => Answer)
   @ManyToOne(() => Answer, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_answer_idx' })
+  @JoinColumn({ name: 'answerIdx' })
   answer: Answer;
 
-  @Field(() => Int, { name: 'answerIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_answer_idx: number;
+  answerIdx: number;
 
-  @Field(() => CommentType, { name: 'commentType' })
+  @Field(() => CommentType)
   @Column({ type: 'enum', enum: CommentType })
-  comment_type: CommentType;
+  commentType: CommentType;
 
-  @Field(() => Int, { name: 'replyCount' })
-  reply_count: number;
-
-  @Field(() => Date, { name: 'createdAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
-  @Field(() => Date, { name: 'updatedAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

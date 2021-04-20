@@ -23,7 +23,6 @@ import { Roles } from 'src/decorator/role.decorator';
 import { Post } from '../post/post.entity';
 import { Question } from '../question/question.entity';
 import { GetUsersArgs, LoginArgs } from './dto/user.args';
-import { GitHubUser } from './dto/user.object';
 
 @Resolver(User)
 export class UserResolver {
@@ -70,8 +69,8 @@ export class UserResolver {
     return createToken(user);
   }
 
-  @Mutation(() => GitHubUser)
-  async gitHubUser(@Args('code') code: string): Promise<GitHubUser> {
+  @Mutation(() => User)
+  async gitHubUser(@Args('code') code: string): Promise<User> {
     return await this.userService.gitHubUser(code);
   }
 

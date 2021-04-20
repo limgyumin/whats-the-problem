@@ -9,15 +9,15 @@ export class CommentRepository extends Repository<Comment> {
 
   findAllByAnswerIdxOrderByCreatedAtASC(answerIdx: number): Promise<Comment[]> {
     return this.createQueryBuilder()
-      .where('fk_answer_idx = :answerIdx', { answerIdx })
-      .orderBy('created_at', 'ASC')
+      .where('answerIdx = :answerIdx', { answerIdx })
+      .orderBy('createdAt', 'ASC')
       .getMany();
   }
 
   findAllByPostIdxOrderByCreatedAtASC(postIdx: number): Promise<Comment[]> {
     return this.createQueryBuilder()
-      .where('fk_post_idx = :postIdx', { postIdx })
-      .orderBy('created_at', 'ASC')
+      .where('postIdx = :postIdx', { postIdx })
+      .orderBy('createdAt', 'ASC')
       .getMany();
   }
 
@@ -26,8 +26,8 @@ export class CommentRepository extends Repository<Comment> {
   ): Promise<Comment[]> {
     return this.createQueryBuilder('comment')
       .leftJoinAndSelect('comment.user', 'user')
-      .where('comment.fk_answer_idx = :answerIdx', { answerIdx })
-      .orderBy('comment.created_at', 'ASC')
+      .where('comment.answerIdx = :answerIdx', { answerIdx })
+      .orderBy('comment.createdAt', 'ASC')
       .getMany();
   }
 
@@ -36,14 +36,14 @@ export class CommentRepository extends Repository<Comment> {
   ): Promise<Comment[]> {
     return this.createQueryBuilder('comment')
       .leftJoinAndSelect('comment.user', 'user')
-      .where('comment.fk_post_idx = :postIdx', { postIdx })
-      .orderBy('comment.created_at', 'ASC')
+      .where('comment.postIdx = :postIdx', { postIdx })
+      .orderBy('comment.createdAt', 'ASC')
       .getMany();
   }
 
   findAllAndCountByPostIdx(postIdx: number): Promise<number> {
     return this.createQueryBuilder()
-      .where('fk_post_idx = :postIdx', { postIdx })
+      .where('postIdx = :postIdx', { postIdx })
       .getCount();
   }
 }

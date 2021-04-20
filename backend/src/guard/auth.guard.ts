@@ -66,7 +66,7 @@ export class AuthGuard implements CanActivate {
           decodedUser,
         );
 
-        if (!validUser.is_admin) {
+        if (!validUser.isAdmin) {
           throw new ForbiddenException('No permission.');
         }
 

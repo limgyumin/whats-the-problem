@@ -33,7 +33,7 @@ export class QuestionService {
 
     question.title = title;
     question.content = content;
-    question.is_temp = isTemp;
+    question.isTemp = isTemp;
     question.tags = tagList;
     question.user = user;
 
@@ -56,7 +56,7 @@ export class QuestionService {
       throw new NotFoundException('Question not found.');
     }
 
-    if (question.fk_user_idx !== user.idx) {
+    if (question.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 
@@ -64,10 +64,10 @@ export class QuestionService {
 
     question.title = title || question.title;
     question.content = content || question.content;
-    question.is_temp = isTemp;
+    question.isTemp = isTemp;
     question.tags = tagList;
     question.user = user;
-    question.updated_at = new Date();
+    question.updatedAt = new Date();
 
     return await question.save();
   }
@@ -82,7 +82,7 @@ export class QuestionService {
       throw new NotFoundException('Post not found.');
     }
 
-    if (question.fk_user_idx !== user.idx) {
+    if (question.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 

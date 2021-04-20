@@ -42,27 +42,21 @@ export class Post extends BaseEntity {
   })
   thumbnail: string;
 
-  @Field(() => Boolean, { defaultValue: false, name: 'isTemp' })
+  @Field(() => Boolean, { defaultValue: false })
   @Column({
     default: false,
     nullable: false,
   })
-  is_temp: boolean;
-
-  @Field(() => Int, { name: 'likeCount' })
-  like_count: number;
-
-  @Field(() => Int, { name: 'commentCount' })
-  comment_count: number;
+  isTemp: boolean;
 
   @Field(() => User)
   @ManyToOne(() => User, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'fk_user_idx' })
+  @JoinColumn({ name: 'userIdx' })
   user: User;
 
-  @Field(() => Int, { name: 'userIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_user_idx: number;
+  userIdx: number;
 
   @Field(() => [Tag])
   @ManyToMany(() => Tag, (tag) => tag.posts, { onDelete: 'CASCADE' })
@@ -73,13 +67,13 @@ export class Post extends BaseEntity {
   @OneToMany(() => Like, (like) => like.post, { onDelete: 'SET NULL' })
   likes: Like[];
 
-  @Field(() => Date, { name: 'createdAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
-  @Field(() => Date, { name: 'updatedAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

@@ -44,7 +44,7 @@ export class PostService {
 
     post.title = title;
     post.content = content;
-    post.is_temp = isTemp;
+    post.isTemp = isTemp;
     post.thumbnail = sliceURL(thumbnail);
     post.tags = tagList;
     post.user = user;
@@ -63,7 +63,7 @@ export class PostService {
       throw new NotFoundException('Post not found.');
     }
 
-    if (post.fk_user_idx !== user.idx) {
+    if (post.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 
@@ -72,10 +72,10 @@ export class PostService {
     post.title = title || post.title;
     post.content = content || post.content;
     post.thumbnail = sliceURL(thumbnail) || post.thumbnail;
-    post.is_temp = isTemp;
+    post.isTemp = isTemp;
     post.tags = tagList;
     post.user = user;
-    post.updated_at = new Date();
+    post.updatedAt = new Date();
 
     return await post.save();
   }
@@ -87,7 +87,7 @@ export class PostService {
       throw new NotFoundException('Post not found.');
     }
 
-    if (post.fk_user_idx !== user.idx) {
+    if (post.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 

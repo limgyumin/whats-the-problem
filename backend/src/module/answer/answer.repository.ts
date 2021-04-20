@@ -12,8 +12,8 @@ export class AnswerRepository extends Repository<Answer> {
   ): Promise<Answer[]> {
     return this.createQueryBuilder('answer')
       .leftJoinAndSelect('answer.user', 'user')
-      .where('answer.fk_question_idx = :questionIdx', { questionIdx })
-      .orderBy('answer.created_at', 'ASC')
+      .where('answer.questionIdx = :questionIdx', { questionIdx })
+      .orderBy('answer.createdAt', 'ASC')
       .getMany();
   }
 
@@ -21,7 +21,7 @@ export class AnswerRepository extends Repository<Answer> {
     questionIdx: number,
   ): Promise<number> {
     return this.createQueryBuilder()
-      .where('fk_question_idx = :questionIdx', { questionIdx })
+      .where('questionIdx = :questionIdx', { questionIdx })
       .getCount();
   }
 }

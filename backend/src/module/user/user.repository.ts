@@ -5,7 +5,7 @@ import { User } from './user.entity';
 export class UserRepository extends Repository<User> {
   findOneByGitHubId(githubId: string): Promise<User> {
     return this.createQueryBuilder()
-      .where('github_id = :githubId', { githubId })
+      .where('gitHubId = :githubId', { githubId })
       .getOne();
   }
 
@@ -38,7 +38,7 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder()
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('created_at', 'ASC')
+      .orderBy('createdAt', 'ASC')
       .getMany();
   }
 }

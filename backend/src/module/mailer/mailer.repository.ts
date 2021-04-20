@@ -9,7 +9,7 @@ export class MailerRepository extends Repository<Mailer> {
   ): Promise<Mailer> {
     return this.createQueryBuilder()
       .where('email = :email', { email })
-      .andWhere('verify_code = :verifyCode', { verifyCode })
+      .andWhere('verifyCode = :verifyCode', { verifyCode })
       .getOne();
   }
 
@@ -23,7 +23,7 @@ export class MailerRepository extends Repository<Mailer> {
     return this.createQueryBuilder()
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('created_at', 'ASC')
+      .orderBy('createdAt', 'ASC')
       .getMany();
   }
 }

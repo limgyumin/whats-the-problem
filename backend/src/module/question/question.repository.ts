@@ -6,7 +6,7 @@ export class QuestionRepository extends Repository<Question> {
   findOneByIdx(idx: number, isTemp: boolean): Promise<Question> {
     return this.createQueryBuilder()
       .where('idx = :idx', { idx })
-      .andWhere('is_temp = :isTemp', { isTemp })
+      .andWhere('isTemp = :isTemp', { isTemp })
       .getOne();
   }
 
@@ -15,7 +15,7 @@ export class QuestionRepository extends Repository<Question> {
       .leftJoinAndSelect('question.tags', 'tag')
       .leftJoinAndSelect('question.user', 'user')
       .where('question.idx = :idx', { idx })
-      .andWhere('question.is_temp = :isTemp', { isTemp })
+      .andWhere('question.isTemp = :isTemp', { isTemp })
       .getOne();
   }
 
@@ -28,11 +28,11 @@ export class QuestionRepository extends Repository<Question> {
     return this.createQueryBuilder('question')
       .leftJoinAndSelect('question.tags', 'tag')
       .leftJoinAndSelect('question.user', 'user')
-      .where('is_temp = :isTemp', { isTemp })
+      .where('isTemp = :isTemp', { isTemp })
       .andWhere('user.idx = :userIdx', { userIdx })
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('question.created_at', 'ASC')
+      .orderBy('question.createdAt', 'ASC')
       .getMany();
   }
 
@@ -44,10 +44,10 @@ export class QuestionRepository extends Repository<Question> {
     return this.createQueryBuilder('question')
       .leftJoinAndSelect('question.tags', 'tag')
       .leftJoinAndSelect('question.user', 'user')
-      .where('is_temp = :isTemp', { isTemp })
+      .where('isTemp = :isTemp', { isTemp })
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('question.created_at', 'ASC')
+      .orderBy('question.createdAt', 'ASC')
       .getMany();
   }
 }

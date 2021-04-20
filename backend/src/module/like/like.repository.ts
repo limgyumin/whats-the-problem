@@ -15,13 +15,13 @@ export class LikeRepository extends Repository<Like> {
     return this.createQueryBuilder('like')
       .leftJoinAndSelect('like.post', 'post')
       .where('post.idx = :postIdx', { postIdx })
-      .andWhere('like.fk_user_idx = :userIdx', { userIdx })
+      .andWhere('like.userIdx = :userIdx', { userIdx })
       .getOne();
   }
 
   findAllAndCountByPostIdx(postIdx: number): Promise<number> {
     return this.createQueryBuilder()
-      .where('fk_post_idx = :postIdx', { postIdx })
+      .where('postIdx = :postIdx', { postIdx })
       .getCount();
   }
 }

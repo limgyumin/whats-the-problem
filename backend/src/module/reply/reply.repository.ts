@@ -10,14 +10,14 @@ export class ReplyRepository extends Repository<Reply> {
   findAllWithUserOrderByCreatedAtASC(commentIdx: number): Promise<Reply[]> {
     return this.createQueryBuilder('reply')
       .leftJoinAndSelect('reply.user', 'user')
-      .where('reply.fk_comment_idx = :commentIdx', { commentIdx })
-      .orderBy('reply.created_at', 'ASC')
+      .where('reply.commentIdx = :commentIdx', { commentIdx })
+      .orderBy('reply.createdAt', 'ASC')
       .getMany();
   }
 
   findAllAndCount(commentIdx: number): Promise<number> {
     return this.createQueryBuilder()
-      .where('fk_comment_idx = :commentIdx', { commentIdx })
+      .where('commentIdx = :commentIdx', { commentIdx })
       .getCount();
   }
 }

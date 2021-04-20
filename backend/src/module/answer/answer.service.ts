@@ -56,13 +56,13 @@ export class AnswerService {
       throw new NotFoundException('Answer not found.');
     }
 
-    if (answer.fk_user_idx !== user.idx) {
+    if (answer.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 
     answer.content = content;
     answer.user = user;
-    answer.updated_at = new Date();
+    answer.updatedAt = new Date();
 
     return await answer.save();
   }
@@ -74,7 +74,7 @@ export class AnswerService {
       throw new NotFoundException('Answer not found.');
     }
 
-    if (answer.fk_user_idx !== user.idx) {
+    if (answer.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 

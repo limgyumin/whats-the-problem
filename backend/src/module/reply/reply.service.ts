@@ -45,13 +45,13 @@ export class ReplyService {
       throw new NotFoundException('Reply not found.');
     }
 
-    if (reply.fk_user_idx !== user.idx) {
+    if (reply.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 
     reply.content = content;
     reply.user = user;
-    reply.updated_at = new Date();
+    reply.updatedAt = new Date();
 
     return reply.save();
   }
@@ -63,7 +63,7 @@ export class ReplyService {
       throw new NotFoundException('Reply not found.');
     }
 
-    if (reply.fk_user_idx !== user.idx) {
+    if (reply.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 

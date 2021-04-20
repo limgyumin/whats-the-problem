@@ -26,29 +26,29 @@ export class Reply extends BaseEntity {
 
   @Field(() => User)
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_user_idx' })
+  @JoinColumn({ name: 'userIdx' })
   user: User;
 
-  @Field(() => Int, { name: 'userIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_user_idx: number;
+  userIdx: number;
 
   @Field(() => Comment)
   @ManyToOne(() => Comment, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_comment_idx' })
+  @JoinColumn({ name: 'commentIdx' })
   comment: Comment;
 
-  @Field(() => Int, { name: 'commentIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_comment_idx: number;
+  commentIdx: number;
 
-  @Field(() => Date, { name: 'createdAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
-  @Field(() => Date, { name: 'updatedAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

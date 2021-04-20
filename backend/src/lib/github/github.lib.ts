@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosResponse } from 'axios';
 import config from 'src/config';
+import { User } from 'src/module/user/user.entity';
 import { IGitHubUser } from './github.interface';
 
 @Injectable()
@@ -25,9 +26,9 @@ export class GitHubLib {
     return access_token;
   }
 
-  async getGitHubUser(access_token: string): Promise<IGitHubUser | null> {
+  async getGitHubUser(access_token: string): Promise<User | null> {
     try {
-      const { data }: AxiosResponse = await axios.get(
+      const { data }: AxiosResponse<IGitHubUser> = await axios.get(
         'https://api.github.com/user',
         {
           headers: {
@@ -36,13 +37,13 @@ export class GitHubLib {
         },
       );
 
-      const user: IGitHubUser = {
+      const user = {
         avatar: data.avatar_url,
         email: data.email,
         gitHubId: data.id,
         name: data.name || data.login,
         bio: data.bio,
-      };
+      } as User;
 
       return user;
     } catch (error) {

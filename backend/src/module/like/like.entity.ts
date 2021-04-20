@@ -26,23 +26,21 @@ export class Like extends BaseEntity {
   @ManyToOne(() => User, {
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'fk_user_idx' })
+  @JoinColumn({ name: 'userIdx' })
   user: User;
 
-  @Field(() => Int, {
-    name: 'userIdx',
-  })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_user_idx: number;
+  userIdx: number;
 
   @Field(() => Post)
   @ManyToOne(() => Post, (post) => post.likes, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'fk_post_idx' })
+  @JoinColumn({ name: 'postIdx' })
   post: Post;
 
-  @Field(() => Int, { name: 'postIdx' })
+  @Field(() => Int)
   @Column({ nullable: true })
-  fk_post_idx: number;
+  postIdx: number;
 }

@@ -28,7 +28,7 @@ export class LikeResolver {
 
   @ResolveField(() => Boolean)
   async liked(@Parent() parent: Like, @GetUser() user: User): Promise<boolean> {
-    return await this.likeService.liked(parent.fk_post_idx, user);
+    return await this.likeService.liked(parent.postIdx, user);
   }
 
   @Mutation(() => Like)

@@ -52,7 +52,7 @@ export class CommentService {
     comment.content = content;
     comment.post = post;
     comment.answer = answer;
-    comment.comment_type = commentType;
+    comment.commentType = commentType;
     comment.user = user;
 
     await this.userService.handleScore(user.idx, CREATE_COMMENT);
@@ -67,13 +67,13 @@ export class CommentService {
       throw new NotFoundException('Comment not found.');
     }
 
-    if (comment.fk_user_idx !== user.idx) {
+    if (comment.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 
     comment.content = content;
     comment.user = user;
-    comment.updated_at = new Date();
+    comment.updatedAt = new Date();
 
     return await comment.save();
   }
@@ -85,7 +85,7 @@ export class CommentService {
       throw new NotFoundException('Comment not found.');
     }
 
-    if (comment.fk_user_idx !== user.idx) {
+    if (comment.userIdx !== user.idx) {
       throw new ForbiddenException('No permission.');
     }
 

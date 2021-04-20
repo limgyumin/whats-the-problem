@@ -11,6 +11,7 @@ type User {
   name: String!
   bio: String
   score: Int!
+  isNew: Boolean!
   isAdmin: Boolean!
   createdAt: DateTime!
   posts(option: UserPostOption!): [Post!]!
@@ -94,22 +95,14 @@ type Post {
   content: String!
   thumbnail: String
   isTemp: Boolean!
-  likeCount: Int!
-  commentCount: Int!
   user: User!
   userIdx: Int!
   tags: [Tag!]!
   likes: [Like!]!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type GitHubUser {
-  avatar: String!
-  email: String
-  gitHubId: String!
-  name: String!
-  bio: String!
+  commentCount: Int!
+  likeCount: Int!
 }
 
 type Comment {
@@ -122,9 +115,9 @@ type Comment {
   answer: Answer!
   answerIdx: Int!
   commentType: CommentType!
-  replyCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
+  replyCount: Int!
 }
 
 enum CommentType {
@@ -197,7 +190,7 @@ input QuestionOption {
 
 type Mutation {
   register(user: CreateUserInput!): String!
-  gitHubUser(code: String!): GitHubUser!
+  gitHubUser(code: String!): User!
   gitHubAuth(user: GitHubUserInput!): String!
   login(email: String!, password: String!): String!
   updateUser(user: UpdateUserInput!): User!

@@ -21,13 +21,13 @@ export class User extends BaseEntity {
   })
   avatar: string;
 
-  @Field(() => String, { nullable: true, name: 'gitHubId' })
+  @Field(() => String, { nullable: true })
   @Column({
     length: 10,
     nullable: true,
     unique: true,
   })
-  github_id: string;
+  gitHubId: string;
 
   @Field(() => String, { nullable: true })
   @Column({
@@ -58,20 +58,23 @@ export class User extends BaseEntity {
   })
   bio: string;
 
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => Int)
   @Column({
     default: 0,
   })
   score: number;
 
-  @Field(() => Boolean, { defaultValue: false, name: 'isAdmin' })
+  @Field(() => Boolean, { defaultValue: false })
+  isNew: boolean;
+
+  @Field(() => Boolean)
   @Column({
     default: false,
   })
-  is_admin: boolean;
+  isAdmin: boolean;
 
-  @Field(() => Date, { name: 'createdAt' })
+  @Field(() => Date)
   @Column('timestamptz')
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }
