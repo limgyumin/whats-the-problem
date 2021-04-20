@@ -1,0 +1,33 @@
+$MALGUN_GOTHIC_URL: "../assets/fonts/MalgunGothic";
+
+@mixin font_face($weight, $url) {
+  font-family: MalgunGothic;
+  font-display: block;
+  font-weight: $weight;
+  src: url($url + ".eot");
+  src: url($url + ".eot?#iefix") format("embedded-opentype"),
+    url($url + ".woff2") format("woff2"), url($url + ".woff") format("woff"),
+    url($url + ".otf") format("truetype");
+}
+
+$MALGUN_GOTHIC_SEMILIGHT_WEIGHT: lighter;
+$MALGUN_GOTHIC_REGULAR_WEIGHT: normal;
+$MALGUN_GOTHIC_BOLD_WEIGHT: bold;
+
+@font-face {
+  @include font_face(
+    $MALGUN_GOTHIC_SEMILIGHT_WEIGHT,
+    $MALGUN_GOTHIC_URL + "-Semilight"
+  );
+}
+
+@font-face {
+  @include font_face(
+    $MALGUN_GOTHIC_REGULAR_WEIGHT,
+    $MALGUN_GOTHIC_URL + "-Regular"
+  );
+}
+
+@font-face {
+  @include font_face($MALGUN_GOTHIC_BOLD_WEIGHT, $MALGUN_GOTHIC_URL + "-Bold");
+}

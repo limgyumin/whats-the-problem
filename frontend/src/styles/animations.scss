@@ -1,0 +1,28 @@
+@mixin fade-in-up($before, $after) {
+  animation: fade-in-up-animation ease 1s;
+  @keyframes fade-in-up-animation {
+    from {
+      opacity: 0;
+      transform: translateY($before);
+    }
+    to {
+      opacity: 1;
+      transform: translateY($after);
+    }
+  }
+}
+
+@mixin floating-side($before, $after) {
+  animation: floating-side-animation ease 0.5s infinite;
+  @keyframes floating-side-animation {
+    0% {
+      transform: translateX($before);
+    }
+    50% {
+      transform: translateX($after);
+    }
+    100% {
+      transform: translateX($before);
+    }
+  }
+}
