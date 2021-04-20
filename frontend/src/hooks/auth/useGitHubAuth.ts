@@ -1,27 +1,26 @@
 import { gitHubUserState } from "atom/auth.atom";
 import { GITHUB_AUTH, GITHUB_USER } from "graphql/auth/auth.mutation";
 import { useCallback, useEffect, useState } from "react";
-import { ExecutionResult, useMutation } from "react-apollo";
 import { useHistory } from "react-router";
 import { useRecoilState } from "recoil";
 import cookie from "js-cookie";
 import {
-  IGitHubAuthResponse,
+  IGitHubAuthResult,
   IGitHubUser,
-  IGitHubUserResponse,
+  IGitHubUserResult,
 } from "types/user.type";
-import { isEmpty } from "lib/isEmpty";
 import { isInvalidString } from "lib/isInvalidString";
 import useQueryString from "hooks/util/useQueryString";
-import { ApolloError } from "apollo-client";
 import { nameRegExp } from "constants/regExp/nameRegExp";
+import { ApolloError, useMutation } from "@apollo/client";
+import { createToken } from "lib/token";
 
 const useGitHubAuth = () => {
   const code = useQueryString("code");
   const history = useHistory();
 
-  const [gitHubUser] = useMutation(GITHUB_USER);
-  const [gitHubAuth] = useMutation(GITHUB_AUTH);
+  const [gitHubUser] = useMutation<IGitHubUserResult>(GITHUB_USER);
+  const [gitHubAuth] = useMutation<IGitHubAuthResult>(GITHUB_AUTH);
 
   const [user, setUser] = useRecoilState<IGitHubUser>(gitHubUserState);
   const [warning, setWarning] = useState<string>("");
@@ -30,11 +29,7 @@ const useGitHubAuth = () => {
   const changeNameHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-
-      setUser({
-        ...user,
-        name: value,
-      });
+      setUser({ ...user, name: value });
     },
     [user, setUser]
   );
@@ -42,11 +37,7 @@ const useGitHubAuth = () => {
   const changeBioHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-
-      setUser({
-        ...user,
-        bio: value,
-      });
+      setUser({ ...user, bio: value });
     },
     [user, setUser]
   );
@@ -56,9 +47,19 @@ const useGitHubAuth = () => {
     await gitHubUser({
       variables: { code },
     })
-      .then((res: ExecutionResult<IGitHubUserResponse>) => {
+      .then((res) => {
         if (res.data) {
-          setUser(res.data.gitHubUser);
+          const gitHubUser = res.data.gitHubUser;
+
+          if (!gitHubUser.isNew) {
+            cookie.set("token", createToken(gitHubUser));
+            setLoading(false);
+            history.push("/");
+          }
+
+          delete gitHubUser.isNew;
+
+          setUser(gitHubUser);
           setLoading(false);
         }
       })
@@ -67,20 +68,29 @@ const useGitHubAuth = () => {
       });
   }, [code, history, gitHubUser, setUser, setLoading]);
 
-  const submitUserHandler = useCallback(async () => {
-    const { name } = user;
-
-    if (isEmpty(name) || isInvalidString(name, nameRegExp)) {
+  const validate = (name: string) => {
+    if (isInvalidString(name, nameRegExp)) {
       setWarning(
         "이름은 2 ~ 16자 이내의 한글, 영어, 또는 숫자로 이루어져야합니다."
       );
-      return;
+      return false;
     }
+
+    setWarning("");
+    return true;
+  };
+
+  const submitUserHandler = useCallback(async () => {
+    const { name } = user;
+
+    if (!validate(name)) return;
+
+    console.log(user);
 
     await gitHubAuth({
       variables: { user },
     })
-      .then((res: ExecutionResult<IGitHubAuthResponse>) => {
+      .then((res) => {
         if (res.data) {
           cookie.set("token", res.data.gitHubAuth);
           history.push("/");
@@ -89,7 +99,7 @@ const useGitHubAuth = () => {
       .catch((err: ApolloError) => {
         history.push("/");
       });
-  }, [user, history, gitHubAuth, setWarning]);
+  }, [user, history, gitHubAuth]);
 
   useEffect(() => {
     gitHubUserHandler();
