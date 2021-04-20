@@ -3,9 +3,9 @@ import { loginState } from "atom/auth.atom";
 import { getToken } from "lib/token";
 import { MY_PROFILE } from "graphql/user/user.query";
 import { useCallback, useEffect } from "react";
-import { IMyProfileResult } from "types/user.type";
 import { useHistory } from "react-router";
 import { useLazyQuery } from "@apollo/client";
+import { IMyProfileResult } from "types/user/user.result.type";
 
 const useFetchProfile = () => {
   const history = useHistory();
@@ -13,7 +13,7 @@ const useFetchProfile = () => {
 
   const [login, setLogin] = useRecoilState(loginState);
 
-  const fetchMyProfileHandler = useCallback(() => {
+  const fetchMyProfileHandler = useCallback((): void => {
     const token = getToken();
     const { error } = result;
 

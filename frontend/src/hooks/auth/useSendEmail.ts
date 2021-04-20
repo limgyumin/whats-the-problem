@@ -1,6 +1,6 @@
 import { CREATE_MAILER } from "graphql/mailer/mailer.mutation";
 import { useCallback, useEffect, useState } from "react";
-import { ICreateMailerResult } from "types/mailer.type";
+import { ICreateMailerResult } from "types/mailer/mailer.type";
 import { useHistory } from "react-router";
 import { isInvalidString } from "lib/isInvalidString";
 import { emailRegExp } from "constants/regExp/emailRegExp";

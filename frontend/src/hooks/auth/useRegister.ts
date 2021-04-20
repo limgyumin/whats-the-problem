@@ -7,11 +7,11 @@ import { useRecoilState } from "recoil";
 import { isInvalidString } from "lib/isInvalidString";
 import { passwordRegExp } from "constants/regExp/passwordRegExp";
 import { nameRegExp } from "constants/regExp/nameRegExp";
-import { IRegisterResult } from "types/user.type";
+import { IRegisterResult } from "types/user/user.result.type";
 import cookie from "js-cookie";
 import { ApolloError, useMutation } from "@apollo/client";
 
-const useLocalAuth = () => {
+const useRegister = () => {
   const history = useHistory();
   const [register] = useMutation<IRegisterResult>(REGISTER);
 
@@ -20,7 +20,7 @@ const useLocalAuth = () => {
   const [nameWarning, setNameWarning] = useState<string>("");
 
   const changePasswordHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target;
       setUser({ ...user, password: value });
     },
@@ -28,7 +28,7 @@ const useLocalAuth = () => {
   );
 
   const changeNameHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target;
       setUser({ ...user, name: value });
     },
@@ -36,14 +36,14 @@ const useLocalAuth = () => {
   );
 
   const changeBioHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target;
       setUser({ ...user, bio: value });
     },
     [user, setUser]
   );
 
-  const validate = (password: string, name: string) => {
+  const validate = (password: string, name: string): boolean => {
     const [invalidPassword, invalidName] = [
       isInvalidString(password, passwordRegExp),
       isInvalidString(name, nameRegExp),
@@ -65,10 +65,10 @@ const useLocalAuth = () => {
       setNameWarning("");
     }
 
-    return invalidPassword || invalidName ? false : true;
+    return !(invalidPassword || invalidName);
   };
 
-  const submitUserHandler = useCallback(async () => {
+  const submitUserHandler = useCallback(async (): Promise<void> => {
     const { password, name } = user;
 
     if (!validate(password, name)) return;
@@ -106,4 +106,4 @@ const useLocalAuth = () => {
   };
 };
 
-export default useLocalAuth;
+export default useRegister;

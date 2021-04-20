@@ -7,7 +7,7 @@ import { isInvalidString } from "lib/isInvalidString";
 import { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
-import { IVerifyMailerResult } from "types/mailer.type";
+import { IVerifyMailerResult } from "types/mailer/mailer.type";
 
 const useVerifyEmail = () => {
   const history = useHistory();

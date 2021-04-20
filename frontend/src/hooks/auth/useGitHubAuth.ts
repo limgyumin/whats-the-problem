@@ -4,19 +4,19 @@ import { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useRecoilState } from "recoil";
 import cookie from "js-cookie";
-import {
-  IGitHubAuthResult,
-  IGitHubUser,
-  IGitHubUserResult,
-} from "types/user.type";
+import { IGitHubUser } from "types/user/user.type";
 import { isInvalidString } from "lib/isInvalidString";
 import useQueryString from "hooks/util/useQueryString";
 import { nameRegExp } from "constants/regExp/nameRegExp";
 import { ApolloError, useMutation } from "@apollo/client";
 import { createToken } from "lib/token";
+import {
+  IGitHubAuthResult,
+  IGitHubUserResult,
+} from "types/user/user.result.type";
 
 const useGitHubAuth = () => {
-  const code = useQueryString("code");
+  const code: string = useQueryString("code");
   const history = useHistory();
 
   const [gitHubUser] = useMutation<IGitHubUserResult>(GITHUB_USER);
@@ -27,7 +27,7 @@ const useGitHubAuth = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const changeNameHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target;
       setUser({ ...user, name: value });
     },
@@ -35,14 +35,14 @@ const useGitHubAuth = () => {
   );
 
   const changeBioHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target;
       setUser({ ...user, bio: value });
     },
     [user, setUser]
   );
 
-  const gitHubUserHandler = useCallback(async () => {
+  const gitHubUserHandler = useCallback(async (): Promise<void> => {
     setLoading(true);
     await gitHubUser({
       variables: { code },
@@ -68,7 +68,7 @@ const useGitHubAuth = () => {
       });
   }, [code, history, gitHubUser, setUser, setLoading]);
 
-  const validate = (name: string) => {
+  const validate = (name: string): boolean => {
     if (isInvalidString(name, nameRegExp)) {
       setWarning(
         "이름은 2 ~ 16자 이내의 한글, 영어, 또는 숫자로 이루어져야합니다."
@@ -80,7 +80,7 @@ const useGitHubAuth = () => {
     return true;
   };
 
-  const submitUserHandler = useCallback(async () => {
+  const submitUserHandler = useCallback(async (): Promise<void> => {
     const { name } = user;
 
     if (!validate(name)) return;
@@ -103,6 +103,11 @@ const useGitHubAuth = () => {
 
   useEffect(() => {
     gitHubUserHandler();
+
+    return () => {
+      setWarning("");
+      setLoading(false);
+    };
   }, [gitHubUserHandler]);
 
   return {
