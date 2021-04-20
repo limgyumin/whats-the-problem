@@ -20,6 +20,7 @@ export const GITHUB_USER = gql`
       gitHubId
       name
       bio
+      isNew
     }
   }
 `;
