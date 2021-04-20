@@ -19,7 +19,6 @@ import {
   GitHubUserInput,
   UpdateUserInput,
 } from './dto/user.input';
-import { GitHubUser } from './dto/user.object';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 
@@ -38,7 +37,7 @@ export class UserService {
       data.email,
     );
 
-    if (!mailer || !mailer.is_verified) {
+    if (!mailer || !mailer.isVerified) {
       throw new UnauthorizedException('Unverified email.');
     }
 
@@ -143,16 +142,24 @@ export class UserService {
     return questions;
   }
 
-  async gitHubUser(code: string): Promise<GitHubUser> {
+  async gitHubUser(code: string): Promise<User> {
     const accessToken: string = await this.gitHubLib.getGitHubAccessToken(code);
 
-    const gitHubUser: IGitHubUser = await this.gitHubLib.getGitHubUser(
-      accessToken,
-    );
+    const gitHubUser: User = await this.gitHubLib.getGitHubUser(accessToken);
 
     if (gitHubUser === null) {
       throw new NotFoundException('User not found.');
     }
+
+    const existUser: User = await this.userRepository.findOneByGitHubId(
+      gitHubUser.gitHubId,
+    );
+
+    if (existUser) {
+      return existUser;
+    }
+
+    gitHubUser.isNew = true;
 
     return gitHubUser;
   }
@@ -166,18 +173,14 @@ export class UserService {
       return existUser;
     }
 
-    const user: User = this.userRepository.create(data);
-
-    user.github_id = data.gitHubId;
-
-    return user.save();
+    return await this.userRepository.create(data).save();
   }
 
   async findUserByEmailOrGitHubId(decodedUser: User): Promise<User> {
     let user: User;
 
-    if (decodedUser.github_id) {
-      user = await this.userRepository.findOneByGitHubId(decodedUser.github_id);
+    if (decodedUser.gitHubId) {
+      user = await this.userRepository.findOneByGitHubId(decodedUser.gitHubId);
     } else {
       user = await this.userRepository.findOneByEmail(decodedUser.email);
     }
