@@ -1,0 +1,98 @@
+@import "../../../styles/animations.scss";
+
+.verify-email {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  @include fade-in-up(7rem, 0rem);
+
+  &-text {
+    &-title {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: var(--main-point);
+      margin-bottom: 0.6rem;
+      padding-right: 1rem;
+    }
+
+    &-subtitle {
+      font-size: 1.125rem;
+      font-weight: normal;
+      color: var(--main-point-2);
+    }
+  }
+
+  &-input {
+    width: 100%;
+    margin: 5rem 0 2rem 0;
+
+    &-text {
+      color: var(--main-point-3);
+      font-weight: bold;
+      font-size: 1.125rem;
+      margin-bottom: 1rem;
+    }
+
+    & > input {
+      width: 100%;
+      color: var(--main-point-1);
+      font-weight: normal;
+      font-size: 1.425rem;
+      padding: 0.8rem 1.2rem;
+      outline: none;
+      border: 1px solid var(--main-point-border);
+      border-radius: 0.6rem;
+      background-color: var(--main-point-light);
+
+      &:focus {
+        &::placeholder {
+          color: transparent;
+        }
+      }
+
+      &::placeholder {
+        color: var(--main-point-4);
+        font-weight: normal;
+        font-size: 1.425rem;
+      }
+    }
+
+    &-warning {
+      margin-top: 0.6rem;
+      font-size: 0.925rem;
+      color: var(--main-warning);
+    }
+  }
+
+  &-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4rem;
+
+    &-submit {
+      cursor: pointer;
+      outline: none;
+      border: none;
+      background-color: var(--main-point-1);
+      padding: 0.6rem;
+      border-radius: 0.6rem;
+
+      &:hover {
+        background-color: var(--main-point-2);
+      }
+
+      &-icon {
+        font-size: 2.4rem;
+        color: var(--main-point-0);
+
+        &:hover {
+          @include floating-side(-0.1rem, 0.1rem);
+        }
+      }
+    }
+  }
+}
