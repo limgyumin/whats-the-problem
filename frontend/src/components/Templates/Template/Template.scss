@@ -1,13 +1,13 @@
 .template {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
 
   &-wrapper {
     width: 100%;
-    max-width: 1500px;
-    padding: 0 1rem;
+    max-width: 1400px;
+    padding: 0 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
