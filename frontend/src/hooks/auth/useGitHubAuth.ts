@@ -14,10 +14,13 @@ import {
   IGitHubAuthResult,
   IGitHubUserResult,
 } from "types/user/user.result.type";
+import { setCookie } from "lib/cookie";
+import { useToasts } from "react-toast-notifications";
 
 const useGitHubAuth = () => {
   const code: string = useQueryString("code");
   const history = useHistory();
+  const { addToast } = useToasts();
 
   const [gitHubUser] = useMutation<IGitHubUserResult>(GITHUB_USER);
   const [gitHubAuth] = useMutation<IGitHubAuthResult>(GITHUB_AUTH);
@@ -54,6 +57,10 @@ const useGitHubAuth = () => {
           if (!gitHubUser.isNew) {
             cookie.set("token", createToken(gitHubUser));
             setLoading(false);
+            addToast(
+              "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+              { appearance: "success" }
+            );
             history.push("/");
           }
 
@@ -66,7 +73,7 @@ const useGitHubAuth = () => {
       .catch((err: ApolloError) => {
         history.push("/");
       });
-  }, [code, history, gitHubUser, setUser, setLoading]);
+  }, [code, history, gitHubUser, setUser, setLoading, addToast]);
 
   const validate = (name: string): boolean => {
     if (isInvalidString(name, nameRegExp)) {
@@ -85,21 +92,23 @@ const useGitHubAuth = () => {
 
     if (!validate(name)) return;
 
-    console.log(user);
-
     await gitHubAuth({
       variables: { user },
     })
       .then((res) => {
         if (res.data) {
-          cookie.set("token", res.data.gitHubAuth);
+          setCookie("token", res.data.gitHubAuth);
+          addToast(
+            "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+            { appearance: "success" }
+          );
           history.push("/");
         }
       })
       .catch((err: ApolloError) => {
         history.push("/");
       });
-  }, [user, history, gitHubAuth]);
+  }, [user, history, gitHubAuth, addToast]);
 
   useEffect(() => {
     gitHubUserHandler();

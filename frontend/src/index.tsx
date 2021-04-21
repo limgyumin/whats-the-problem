@@ -6,13 +6,16 @@ import App from "components/App";
 import { client } from "./client/client";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import { ToastProvider } from "react-toast-notifications";
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
       <BrowserRouter>
         <ApolloProvider client={client}>
-          <App />
+          <ToastProvider autoDismiss={true} placement="top-center">
+            <App />
+          </ToastProvider>
         </ApolloProvider>
       </BrowserRouter>
     </RecoilRoot>

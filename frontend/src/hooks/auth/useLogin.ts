@@ -6,17 +6,18 @@ import { ILoginResult } from "types/user/user.result.type";
 import { isInvalidString } from "lib/isInvalidString";
 import { emailRegExp } from "constants/regExp/emailRegExp";
 import { passwordRegExp } from "constants/regExp/passwordRegExp";
-import cookie from "js-cookie";
 import { useHistory } from "react-router";
+import { setCookie } from "lib/cookie";
+import { useToasts } from "react-toast-notifications";
 
 const useLogin = () => {
+  const { addToast } = useToasts();
   const history = useHistory();
   const [login] = useMutation<ILoginResult>(LOGIN);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [emailWarning, setEmailWarning] = useState<string>("");
-  const [passwordWarning, setPasswordWarning] = useState<string>("");
+  const [warning, setWarning] = useState<string>("");
 
   const changeEmailHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target;
@@ -36,18 +37,10 @@ const useLogin = () => {
       isInvalidString(password, passwordRegExp),
     ];
 
-    if (invalidEmail) {
-      setEmailWarning("올바른 이메일 형식이 아닙니다.");
+    if (invalidEmail || invalidPassword) {
+      setWarning("이메일 또는 비밀번호가 일치하지 않습니다.");
     } else {
-      setEmailWarning("");
-    }
-
-    if (invalidPassword) {
-      setPasswordWarning(
-        "비밀번호는 6 ~ 20자 이내의 영문 대소문자와 최소 1개 이상의 숫자 또는 특수문자를 포함해야 합니다."
-      );
-    } else {
-      setPasswordWarning("");
+      setWarning("");
     }
 
     return !(invalidEmail || invalidPassword);
@@ -59,29 +52,31 @@ const useLogin = () => {
     await login({ variables: { email, password } })
       .then((res) => {
         if (res.data) {
-          cookie.set("token", res.data.login);
+          setCookie("token", res.data.login);
+          addToast(
+            "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+            { appearance: "success" }
+          );
           history.push("/");
         }
       })
       .catch((err: ApolloError) => {
         history.push("/");
       });
-  }, [email, password, history, validate, login]);
+  }, [email, password, history, validate, addToast, login]);
 
   useEffect(() => {
     return () => {
       setEmail("");
       setPassword("");
-      setEmailWarning("");
-      setPasswordWarning("");
+      setWarning("");
     };
   }, []);
 
   return {
     email,
     password,
-    emailWarning,
-    passwordWarning,
+    warning,
     changeEmailHandler,
     changePasswordHandler,
     submitUserHandler,

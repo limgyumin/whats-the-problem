@@ -7,12 +7,13 @@ import { emailRegExp } from "constants/regExp/emailRegExp";
 import { useRecoilState } from "recoil";
 import { createUserState } from "atom/auth.atom";
 import { ApolloError, useMutation } from "@apollo/client";
+import { ICreateUser } from "types/user/user.type";
 
 const useEmailAuth = () => {
   const history = useHistory();
   const [createMailer] = useMutation<ICreateMailerResult>(CREATE_MAILER);
 
-  const [user, setUser] = useRecoilState(createUserState);
+  const [user, setUser] = useRecoilState<ICreateUser>(createUserState);
   const [loading, setLoading] = useState<boolean>(false);
   const [warning, setWarning] = useState<string>("");
 

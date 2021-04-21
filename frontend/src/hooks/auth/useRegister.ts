@@ -8,14 +8,17 @@ import { isInvalidString } from "lib/isInvalidString";
 import { passwordRegExp } from "constants/regExp/passwordRegExp";
 import { nameRegExp } from "constants/regExp/nameRegExp";
 import { IRegisterResult } from "types/user/user.result.type";
-import cookie from "js-cookie";
 import { ApolloError, useMutation } from "@apollo/client";
+import { setCookie } from "lib/cookie";
+import { useToasts } from "react-toast-notifications";
+import { ICreateUser } from "types/user/user.type";
 
 const useRegister = () => {
+  const { addToast } = useToasts();
   const history = useHistory();
   const [register] = useMutation<IRegisterResult>(REGISTER);
 
-  const [user, setUser] = useRecoilState(createUserState);
+  const [user, setUser] = useRecoilState<ICreateUser>(createUserState);
   const [passwordWarning, setPasswordWarning] = useState<string>("");
   const [nameWarning, setNameWarning] = useState<string>("");
 
@@ -76,14 +79,18 @@ const useRegister = () => {
     await register({ variables: { user } })
       .then((res) => {
         if (res.data) {
-          cookie.set("token", res.data.register);
+          setCookie("token", res.data.register);
+          addToast(
+            "성공적으로 회원가입 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+            { appearance: "success" }
+          );
           history.push("/");
         }
       })
       .catch((err: ApolloError) => {
         history.push("/");
       });
-  }, [history, user, register]);
+  }, [history, user, register, addToast]);
 
   useEffect(() => {
     if (!user.email) {

@@ -8,12 +8,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import { IVerifyMailerResult } from "types/mailer/mailer.type";
+import { ICreateUser } from "types/user/user.type";
 
 const useVerifyEmail = () => {
   const history = useHistory();
   const [verifyMailer] = useMutation<IVerifyMailerResult>(VERIFY_MAILER);
 
-  const user = useRecoilValue(createUserState);
+  const user = useRecoilValue<ICreateUser>(createUserState);
   const [verifyCode, setVerifyCode] = useState<string>("");
   const [warning, setWarning] = useState<string>("");
 
