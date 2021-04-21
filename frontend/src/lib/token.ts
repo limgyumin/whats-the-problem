@@ -1,10 +1,10 @@
-import cookie from "js-cookie";
 import jwt, { SignOptions } from "jsonwebtoken";
 import { IGitHubUser } from "types/user/user.type";
 import { JWT_SECRET } from "config/config.json";
+import { getCookie } from "./cookie";
 
 export const createToken = ({ gitHubId }: IGitHubUser): string => {
-  const payload = {
+  const payload: string | object | Buffer = {
     gitHubId,
   };
 
@@ -16,7 +16,7 @@ export const createToken = ({ gitHubId }: IGitHubUser): string => {
 };
 
 export const getToken = (): string | null => {
-  const token = cookie.get("token");
+  const token = getCookie("token");
 
   return token || null;
 };

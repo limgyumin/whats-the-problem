@@ -1,0 +1,68 @@
+@import "../../../../styles/ellipsis.scss";
+
+.header-menu {
+  top: 3.6rem;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--main-point-border-1);
+  background: var(--main-bg);
+  width: 15rem;
+  height: auto;
+  position: absolute;
+  border-radius: 0.2rem;
+
+  &-profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--main-point-light-1);
+
+    &:hover {
+      background-color: var(--main-point-light);
+    }
+
+    &-avatar {
+      width: 3.2rem;
+      height: 3.2rem;
+      border: 1px solid var(--main-point-light-1);
+      border-radius: 50%;
+      margin-right: 0.6rem;
+    }
+
+    &-wrapper {
+      width: 100%;
+
+      &-name {
+        font-weight: bold;
+        font-size: 1.125rem;
+        color: var(--main-point-2);
+        margin-bottom: 0.2rem;
+        @include ellipsis(1);
+      }
+
+      &-bio {
+        font-weight: normal;
+        font-size: 0.725rem;
+        color: var(--main-point-2);
+        @include ellipsis(1);
+      }
+    }
+  }
+
+  &-logout {
+    padding: 0.8rem 0.8rem 0.8rem 1.2rem;
+
+    &:hover {
+      background-color: var(--main-point-light);
+    }
+
+    &-text {
+      font-size: 0.925rem;
+      font-weight: normal;
+      color: var(--main-point-2);
+    }
+  }
+}

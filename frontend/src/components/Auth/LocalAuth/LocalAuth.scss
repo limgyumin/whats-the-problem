@@ -43,6 +43,53 @@
   &-inputs {
     width: 100%;
     margin-top: 2rem;
+
+    &-wrapper {
+      margin: 2rem 0;
+
+      &-text {
+        color: var(--main-point-3);
+        font-weight: bold;
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+      }
+
+      &-input {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        cursor: text;
+        width: 100%;
+        outline: none;
+        border: 1px solid var(--main-point-border);
+        border-radius: 0.6rem;
+        background-color: var(--main-point-light);
+
+        &-element {
+          width: 100%;
+          color: var(--main-point-3);
+          font-weight: normal;
+          font-size: 1.425rem;
+          border: none;
+          outline: none;
+          padding: 0.8rem 1.2rem;
+          background-color: transparent;
+
+          &::placeholder {
+            color: var(--main-point-4);
+            font-weight: normal;
+            font-size: 1.425rem;
+          }
+        }
+
+        &-icon {
+          font-size: 2.2rem;
+          color: var(--main-point-3);
+          margin: auto 0.8rem;
+        }
+      }
+    }
   }
 
   &-bottom {

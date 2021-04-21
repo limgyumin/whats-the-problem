@@ -16,8 +16,7 @@ const SignIn = () => {
   const {
     email,
     password,
-    emailWarning,
-    passwordWarning,
+    warning,
     changeEmailHandler,
     changePasswordHandler,
     submitUserHandler,
@@ -55,7 +54,6 @@ const SignIn = () => {
               value={email}
               placeholder="이메일을 입력해주세요."
               onChangeHandler={changeEmailHandler}
-              warning={emailWarning}
             />
             <Input
               name="비밀번호"
@@ -63,7 +61,7 @@ const SignIn = () => {
               type="password"
               placeholder="비밀번호을 입력해주세요."
               onChangeHandler={changePasswordHandler}
-              warning={passwordWarning}
+              warning={warning}
             />
           </div>
           <div className={cx("signin-content-wrapper-bottom")}>
