@@ -11,10 +11,12 @@ import {
 import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
+import { Tag } from '../tag/tag.entity';
 import { User } from '../user/user.entity';
 import {
   DeleteQuestionArgs,
   GetQuestionArgs,
+  GetQuestionsArgs,
   UpdateQuestionArgs,
 } from './dto/question.args';
 import { CreateQuestionInput, QuestionOption } from './dto/question.input';
@@ -32,9 +34,19 @@ export class QuestionResolver {
 
   @Query(() => [Question])
   async questions(
-    @Args('option') { page, limit }: QuestionOption,
+    @Args() { questionType, option: { page, limit } }: GetQuestionsArgs,
   ): Promise<Question[]> {
-    return await this.questionService.questions(page, limit);
+    return await this.questionService.questions(page, limit, questionType);
+  }
+
+  @ResolveField(() => [Tag])
+  async tags(@Parent() parent: Question): Promise<Tag[]> {
+    return await this.questionService.tags(parent.idx);
+  }
+
+  @Query(() => Int)
+  async questionCount(): Promise<number> {
+    return await this.questionService.questionCount();
   }
 
   @ResolveField(() => Int)

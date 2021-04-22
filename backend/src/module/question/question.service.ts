@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { QuestionType } from 'src/enum/question.enum';
 import { AnswerRepository } from '../answer/answer.repository';
 import { Tag } from '../tag/tag.entity';
 import { TagRepository } from '../tag/tag.repository';
@@ -92,7 +93,7 @@ export class QuestionService {
   }
 
   async question(idx: number): Promise<Question> {
-    const question: Question = await this.questionRepository.findOneWithTagsAndUserByIdx(
+    const question: Question = await this.questionRepository.findOneWithUserByIdx(
       idx,
       false,
     );
@@ -104,18 +105,43 @@ export class QuestionService {
     return question;
   }
 
-  async questions(page: number, limit: number): Promise<Question[]> {
+  async questions(
+    page: number,
+    limit: number,
+    questionType: QuestionType,
+  ): Promise<Question[]> {
     if (page < 1 || limit < 1) {
       throw new BadRequestException('Invalid page or limit.');
     }
 
-    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUserOrderByCreatedAtASC(
-      page,
-      limit,
-      false,
-    );
+    let questions: Question[] = [];
+
+    switch (questionType) {
+      case QuestionType.CreatedAt:
+        questions = await this.questionRepository.findAllWithUserOrderByCreatedAtASC(
+          page,
+          limit,
+          false,
+        );
+        break;
+      case QuestionType.Answer:
+        questions = await this.questionRepository.findAllWithUserOrderByAnswerCountDESC(
+          page,
+          limit,
+          false,
+        );
+        break;
+    }
 
     return questions;
+  }
+
+  async tags(idx: number): Promise<Tag[]> {
+    return await this.tagRepository.findAllByQuestionIdxOrderByIdxASC(idx);
+  }
+
+  async questionCount(): Promise<number> {
+    return await this.questionRepository.findAllAndCountCreatedAtDESC(false);
   }
 
   async answerCount(idx: number): Promise<number> {
