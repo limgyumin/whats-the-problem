@@ -7,5 +7,5 @@ export class LikeObject {
   likeCount: number;
 
   @Field(() => [Like])
-  likes: Like[];
+  list: Like[];
 }

@@ -99,7 +99,7 @@ export class PostService {
   }
 
   async post(idx: number): Promise<Post> {
-    const post: Post = await this.postRepository.findOneWithTagsAndUserByIdx(
+    const post: Post = await this.postRepository.findOneWithUserByIdx(
       idx,
       false,
     );
@@ -124,14 +124,14 @@ export class PostService {
 
     switch (postType) {
       case PostType.CreatedAt:
-        posts = await this.postRepository.findAllWithTagsAndUserOrderByCreatedAtASC(
+        posts = await this.postRepository.findAllWithUserOrderByCreatedAtASC(
           page,
           limit,
           false,
         );
         break;
       case PostType.Like:
-        posts = await this.postRepository.findAllWithTagsAndUserOrderByLikeCountDESC(
+        posts = await this.postRepository.findAllWithUserOrderByLikeCountDESC(
           page,
           limit,
           false,
@@ -140,6 +140,10 @@ export class PostService {
     }
 
     return posts;
+  }
+
+  async tags(idx: number): Promise<Tag[]> {
+    return await this.tagRepository.findAllByPostIdxOrderByIdxASC(idx);
   }
 
   async likeCount(idx: number): Promise<number> {

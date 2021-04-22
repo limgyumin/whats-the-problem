@@ -32,7 +32,7 @@ export class TagResolver {
     @Args('option') { page, limit }: TagOption,
     @Parent() parent: Tag,
   ): Promise<Post[]> {
-    return await this.tagService.tagPosts(parent.idx, page, limit);
+    return await this.tagService.posts(parent.idx, page, limit);
   }
 
   @ResolveField(() => Int)

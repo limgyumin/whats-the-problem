@@ -50,8 +50,8 @@ export class LikeService {
     const likeCount: number = likes.length;
 
     const likeObject: LikeObject = {
-      likes,
       likeCount,
+      list: likes,
     };
 
     return likeObject;

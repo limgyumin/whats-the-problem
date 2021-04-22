@@ -10,9 +10,8 @@ export class PostRepository extends Repository<Post> {
       .getOne();
   }
 
-  findOneWithTagsAndUserByIdx(idx: number, isTemp: boolean): Promise<Post> {
+  findOneWithUserByIdx(idx: number, isTemp: boolean): Promise<Post> {
     return this.createQueryBuilder('post')
-      .leftJoinAndSelect('post.tags', 'tag')
       .leftJoinAndSelect('post.user', 'user')
       .where('post.idx = :idx', { idx })
       .andWhere('post.isTemp = :isTemp', { isTemp })
@@ -26,7 +25,6 @@ export class PostRepository extends Repository<Post> {
   ): Promise<Post[]> {
     return this.createQueryBuilder('post')
       .leftJoin('post.tags', 'tag')
-      .leftJoinAndSelect('post.tags', 'tagSelect')
       .leftJoinAndSelect('post.user', 'user')
       .where('tag.idx = :tagIdx', { tagIdx })
       .skip((page - 1) * limit)
@@ -37,18 +35,17 @@ export class PostRepository extends Repository<Post> {
 
   findAllAndCountWithTagsByTagIdx(tagIdx: number): Promise<number> {
     return this.createQueryBuilder('post')
-      .leftJoinAndSelect('post.tags', 'tag')
+      .leftJoin('post.tags', 'tag')
       .where('tag.idx = :tagIdx', { tagIdx })
       .getCount();
   }
 
-  findAllWithTagsAndUserOrderByCreatedAtASC(
+  findAllWithUserOrderByCreatedAtASC(
     page: number,
     limit: number,
     isTemp: boolean,
   ): Promise<Post[]> {
     return this.createQueryBuilder('post')
-      .leftJoinAndSelect('post.tags', 'tag')
       .leftJoinAndSelect('post.user', 'user')
       .where('post.isTemp = :isTemp', { isTemp })
       .skip((page - 1) * limit)
@@ -57,13 +54,12 @@ export class PostRepository extends Repository<Post> {
       .getMany();
   }
 
-  findAllWithTagsAndUserOrderByLikeCountDESC(
+  findAllWithUserOrderByLikeCountDESC(
     page: number,
     limit: number,
     isTemp: boolean,
   ): Promise<Post[]> {
     return this.createQueryBuilder('post')
-      .leftJoinAndSelect('post.tags', 'tag')
       .leftJoinAndSelect('post.user', 'user')
       .leftJoin('post.likes', 'like')
       .addSelect('COUNT(like.idx) as likeCount')
@@ -75,14 +71,13 @@ export class PostRepository extends Repository<Post> {
       .getMany();
   }
 
-  findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
+  findAllWithUserByUserIdxOrderByCreatedAtASC(
     page: number,
     limit: number,
     userIdx: number,
     isTemp: boolean,
   ): Promise<Post[]> {
     return this.createQueryBuilder('post')
-      .leftJoinAndSelect('post.tags', 'tag')
       .leftJoinAndSelect('post.user', 'user')
       .where('post.isTemp = :isTemp', { isTemp })
       .andWhere('post.userIdx = :userIdx', { userIdx })

@@ -12,6 +12,7 @@ import { Roles } from 'src/decorator/role.decorator';
 import { GetUser } from 'src/decorator/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { User } from 'src/module/user/user.entity';
+import { Tag } from '../tag/tag.entity';
 import {
   DeletePostArgs,
   GetPostArgs,
@@ -41,6 +42,11 @@ export class PostResolver {
   @ResolveField(() => Int)
   async commentCount(@Parent() parent: Post): Promise<number> {
     return await this.postService.commentCount(parent.idx);
+  }
+
+  @ResolveField(() => [Tag])
+  async tags(@Parent() parent: Post): Promise<Tag[]> {
+    return await this.postService.tags(parent.idx);
   }
 
   @ResolveField(() => Int)

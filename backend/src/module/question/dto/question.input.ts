@@ -2,6 +2,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   IsArray,
   IsBoolean,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -43,8 +44,10 @@ export class QuestionTagInput {
 @InputType()
 export class QuestionOption {
   @Field(() => Int)
+  @IsNumber()
   readonly page: number;
 
   @Field(() => Int)
+  @IsNumber()
   readonly limit: number;
 }

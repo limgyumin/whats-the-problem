@@ -60,7 +60,7 @@ export class TagService {
     return tag;
   }
 
-  async tagPosts(idx: number, page: number, limit: number): Promise<Post[]> {
+  async posts(idx: number, page: number, limit: number): Promise<Post[]> {
     const tag: Tag = await this.tagRepository.findOneByIdx(idx);
 
     if (!tag) {

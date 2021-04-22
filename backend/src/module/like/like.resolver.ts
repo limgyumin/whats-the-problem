@@ -22,7 +22,7 @@ export class LikeResolver {
   @Query(() => LikeObject)
   @Roles('Any')
   @UseGuards(AuthGuard)
-  async like(@Args('postIdx') postIdx: number) {
+  async likes(@Args('postIdx') postIdx: number) {
     return await this.likeService.like(postIdx);
   }
 

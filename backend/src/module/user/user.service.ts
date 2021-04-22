@@ -117,7 +117,7 @@ export class UserService {
   }
 
   async posts(userIdx: number, page: number, limit: number) {
-    const posts: Post[] = await this.postRepository.findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
+    const posts: Post[] = await this.postRepository.findAllWithUserByUserIdxOrderByCreatedAtASC(
       page,
       limit,
       userIdx,
@@ -132,7 +132,7 @@ export class UserService {
     page: number,
     limit: number,
   ): Promise<Question[]> {
-    const questions: Question[] = await this.questionRepository.findAllWithTagsAndUserByUserIdxOrderByCreatedAtASC(
+    const questions: Question[] = await this.questionRepository.findAllWithUserByUserIdxOrderByCreatedAtASC(
       page,
       limit,
       userIdx,

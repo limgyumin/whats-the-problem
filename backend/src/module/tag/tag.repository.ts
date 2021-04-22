@@ -19,7 +19,21 @@ export class TagRepository extends Repository<Tag> {
       .getOne();
   }
 
+  findAllByPostIdxOrderByIdxASC(postIdx: number): Promise<Tag[]> {
+    return this.createQueryBuilder('tag')
+      .leftJoinAndSelect('tag.posts', 'post')
+      .where('post.idx = :postIdx', { postIdx })
+      .getMany();
+  }
+
+  findAllByQuestionIdxOrderByIdxASC(questionIdx: number): Promise<Tag[]> {
+    return this.createQueryBuilder('tag')
+      .leftJoinAndSelect('tag.questions', 'question')
+      .where('question.idx = :questionIdx', { questionIdx })
+      .getMany();
+  }
+
   findAllOrderByIdxASC(): Promise<Tag[]> {
-    return this.createQueryBuilder('tag').orderBy('tag.idx', 'ASC').getMany();
+    return this.createQueryBuilder().orderBy('idx', 'ASC').getMany();
   }
 }
