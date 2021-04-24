@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ApolloError, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { LOGIN } from "graphql/auth/auth.mutation";
 import { useCallback, useState } from "react";
 import { ILoginResult } from "types/user/user.result.type";
@@ -49,20 +49,23 @@ const useLogin = () => {
   const submitUserHandler = useCallback(async (): Promise<void> => {
     if (!validate()) return;
 
-    await login({ variables: { email, password } })
-      .then((res) => {
-        if (res.data) {
-          setCookie("token", res.data.login);
-          addToast(
-            "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
-            { appearance: "success" }
-          );
-          history.push("/");
-        }
-      })
-      .catch((err: ApolloError) => {
+    try {
+      const { data } = await login({ variables: { email, password } });
+
+      if (data) {
+        setCookie("token", data.login);
+        addToast(
+          "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+          { appearance: "success" }
+        );
         history.push("/");
+      }
+    } catch (error) {
+      addToast("로그인을 처리하는 중에 오류가 발생했어요...", {
+        appearance: "error",
       });
+      history.push("/");
+    }
   }, [email, password, history, validate, addToast, login]);
 
   useEffect(() => {

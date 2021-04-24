@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import { ApolloError } from "apollo-client";
 import { createUserState } from "atom/auth.atom";
 import { verifyCodeRegExp } from "constants/regExp/verifyCodeRegExp";
 import { VERIFY_MAILER } from "graphql/mailer/mailer.mutation";
@@ -43,24 +42,24 @@ const useVerifyEmail = () => {
 
     if (!validate()) return;
 
-    await verifyMailer({ variables: { email, verifyCode } })
-      .then((res) => {
-        if (res.data) {
-          history.push("/signup/auth");
-        }
-      })
-      .catch((err: ApolloError) => {
-        switch (err.message.replace("GraphQL error: ", "")) {
-          case "Invalid email or verify code.":
-            setWarning("유효하지 않은 인증코드입니다.");
-            break;
-          case "Expired email.":
-            setWarning("이미 만료된 인증코드입니다.");
-            break;
-          default:
-            history.push("/");
-        }
-      });
+    try {
+      const { data } = await verifyMailer({ variables: { email, verifyCode } });
+
+      if (data) {
+        history.push("/signup/auth");
+      }
+    } catch (error) {
+      switch (error.message) {
+        case "Invalid email or verify code.":
+          setWarning("유효하지 않은 인증코드입니다.");
+          break;
+        case "Expired email.":
+          setWarning("이미 만료된 인증코드입니다.");
+          break;
+        default:
+          history.push("/");
+      }
+    }
   }, [user, verifyCode, history, verifyMailer, validate]);
 
   useEffect(() => {

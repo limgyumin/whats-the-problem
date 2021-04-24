@@ -8,7 +8,7 @@ import { IGitHubUser } from "types/user/user.type";
 import { isInvalidString } from "lib/isInvalidString";
 import useQueryString from "hooks/util/useQueryString";
 import { nameRegExp } from "constants/regExp/nameRegExp";
-import { ApolloError, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { createToken } from "lib/token";
 import {
   IGitHubAuthResult,
@@ -47,35 +47,39 @@ const useGitHubAuth = () => {
 
   const gitHubUserHandler = useCallback(async (): Promise<void> => {
     setLoading(true);
-    await gitHubUser({
-      variables: { code },
-    })
-      .then((res) => {
-        if (res.data) {
-          const gitHubUser = res.data.gitHubUser;
 
-          if (!gitHubUser.isNew) {
-            cookie.set("token", createToken(gitHubUser));
-            setLoading(false);
-            addToast(
-              "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
-              { appearance: "success" }
-            );
-            history.push("/");
-          }
+    const { data, errors } = await gitHubUser({ variables: { code } });
 
-          delete gitHubUser.isNew;
+    if (data) {
+      const gitHubUser: IGitHubUser = data.gitHubUser;
 
-          setUser(gitHubUser);
-          setLoading(false);
-        }
-      })
-      .catch((err: ApolloError) => {
+      if (!gitHubUser.isNew) {
+        cookie.set("token", createToken(gitHubUser));
+        setLoading(false);
+        addToast(
+          "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+          { appearance: "success" }
+        );
         history.push("/");
+      }
+
+      delete gitHubUser.isNew;
+
+      setUser(gitHubUser);
+      setLoading(false);
+    }
+
+    if (errors) {
+      addToast("GitHub 사용자 정보를 조회하는 중에 오류가 발생했어요...", {
+        appearance: "error",
       });
+      history.push("/");
+    }
   }, [code, history, gitHubUser, setUser, setLoading, addToast]);
 
-  const validate = (name: string): boolean => {
+  const validate = useCallback((): boolean => {
+    const { name } = user;
+
     if (isInvalidString(name, nameRegExp)) {
       setWarning(
         "이름은 2 ~ 16자 이내의 한글, 영어, 또는 숫자로 이루어져야합니다."
@@ -85,30 +89,29 @@ const useGitHubAuth = () => {
 
     setWarning("");
     return true;
-  };
+  }, [user]);
 
   const submitUserHandler = useCallback(async (): Promise<void> => {
-    const { name } = user;
+    if (!validate()) return;
 
-    if (!validate(name)) return;
+    try {
+      const { data } = await gitHubAuth({ variables: { user } });
 
-    await gitHubAuth({
-      variables: { user },
-    })
-      .then((res) => {
-        if (res.data) {
-          setCookie("token", res.data.gitHubAuth);
-          addToast(
-            "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
-            { appearance: "success" }
-          );
-          history.push("/");
-        }
-      })
-      .catch((err: ApolloError) => {
+      if (data) {
+        setCookie("token", data.gitHubAuth);
+        addToast(
+          "성공적으로 로그인 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+          { appearance: "success" }
+        );
         history.push("/");
+      }
+    } catch (error) {
+      addToast("GitHub 사용자 정보를 제출하는 중에 오류가 발생했어요...", {
+        appearance: "error",
       });
-  }, [user, history, gitHubAuth, addToast]);
+      history.push("/");
+    }
+  }, [user, history, validate, gitHubAuth, addToast]);
 
   useEffect(() => {
     gitHubUserHandler();

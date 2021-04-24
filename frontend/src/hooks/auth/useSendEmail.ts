@@ -6,10 +6,12 @@ import { isInvalidString } from "lib/isInvalidString";
 import { emailRegExp } from "constants/regExp/emailRegExp";
 import { useRecoilState } from "recoil";
 import { createUserState } from "atom/auth.atom";
-import { ApolloError, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { ICreateUser } from "types/user/user.type";
+import { useToasts } from "react-toast-notifications";
 
 const useEmailAuth = () => {
+  const { addToast } = useToasts();
   const history = useHistory();
   const [createMailer] = useMutation<ICreateMailerResult>(CREATE_MAILER);
 
@@ -25,7 +27,9 @@ const useEmailAuth = () => {
     [user, setUser]
   );
 
-  const validate = (email: string): boolean => {
+  const validate = useCallback((): boolean => {
+    const { email } = user;
+
     if (isInvalidString(email, emailRegExp)) {
       setWarning("올바른 이메일 형식이 아닙니다.");
       return false;
@@ -33,32 +37,33 @@ const useEmailAuth = () => {
 
     setWarning("");
     return true;
-  };
+  }, [user]);
 
   const submitEmailHandler = useCallback(async (): Promise<void> => {
     const { email } = user;
 
-    if (!validate(email)) return;
+    if (!validate()) return;
     setLoading(true);
 
-    await createMailer({
-      variables: { email },
-    })
-      .then((res) => {
-        if (res.data) {
-          setLoading(false);
-          history.push("/signup/verify");
-        }
-      })
-      .catch((err: ApolloError) => {
-        if (err.message.includes("Email already verified.")) {
-          setWarning("이미 존재하는 이메일입니다.");
-        } else {
-          history.push("/");
-        }
+    try {
+      const { data } = await createMailer({ variables: { email } });
+
+      if (data) {
         setLoading(false);
-      });
-  }, [user, history, createMailer, setLoading]);
+        history.push("/signup/verify");
+      }
+    } catch (error) {
+      if (error.message.includes("Email already verified.")) {
+        setWarning("이미 존재하는 이메일입니다.");
+      } else {
+        addToast("사용자 정보를 제출하는 중에 오류가 발생했어요...", {
+          appearance: "error",
+        });
+        history.push("/");
+      }
+      setLoading(false);
+    }
+  }, [user, history, validate, createMailer, setLoading, addToast]);
 
   useEffect(() => {
     return () => {

@@ -8,7 +8,7 @@ import { isInvalidString } from "lib/isInvalidString";
 import { passwordRegExp } from "constants/regExp/passwordRegExp";
 import { nameRegExp } from "constants/regExp/nameRegExp";
 import { IRegisterResult } from "types/user/user.result.type";
-import { ApolloError, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { setCookie } from "lib/cookie";
 import { useToasts } from "react-toast-notifications";
 import { ICreateUser } from "types/user/user.type";
@@ -46,7 +46,9 @@ const useRegister = () => {
     [user, setUser]
   );
 
-  const validate = (password: string, name: string): boolean => {
+  const validate = useCallback((): boolean => {
+    const { password, name } = user;
+
     const [invalidPassword, invalidName] = [
       isInvalidString(password, passwordRegExp),
       isInvalidString(name, nameRegExp),
@@ -69,28 +71,29 @@ const useRegister = () => {
     }
 
     return !(invalidPassword || invalidName);
-  };
+  }, [user]);
 
   const submitUserHandler = useCallback(async (): Promise<void> => {
-    const { password, name } = user;
+    if (!validate()) return;
 
-    if (!validate(password, name)) return;
+    try {
+      const { data } = await register({ variables: { user } });
 
-    await register({ variables: { user } })
-      .then((res) => {
-        if (res.data) {
-          setCookie("token", res.data.register);
-          addToast(
-            "성공적으로 회원가입 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
-            { appearance: "success" }
-          );
-          history.push("/");
-        }
-      })
-      .catch((err: ApolloError) => {
+      if (data) {
+        setCookie("token", data.register);
+        addToast(
+          "성공적으로 회원가입 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
+          { appearance: "success" }
+        );
         history.push("/");
+      }
+    } catch (error) {
+      addToast("사용자 정보를 제출하는 중에 오류가 발생했어요...", {
+        appearance: "error",
       });
-  }, [history, user, register, addToast]);
+      history.push("/");
+    }
+  }, [history, user, validate, register, addToast]);
 
   useEffect(() => {
     if (!user.email) {
