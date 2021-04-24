@@ -1,6 +1,7 @@
 .light {
   --main-bg: #f9f9f9;
   --main-bg-1: #f2f2f3;
+  --main-header: rgb(249, 249, 249, 0.6);
   --main-point-0: #fff;
   --main-point: #2b3039;
   --main-point-1: #3d434d;
@@ -10,6 +11,7 @@
   --main-point-light: #f5f6f7;
   --main-point-light-1: #e8ebee;
   --main-point-light-2: #c6cbd1;
+  --main-point-light-3: #dadee2;
   --main-point-border: #d0d5da;
   --main-point-border-1: #dde1e6;
   --main-warning: #fd4444;
@@ -17,5 +19,5 @@
 
 .App {
   background-color: var(--main-bg);
-  height: 100vh;
+  min-height: 100vh;
 }
