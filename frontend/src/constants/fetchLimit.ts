@@ -1,0 +1,1 @@
+export const FETCH_QUESTIONS_LIMIT = 12;

@@ -1,0 +1,84 @@
+@import "../../../../styles/ellipsis.scss";
+
+.main-question-item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 0.4rem;
+  border: 1px solid var(--main-point-border-1);
+  background-color: var(--main-bg);
+  padding: 1.4rem 1.4rem 1rem 1.4rem;
+  margin: 1rem 0;
+
+  &-wrapper {
+    max-width: 800px;
+
+    &-area {
+      cursor: pointer;
+      &-title {
+        font-size: 1.525rem;
+        font-weight: bold;
+        color: var(--main-point-1);
+        margin-bottom: 0.6rem;
+        @include ellipsis(1);
+      }
+
+      &-content {
+        font-size: 0.925rem;
+        font-weight: normal;
+        color: var(--main-point-2);
+        line-height: 1.5;
+        word-break: keep-all;
+        margin-bottom: 1.4rem;
+        @include ellipsis(2);
+      }
+    }
+
+    &-tags {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    &-answers {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 0.6rem;
+      background-color: var(--main-point-light-3);
+      min-width: 4.5rem;
+      min-height: 4.5rem;
+
+      &-count {
+        font-size: 1.125rem;
+        font-weight: bold;
+        color: var(--main-point-1);
+        margin-bottom: 0.2rem;
+      }
+
+      &-text {
+        font-size: 1rem;
+        font-weight: normal;
+        color: var(--main-point-1);
+      }
+    }
+
+    &-created {
+      font-size: 0.925rem;
+      margin-bottom: 0.6rem;
+      color: var(--main-point-3);
+
+      & > span {
+        font-weight: bold;
+      }
+    }
+  }
+}
