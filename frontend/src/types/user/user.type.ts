@@ -1,5 +1,5 @@
-import { IPost } from "./post.type";
-import { IQuestion } from "./question.type";
+import { IPost } from "../post/post.type";
+import { IQuestion } from "../question/question.type";
 
 export interface IUser {
   idx: number;
@@ -16,13 +16,13 @@ export interface IUser {
   questions: IQuestion[];
 }
 
-export interface IGitHubUserResponse {
-  gitHubUser: IGitHubUser;
+export interface IUserShortInfo {
+  avatar: string;
+  name: string;
+  bio: string;
 }
 
-export interface IGitHubAuthResponse {
-  gitHubAuth: string;
-}
+export interface IUserDetailInfo {}
 
 export interface IGitHubUser {
   avatar: string;
@@ -30,4 +30,13 @@ export interface IGitHubUser {
   bio: string;
   email: string;
   gitHubId: string;
+  isNew?: boolean;
+}
+
+export interface ICreateUser {
+  avatar: string;
+  email: string;
+  password: string;
+  name: string;
+  bio: string;
 }

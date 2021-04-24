@@ -1,5 +1,5 @@
-import { IQuestion } from "./question.type";
-import { IUser } from "./user.type";
+import { IQuestion } from "../question/question.type";
+import { IUser } from "../user/user.type";
 
 export interface IAnswer {
   idx: number;

@@ -1,6 +1,6 @@
-import { ILike } from "./like.type";
-import { ITag } from "./tag.type";
-import { IUser } from "./user.type";
+import { ILike } from "../like/like.type";
+import { ITag } from "../tag/tag.type";
+import { IUser } from "../user/user.type";
 
 export interface IPost {
   idx: number;

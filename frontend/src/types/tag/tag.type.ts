@@ -1,5 +1,5 @@
-import { IPost } from "./post.type";
-import { IQuestion } from "./question.type";
+import { IPost } from "../post/post.type";
+import { IQuestion } from "../question/question.type";
 
 export interface ITag {
   idx: number;

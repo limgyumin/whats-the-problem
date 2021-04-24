@@ -1,6 +1,6 @@
-import { IAnswer } from "./answer.type";
-import { ITag } from "./tag.type";
-import { IUser } from "./user.type";
+import { IAnswer } from "../answer/answer.type";
+import { ITag } from "../tag/tag.type";
+import { IUser } from "../user/user.type";
 
 export interface IQuestion {
   idx: number;
