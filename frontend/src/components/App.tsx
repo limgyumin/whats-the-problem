@@ -1,5 +1,5 @@
 import React from "react";
-import "styles/colors.scss";
+import "styles/theme.scss";
 import { Route, Switch } from "react-router";
 import * as Pages from "pages";
 

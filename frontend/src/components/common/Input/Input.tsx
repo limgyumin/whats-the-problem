@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
-import React from "react";
+import React, { memo } from "react";
 
 const styles = require("./Input.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
@@ -15,7 +15,7 @@ type InputProps = {
   warning?: string | undefined;
 };
 
-const Input = ({
+const Input: React.FC<InputProps> = ({
   name,
   value,
   type,
@@ -23,7 +23,7 @@ const Input = ({
   maxLength,
   onChangeHandler,
   warning,
-}: InputProps) => {
+}) => {
   return (
     <div className={cx("input")}>
       <h4 className={cx("input-text")}>{name}</h4>
@@ -40,4 +40,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default memo(Input);

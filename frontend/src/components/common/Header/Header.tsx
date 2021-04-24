@@ -10,8 +10,7 @@ const styles = require("./Header.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
 const Header = () => {
-  const { login, result, profile } = useFetchMyProfile();
-  const { loading } = result;
+  const { login, loading, profile } = useFetchMyProfile();
 
   return (
     <header className={cx("header")}>

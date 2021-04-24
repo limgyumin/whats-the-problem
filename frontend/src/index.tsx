@@ -9,16 +9,14 @@ import { RecoilRoot } from "recoil";
 import { ToastProvider } from "react-toast-notifications";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <BrowserRouter>
-        <ApolloProvider client={client}>
-          <ToastProvider autoDismiss={true} placement="top-center">
-            <App />
-          </ToastProvider>
-        </ApolloProvider>
-      </BrowserRouter>
-    </RecoilRoot>
-  </React.StrictMode>,
+  <RecoilRoot>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <ToastProvider autoDismiss={true} placement="top-center">
+          <App />
+        </ToastProvider>
+      </ApolloProvider>
+    </BrowserRouter>
+  </RecoilRoot>,
   document.getElementById("root")
 );

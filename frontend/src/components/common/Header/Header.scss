@@ -4,13 +4,15 @@
   align-items: center;
   justify-content: center;
   position: fixed;
-  background-color: var(--main-bg);
+  z-index: 100;
+  backdrop-filter: saturate(200%) blur(10px);
+  background-color: var(--main-header);
   border: 1px solid var(--main-point-border-1);
 
   &-wrapper {
     width: 100%;
     max-width: 1400px;
-    padding: 1.4rem 2rem;
+    padding: 1.2rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;

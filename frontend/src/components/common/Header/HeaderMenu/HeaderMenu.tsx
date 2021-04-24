@@ -13,7 +13,7 @@ type HeaderMenuProps = {
   bio: string;
 };
 
-const HeaderMenu = ({ avatar, name, bio }: HeaderMenuProps) => {
+const HeaderMenu: React.FC<HeaderMenuProps> = ({ avatar, name, bio }) => {
   const { logoutHandler } = useHeaderMenu();
 
   return (

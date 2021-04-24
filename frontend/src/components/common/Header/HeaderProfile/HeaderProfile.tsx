@@ -14,7 +14,7 @@ type HeaderProfileProps = {
   profile: IUserShortInfo;
 };
 
-const HeaderProfile = ({ profile }: HeaderProfileProps) => {
+const HeaderProfile: React.FC<HeaderProfileProps> = ({ profile }) => {
   const { show, showMenuHandler } = useHeader();
   const { avatar, name, bio } = profile;
 

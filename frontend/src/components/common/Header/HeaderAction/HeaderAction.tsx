@@ -1,6 +1,6 @@
+import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
-import React from "react";
 import { Link } from "react-router-dom";
 
 const styles = require("./HeaderAction.scss");
