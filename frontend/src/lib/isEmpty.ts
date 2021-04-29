@@ -1,6 +1,8 @@
-export const isEmpty = (content: string | undefined): boolean => {
-  if (!content) {
+import { removeSpace } from "./space";
+
+export const isEmpty = (string: string | undefined): boolean => {
+  if (!string) {
     return true;
   }
-  return content.replace(/^\s+|\s+$/g, "") === "";
+  return removeSpace(string) === "";
 };

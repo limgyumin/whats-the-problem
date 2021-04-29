@@ -13,14 +13,16 @@ const cx: ClassNamesFn = classNames.bind(styles);
 const GitHubAuth = () => {
   const {
     loading,
-    warning,
+    nameWarning,
+    idWarning,
     user,
     changeNameHandler,
+    changeIdHandler,
     changeBioHandler,
     submitUserHandler,
   } = useGitHubAuth();
 
-  const { avatar, name, bio } = user;
+  const { avatar, name, id, bio } = user;
 
   return loading ? (
     <GitHubLoading />
@@ -48,7 +50,15 @@ const GitHubAuth = () => {
           placeholder="이름을 입력해주세요."
           maxLength={16}
           onChangeHandler={changeNameHandler}
-          warning={warning}
+          warning={nameWarning}
+        />
+        <Input
+          name="아이디"
+          value={id}
+          placeholder="아이디를 입력해주세요."
+          maxLength={30}
+          onChangeHandler={changeIdHandler}
+          warning={idWarning}
         />
         <Input
           name="한 줄 소개"

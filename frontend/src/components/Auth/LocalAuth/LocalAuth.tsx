@@ -16,12 +16,14 @@ const LocalAuth = () => {
     user,
     passwordWarning,
     nameWarning,
+    idWarning,
     changePasswordHandler,
     changeNameHandler,
+    changeIdHandler,
     changeBioHandler,
     submitUserHandler,
   } = useRegister();
-  const { email, password, name, bio } = user;
+  const { email, password, name, id, bio } = user;
 
   return (
     <div className={cx("local-auth")}>
@@ -63,6 +65,13 @@ const LocalAuth = () => {
           placeholder="비밀번호을 입력해주세요."
           onChangeHandler={changePasswordHandler}
           warning={passwordWarning}
+        />
+        <Input
+          name="아이디"
+          value={id}
+          placeholder="아이디를 입력해주세요."
+          onChangeHandler={changeIdHandler}
+          warning={idWarning}
         />
         <Input
           name="이름"

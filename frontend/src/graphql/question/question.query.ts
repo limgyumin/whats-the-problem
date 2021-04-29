@@ -7,8 +7,37 @@ export const QUESTIONS = gql`
       idx
       title
       content
+      url
       user {
         name
+      }
+      answerCount
+      tags {
+        idx
+        name
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const QUESTION = gql`
+  query question($url: String!) {
+    question(url: $url) {
+      idx
+      title
+      content
+      url
+      uuid
+      userIdx
+      user {
+        idx
+        avatar
+        id
+        name
+        bio
+        score
       }
       answerCount
       tags {

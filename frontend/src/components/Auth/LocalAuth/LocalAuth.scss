@@ -32,8 +32,8 @@
     }
 
     &-avatar {
-      width: 5rem;
-      height: 5rem;
+      width: 3.5rem;
+      height: 3.5rem;
       border-radius: 50%;
       -webkit-box-shadow: 0px 0px 22px 0px rgba(0, 0, 0, 0.08);
       box-shadow: 0px 0px 22px 0px rgba(0, 0, 0, 0.08);
@@ -45,13 +45,13 @@
     margin-top: 2rem;
 
     &-wrapper {
-      margin: 2rem 0;
+      margin: 1.2rem 0;
 
       &-text {
         color: var(--main-point-3);
         font-weight: bold;
-        font-size: 1.125rem;
-        margin-bottom: 1rem;
+        font-size: 0.985rem;
+        margin-bottom: 0.7rem;
       }
 
       &-input {
@@ -70,16 +70,16 @@
           width: 100%;
           color: var(--main-point-3);
           font-weight: normal;
-          font-size: 1.425rem;
+          font-size: 1.125rem;
           border: none;
           outline: none;
-          padding: 0.8rem 1.2rem;
+          padding: 0.7rem 1rem;
           background-color: transparent;
 
           &::placeholder {
             color: var(--main-point-4);
             font-weight: normal;
-            font-size: 1.425rem;
+            font-size: 1.125rem;
           }
         }
 

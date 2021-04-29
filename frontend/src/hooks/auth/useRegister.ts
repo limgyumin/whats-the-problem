@@ -12,6 +12,7 @@ import { useMutation } from "@apollo/client";
 import { setCookie } from "lib/cookie";
 import { useToasts } from "react-toast-notifications";
 import { ICreateUser } from "types/user/user.type";
+import { idRegExp } from "constants/regExp/idRegExp";
 
 const useRegister = () => {
   const { addToast } = useToasts();
@@ -21,6 +22,7 @@ const useRegister = () => {
   const [user, setUser] = useRecoilState<ICreateUser>(createUserState);
   const [passwordWarning, setPasswordWarning] = useState<string>("");
   const [nameWarning, setNameWarning] = useState<string>("");
+  const [idWarning, setIdWarning] = useState<string>("");
 
   const changePasswordHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -38,6 +40,14 @@ const useRegister = () => {
     [user, setUser]
   );
 
+  const changeIdHandler = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const { value } = e.target;
+      setUser({ ...user, id: value });
+    },
+    [user, setUser]
+  );
+
   const changeBioHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target;
@@ -47,11 +57,12 @@ const useRegister = () => {
   );
 
   const validate = useCallback((): boolean => {
-    const { password, name } = user;
+    const { password, name, id } = user;
 
-    const [invalidPassword, invalidName] = [
+    const [invalidPassword, invalidName, invalidId] = [
       isInvalidString(password, passwordRegExp),
       isInvalidString(name, nameRegExp),
+      isInvalidString(id, idRegExp),
     ];
 
     if (invalidPassword) {
@@ -70,7 +81,15 @@ const useRegister = () => {
       setNameWarning("");
     }
 
-    return !(invalidPassword || invalidName);
+    if (invalidId) {
+      setIdWarning(
+        "아이디는 4 ~ 30자 이내의 영어, 또는 숫자로 이루어져야합니다."
+      );
+    } else {
+      setIdWarning("");
+    }
+
+    return !(invalidPassword || invalidName || invalidId);
   }, [user]);
 
   const submitUserHandler = useCallback(async (): Promise<void> => {
@@ -85,15 +104,20 @@ const useRegister = () => {
           "성공적으로 회원가입 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
           { appearance: "success" }
         );
+        setUser({} as ICreateUser);
         history.push("/");
       }
     } catch (error) {
-      addToast("사용자 정보를 제출하는 중에 오류가 발생했어요...", {
-        appearance: "error",
-      });
-      history.push("/");
+      if (error.message.includes("User already exist.")) {
+        setIdWarning("이미 존재하는 아이디입니다.");
+      } else {
+        addToast("사용자 정보를 제출하는 중에 오류가 발생했어요...", {
+          appearance: "error",
+        });
+        history.push("/");
+      }
     }
-  }, [history, user, validate, register, addToast]);
+  }, [history, user, validate, register, addToast, setUser]);
 
   useEffect(() => {
     if (!user.email) {
@@ -109,8 +133,10 @@ const useRegister = () => {
     user,
     passwordWarning,
     nameWarning,
+    idWarning,
     changePasswordHandler,
     changeNameHandler,
+    changeIdHandler,
     changeBioHandler,
     submitUserHandler,
   };
