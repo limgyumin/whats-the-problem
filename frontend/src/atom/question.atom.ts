@@ -15,3 +15,8 @@ export const questionPageState = atom<number>({
   key: "questionPageState",
   default: 1,
 });
+
+export const questionState = atom<IQuestion>({
+  key: "questionState",
+  default: {} as IQuestion,
+});

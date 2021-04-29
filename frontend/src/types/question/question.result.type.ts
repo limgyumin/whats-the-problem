@@ -4,3 +4,7 @@ export interface IQuestionsResult {
   questionCount: number;
   questions: IQuestion[];
 }
+
+export interface IQuestionResult {
+  question: IQuestion;
+}

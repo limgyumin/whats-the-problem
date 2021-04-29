@@ -8,6 +8,7 @@ export interface IUser {
   email: string;
   password: string;
   name: string;
+  id: string;
   bio: string;
   score: number;
   isAdmin: boolean;
@@ -19,6 +20,7 @@ export interface IUser {
 export interface IUserShortInfo {
   avatar: string;
   name: string;
+  id: string;
   bio: string;
 }
 
@@ -27,6 +29,7 @@ export interface IUserDetailInfo {}
 export interface IGitHubUser {
   avatar: string;
   name: string;
+  id: string;
   bio: string;
   email: string;
   gitHubId: string;
@@ -37,6 +40,7 @@ export interface ICreateUser {
   avatar: string;
   email: string;
   password: string;
+  id: string;
   name: string;
   bio: string;
 }

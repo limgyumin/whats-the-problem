@@ -8,6 +8,8 @@ export interface IQuestion {
   content: string;
   isTemp: boolean;
   user: IUser;
+  userIdx: number;
+  url: string;
   tags: ITag[];
   answers: IAnswer[];
   answerCount: number;
