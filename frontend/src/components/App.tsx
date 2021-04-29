@@ -2,8 +2,9 @@ import React from "react";
 import "styles/theme.scss";
 import { Route, Switch } from "react-router";
 import * as Pages from "pages";
+import RestrictRoute from "./Routes/RestrictRoute";
 
-function App() {
+const App = () => {
   return (
     <div className="App light">
       <Switch>
@@ -14,9 +15,14 @@ function App() {
         <Route path="/signup/verify" render={() => <Pages.VerifyEmail />} />
         <Route path="/signup/auth" render={() => <Pages.LocalAuth />} />
         <Route path="/github/auth" render={() => <Pages.GitHubAuth />} />
+        <Route
+          path="/question/:user/:title"
+          render={() => <Pages.Question />}
+        />
+        <RestrictRoute exact path="/write" render={() => <Pages.Write />} />
       </Switch>
     </div>
   );
-}
+};
 
 export default App;
