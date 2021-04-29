@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { initialQuestion } from "types/question/question.initial-state";
 import { IQuestion } from "types/question/question.type";
 
 export const questionsState = atom<IQuestion[]>({
@@ -18,5 +19,5 @@ export const questionPageState = atom<number>({
 
 export const questionState = atom<IQuestion>({
   key: "questionState",
-  default: {} as IQuestion,
+  default: initialQuestion,
 });

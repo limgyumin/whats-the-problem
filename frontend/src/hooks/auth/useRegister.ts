@@ -13,6 +13,7 @@ import { setCookie } from "lib/cookie";
 import { useToasts } from "react-toast-notifications";
 import { ICreateUser } from "types/user/user.type";
 import { idRegExp } from "constants/regExp/idRegExp";
+import { initialCreateUser } from "types/user/user.initial-state";
 
 const useRegister = () => {
   const { addToast } = useToasts();
@@ -104,7 +105,7 @@ const useRegister = () => {
           "성공적으로 회원가입 되었어요. 이제 What'sTheProblem과 함께해봅시다!",
           { appearance: "success" }
         );
-        setUser({} as ICreateUser);
+        setUser(initialCreateUser);
         history.push("/");
       }
     } catch (error) {

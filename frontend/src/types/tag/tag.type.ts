@@ -8,3 +8,7 @@ export interface ITag {
   questions: IQuestion[];
   postCount: number;
 }
+
+export interface ICreateTag {
+  name: string;
+}

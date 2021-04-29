@@ -3,6 +3,7 @@ import { showMenuState } from "atom/header.atom";
 import { removeCookie } from "lib/cookie";
 import { useCallback, useEffect } from "react";
 import { useSetRecoilState } from "recoil";
+import { initialUserShortInfo } from "types/user/user.initial-state";
 import { IUserShortInfo } from "types/user/user.type";
 
 const useHeaderMenu = () => {
@@ -12,7 +13,7 @@ const useHeaderMenu = () => {
 
   const logoutHandler = useCallback(() => {
     removeCookie("token");
-    setProfile({} as IUserShortInfo);
+    setProfile(initialUserShortInfo);
     setLogin(false);
   }, [setProfile, setLogin]);
 
