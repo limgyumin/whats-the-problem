@@ -1,0 +1,43 @@
+.question-content {
+  border: 1px solid var(--main-point-border);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  margin: 4rem 0;
+
+  &-user {
+    padding: 0.7rem 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--main-bg-1);
+    border-bottom: 1px solid var(--main-point-border);
+
+    &-container {
+      display: flex;
+      align-items: center;
+
+      &-avatar {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: 1px solid var(--main-point-border-1);
+        margin-right: 0.6rem;
+      }
+
+      &-info {
+        font-size: 0.955rem;
+        font-weight: normal;
+        color: var(--main-point-3);
+
+        & > span {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  &-wrapper {
+    padding: 0.4rem 0.8rem;
+    background-color: var(--main-bg);
+  }
+}

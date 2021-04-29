@@ -1,0 +1,24 @@
+.question {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  &-wrapper {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 2rem;
+
+    &-title {
+      color: var(--main-point);
+      font-weight: bold;
+      font-size: 2.525rem;
+      margin-bottom: 2rem;
+    }
+
+    &-tags {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+}

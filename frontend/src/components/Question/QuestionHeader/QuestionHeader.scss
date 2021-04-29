@@ -1,0 +1,28 @@
+.question-header {
+  padding: 12rem 0 1rem 0;
+  border-bottom: 1px solid var(--main-point-border-1);
+
+  &-title {
+    color: var(--main-point);
+    font-weight: bold;
+    font-size: 2.525rem;
+    margin-bottom: 2rem;
+  }
+
+  &-info {
+    margin-bottom: 1.5rem;
+    font-size: 0.975rem;
+    font-weight: normal;
+    color: var(--main-point-3);
+
+    & > span {
+      font-weight: bold;
+    }
+  }
+
+  &-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
