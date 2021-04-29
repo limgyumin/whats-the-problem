@@ -1,0 +1,104 @@
+@import "../../styles/animations.scss";
+
+.write {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @include fade-in-up(7rem, 0rem);
+
+    &-text {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: var(--main-point);
+        margin-bottom: 0.6rem;
+
+        & > span {
+          font-weight: normal;
+        }
+      }
+
+      &-subtitle {
+        font-size: 1.125rem;
+        font-weight: normal;
+        color: var(--main-point-2);
+      }
+    }
+
+    &-methods {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 5rem;
+      width: 100%;
+      max-width: 800px;
+
+      &-question,
+      &-post {
+        cursor: pointer;
+        min-width: 16rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 1.6rem 2rem;
+        background-color: var(--main-bg);
+        border-radius: 0.4rem;
+        border: 1px solid var(--main-point-border);
+        transition: background-color ease 0.2s, transform ease 0.2s;
+        text-decoration: none;
+
+        &:hover {
+          transform: scale(1.05, 1.05);
+          background-color: var(--main-point-light);
+
+          //   .signup-methods-local-arrow,
+          //   .signup-methods-github-arrow {
+          //     @include floating-side(0rem, 0.2rem);
+          //   }
+        }
+
+        &-image {
+          width: 18rem;
+          height: auto;
+          margin-bottom: 2rem;
+        }
+
+        &-text {
+          text-align: center;
+          font-size: 1.225rem;
+          font-weight: normal;
+          line-height: 1.55;
+          color: var(--main-point-2);
+
+          & > span {
+            font-weight: bold;
+          }
+        }
+
+        &-arrow {
+          width: 2.4rem;
+          height: auto;
+          margin-top: 0.8rem;
+          color: var(--main-point-3);
+        }
+      }
+    }
+  }
+}
