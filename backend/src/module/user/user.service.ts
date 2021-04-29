@@ -163,12 +163,10 @@ export class UserService {
   }
 
   async gitHubAuth(data: GitHubUserInput): Promise<User> {
-    const existUser: User = await this.userRepository.findOneByGitHubId(
-      data.gitHubId,
-    );
+    const existUser: User = await this.userRepository.findOneById(data.id);
 
     if (existUser) {
-      return existUser;
+      throw new ConflictException('User already exist.');
     }
 
     return await this.userRepository.create(data).save();
