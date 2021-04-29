@@ -6,6 +6,7 @@ type User {
   idx: Int!
   avatar: String
   gitHubId: String
+  id: String!
   email: String
   password: String
   name: String!
@@ -69,6 +70,8 @@ type Question {
   isTemp: Boolean!
   user: User!
   userIdx: Int!
+  url: String!
+  uuid: String!
   answers: [Answer!]!
   tags: [Tag!]!
   createdAt: DateTime!
@@ -153,7 +156,7 @@ type Query {
   tag(idx: Int!): Tag!
   tags: [Tag!]!
   likes(postIdx: Float!): LikeObject!
-  question(idx: Int!): Question!
+  question(url: String!): Question!
   questions(questionType: QuestionType!, option: QuestionOption!): [Question!]!
   questionCount: Int!
   answers(questionIdx: Int!): [Answer!]!
@@ -217,8 +220,8 @@ type Mutation {
   deleteTag(idx: Int!): Tag!
   postLike(postIdx: Float!): Like!
   createQuestion(question: CreateQuestionInput!): Question!
-  updateQuestion(idx: Int!, question: UpdateQuestionInput!): Question!
-  deleteQuestion(idx: Int!): Question!
+  updateQuestion(uuid: String!, question: UpdateQuestionInput!): Question!
+  deleteQuestion(uuid: String!): Question!
   createAnswer(questionIdx: Int!, content: String!): Answer!
   updateAnswer(idx: Int!, content: String!): Answer!
   deleteAnswer(idx: Int!): Answer!
@@ -227,6 +230,7 @@ type Mutation {
 input CreateUserInput {
   avatar: String
   name: String!
+  id: String!
   bio: String!
   email: String!
   password: String!
@@ -235,6 +239,7 @@ input CreateUserInput {
 input GitHubUserInput {
   avatar: String
   name: String!
+  id: String!
   bio: String!
   email: String
   gitHubId: String!
@@ -271,6 +276,7 @@ input CreateQuestionInput {
   title: String!
   content: String!
   isTemp: Boolean
+  url: String!
   tags: [QuestionTagInput!]
 }
 
@@ -282,5 +288,6 @@ input UpdateQuestionInput {
   title: String!
   content: String!
   isTemp: Boolean
+  url: String!
   tags: [QuestionTagInput!]
 }

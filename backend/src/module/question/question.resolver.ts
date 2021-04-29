@@ -19,7 +19,7 @@ import {
   GetQuestionsArgs,
   UpdateQuestionArgs,
 } from './dto/question.args';
-import { CreateQuestionInput, QuestionOption } from './dto/question.input';
+import { CreateQuestionInput } from './dto/question.input';
 import { Question } from './question.entity';
 import { QuestionService } from './question.service';
 
@@ -28,8 +28,8 @@ export class QuestionResolver {
   constructor(private questionService: QuestionService) {}
 
   @Query(() => Question)
-  async question(@Args() { idx }: GetQuestionArgs): Promise<Question> {
-    return await this.questionService.question(idx);
+  async question(@Args() { url }: GetQuestionArgs): Promise<Question> {
+    return await this.questionService.question(url);
   }
 
   @Query(() => [Question])
@@ -69,9 +69,9 @@ export class QuestionResolver {
   @UseGuards(AuthGuard)
   async updateQuestion(
     @GetUser() user: User,
-    @Args() { idx, question }: UpdateQuestionArgs,
+    @Args() { uuid, question }: UpdateQuestionArgs,
   ) {
-    return await this.questionService.update(idx, question, user);
+    return await this.questionService.update(uuid, question, user);
   }
 
   @Mutation(() => Question)
@@ -79,8 +79,8 @@ export class QuestionResolver {
   @UseGuards(AuthGuard)
   async deleteQuestion(
     @GetUser() user: User,
-    @Args() { idx }: DeleteQuestionArgs,
+    @Args() { uuid }: DeleteQuestionArgs,
   ) {
-    return await this.questionService.delete(idx, user);
+    return await this.questionService.delete(uuid, user);
   }
 }

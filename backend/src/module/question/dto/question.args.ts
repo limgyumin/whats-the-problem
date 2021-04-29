@@ -1,18 +1,22 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { QuestionType } from 'src/enum/question.enum';
 import { QuestionOption, UpdateQuestionInput } from './question.input';
 
 @ArgsType()
 class BaseQuestionArgs {
-  @Field(() => Int)
-  @IsNumber()
-  readonly idx: number;
+  @Field(() => String)
+  @IsString()
+  readonly uuid: string;
 }
 
 @ArgsType()
-export class GetQuestionArgs extends BaseQuestionArgs {}
+export class GetQuestionArgs {
+  @Field(() => String)
+  @IsString()
+  readonly url: string;
+}
 
 @ArgsType()
 export class GetQuestionsArgs {

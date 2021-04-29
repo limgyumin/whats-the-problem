@@ -9,7 +9,6 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Answer } from '../answer/answer.entity';
@@ -52,6 +51,20 @@ export class Question extends BaseEntity {
   @Field(() => Int)
   @Column({ nullable: true })
   userIdx: number;
+
+  @Field(() => String)
+  @Column('text', {
+    nullable: false,
+    unique: true,
+  })
+  url: string;
+
+  @Field(() => String)
+  @Column('text', {
+    nullable: false,
+    unique: true,
+  })
+  uuid: string;
 
   @Field(() => [Answer])
   @OneToMany(() => Answer, (answer) => answer.question, {

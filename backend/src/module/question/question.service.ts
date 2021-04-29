@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -16,6 +17,8 @@ import {
 } from './dto/question.input';
 import { Question } from './question.entity';
 import { QuestionRepository } from './question.repository';
+import { uuidCreate } from 'src/lib/uuid/uuid-random';
+import { randomCodeURL } from 'src/lib/url';
 
 @Injectable()
 export class QuestionService {
@@ -26,32 +29,48 @@ export class QuestionService {
   ) {}
 
   async create(data: CreateQuestionInput, user: User): Promise<Question> {
-    const { title, content, isTemp, tags } = data;
+    const { url, tags } = data;
 
-    const question: Question = this.questionRepository.create();
+    const question: Question = this.questionRepository.create(data);
+
+    const existQuestion: Question = await this.questionRepository.findOneWithUserByUrl(
+      url,
+      false,
+    );
+
+    if (existQuestion) {
+      question.url = randomCodeURL(url);
+    }
 
     const tagList: Tag[] = await this.findOrCreateTagsAndGet(tags);
 
-    question.title = title;
-    question.content = content;
-    question.isTemp = isTemp;
     question.tags = tagList;
     question.user = user;
+    question.uuid = uuidCreate();
 
     return await question.save();
   }
 
   async update(
-    idx: number,
+    uuid: string,
     data: UpdateQuestionInput,
     user: User,
   ): Promise<Question> {
-    const { title, content, tags, isTemp } = data;
+    const { title, content, tags, isTemp, url } = data;
 
-    const question: Question = await this.questionRepository.findOneByIdx(
-      idx,
+    const question: Question = await this.questionRepository.findOneByUUID(
+      uuid,
       false,
     );
+
+    const existQuestion: Question = await this.questionRepository.findOneWithUserByUrl(
+      url,
+      false,
+    );
+
+    if (existQuestion) {
+      question.url = randomCodeURL(url);
+    }
 
     if (!question) {
       throw new NotFoundException('Question not found.');
@@ -73,9 +92,9 @@ export class QuestionService {
     return await question.save();
   }
 
-  async delete(idx: number, user: User): Promise<Question> {
-    const question: Question = await this.questionRepository.findOneByIdx(
-      idx,
+  async delete(uuid: string, user: User): Promise<Question> {
+    const question: Question = await this.questionRepository.findOneByUUID(
+      uuid,
       false,
     );
 
@@ -92,9 +111,9 @@ export class QuestionService {
     return await question.remove();
   }
 
-  async question(idx: number): Promise<Question> {
-    const question: Question = await this.questionRepository.findOneWithUserByIdx(
-      idx,
+  async question(url: string): Promise<Question> {
+    const question: Question = await this.questionRepository.findOneWithUserByUrl(
+      url,
       false,
     );
 

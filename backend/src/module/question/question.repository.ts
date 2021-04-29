@@ -10,11 +10,31 @@ export class QuestionRepository extends Repository<Question> {
       .getOne();
   }
 
-  findOneWithUserByIdx(idx: number, isTemp: boolean): Promise<Question> {
+  findOneByTitleAndUserName(
+    title: string,
+    name: string,
+    isTemp: boolean,
+  ): Promise<Question> {
+    return this.createQueryBuilder('question')
+      .leftJoin('question.user', 'user')
+      .where('question.title = :title', { title })
+      .andWhere('user.name = :name', { name })
+      .andWhere('question.isTemp = :isTemp', { isTemp })
+      .getOne();
+  }
+
+  findOneWithUserByUrl(url: string, isTemp: boolean): Promise<Question> {
     return this.createQueryBuilder('question')
       .leftJoinAndSelect('question.user', 'user')
-      .where('question.idx = :idx', { idx })
+      .andWhere('question.url = :url', { url })
       .andWhere('question.isTemp = :isTemp', { isTemp })
+      .getOne();
+  }
+
+  findOneByUUID(uuid: string, isTemp: boolean): Promise<Question> {
+    return this.createQueryBuilder()
+      .where('uuid = :uuid', { uuid })
+      .andWhere('isTemp = :isTemp', { isTemp })
       .getOne();
   }
 

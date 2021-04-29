@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { existsSync, mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
-import { uuidRandom } from '../uuid-random';
+import { uuidRandom } from '../uuid/uuid-random';
 
 export const multerOptions = {
   fileFilter: (request, file, callback) => {

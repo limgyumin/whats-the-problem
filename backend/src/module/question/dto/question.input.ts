@@ -24,6 +24,10 @@ export class CreateQuestionInput {
   @IsBoolean()
   readonly isTemp: boolean;
 
+  @Field(() => String)
+  @IsString()
+  readonly url: string;
+
   @Field(() => [QuestionTagInput], { nullable: true })
   @IsOptional()
   @IsArray()
