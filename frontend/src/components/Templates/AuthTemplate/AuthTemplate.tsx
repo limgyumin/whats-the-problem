@@ -9,7 +9,7 @@ type AuthTemplateProps = {
 const styles = require("./AuthTemplate.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
-const AuthTemplate = ({ children }: AuthTemplateProps) => {
+const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
   return (
     <div className={cx("auth-template")}>
       <div className={cx("auth-template-wrapper")}>{children}</div>

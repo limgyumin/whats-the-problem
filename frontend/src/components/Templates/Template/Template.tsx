@@ -9,7 +9,7 @@ type TemplateProps = {
 const styles = require("./Template.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
-const Template = ({ children }: TemplateProps) => {
+const Template: React.FC<TemplateProps> = ({ children }) => {
   return (
     <div className={cx("template")}>
       <div className={cx("template-wrapper")}>{children}</div>
