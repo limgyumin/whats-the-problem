@@ -2,24 +2,33 @@ import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
 import { ReactComponent as Logo } from "assets/images/logo.svg";
-import useFetchMyProfile from "hooks/user/useFetchMyProfile";
 import HeaderProfile from "./HeaderProfile";
 import HeaderAction from "./HeaderAction";
+import { Link } from "react-router-dom";
+import useHeader from "hooks/header/useHeader";
+import useFetchMyProfile from "hooks/user/useFetchMyProfile";
 
 const styles = require("./Header.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
 const Header = () => {
-  const { login, loading, profile } = useFetchMyProfile();
+  const { loading, login, profile } = useFetchMyProfile();
+  const { show, showMenuHandler } = useHeader();
 
   return (
     <header className={cx("header")}>
       <div className={cx("header-wrapper")}>
-        <Logo className={cx("header-wrapper-logo")} />
+        <Link to="/" className={cx("header-wrapper-logo")}>
+          <Logo className={cx("header-wrapper-logo-image")} />
+        </Link>
         {!loading && (
           <React.Fragment>
             {login && profile ? (
-              <HeaderProfile profile={profile} />
+              <HeaderProfile
+                profile={profile}
+                show={show}
+                showMenuHandler={showMenuHandler}
+              />
             ) : (
               <HeaderAction />
             )}

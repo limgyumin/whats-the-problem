@@ -1,23 +1,23 @@
 .input {
   width: 100%;
-  margin: 2rem 0;
+  margin: 1.2rem 0;
 
   &-text {
     color: var(--main-point-3);
     font-weight: bold;
-    font-size: 1.125rem;
-    margin-bottom: 1rem;
+    font-size: 0.985rem;
+    margin-bottom: 0.7rem;
   }
 
   &-element {
     width: 100%;
     color: var(--main-point-1);
     font-weight: normal;
-    font-size: 1.425rem;
-    padding: 0.8rem 1.2rem;
+    font-size: 1.125rem;
+    padding: 0.7rem 1rem;
     outline: none;
     border: 1px solid var(--main-point-border);
-    border-radius: 0.6rem;
+    border-radius: 0.2rem;
     background-color: var(--main-point-light);
 
     &:focus {
@@ -29,13 +29,13 @@
     &::placeholder {
       color: var(--main-point-4);
       font-weight: normal;
-      font-size: 1.425rem;
+      font-size: 1.125rem;
     }
   }
 
   &-warning {
     margin-top: 0.6rem;
-    font-size: 0.925rem;
+    font-size: 0.825rem;
     color: var(--main-warning);
   }
 }

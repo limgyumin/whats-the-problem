@@ -1,23 +1,47 @@
 .header-profile {
   display: flex;
   align-items: center;
-  position: relative;
-  cursor: pointer;
 
-  &:hover > &-arrow {
-    color: var(--main-point-3);
+  &-write {
+    margin-right: 1.5rem;
+    padding: 0.45rem 0.8rem;
+    text-decoration: none;
+    background-color: var(--main-point-1);
+    border-radius: 2rem;
+
+    &:hover {
+      background-color: var(--main-point-2);
+    }
+
+    &-text {
+      color: var(--main-point-0);
+      font-weight: normal;
+      font-family: inherit;
+      font-size: 1.025rem;
+    }
   }
 
-  &-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    border: 1px solid var(--main-point-border-1);
-    margin-right: 0.6rem;
-  }
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
 
-  &-arrow {
-    font-size: 1rem;
-    color: var(--main-point-4);
+    &:hover > &-arrow {
+      color: var(--main-point-3);
+    }
+
+    &-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: 1px solid var(--main-point-border-1);
+      margin-right: 0.6rem;
+    }
+
+    &-arrow {
+      font-size: 1rem;
+      color: var(--main-point-4);
+    }
   }
 }

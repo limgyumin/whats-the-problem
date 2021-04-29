@@ -18,8 +18,12 @@
     align-items: center;
 
     &-logo {
-      width: 15rem;
       height: auto;
+
+      &-image {
+        width: 15rem;
+        height: auto;
+      }
     }
   }
 }
