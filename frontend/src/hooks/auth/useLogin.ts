@@ -61,12 +61,16 @@ const useLogin = () => {
         history.push("/");
       }
     } catch (error) {
-      addToast("로그인을 처리하는 중에 오류가 발생했어요...", {
-        appearance: "error",
-      });
-      history.push("/");
+      if (error.message.includes("User not found")) {
+        setWarning("이메일 또는 비밀번호가 일치하지 않습니다.");
+      } else {
+        addToast("로그인을 처리하는 중에 오류가 발생했어요...", {
+          appearance: "error",
+        });
+        history.push("/");
+      }
     }
-  }, [email, password, history, validate, addToast, login]);
+  }, [email, password, history, validate, addToast, login, setWarning]);
 
   useEffect(() => {
     return () => {
