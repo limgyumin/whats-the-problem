@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   questionCountState,
   questionPageState,
@@ -22,11 +22,6 @@ const useFetchQuestions = () => {
   const { search } = useLocation();
   const sort: string = useQueryString("sort");
 
-  const [fetchQuestions, { data, error }] = useLazyQuery<IQuestionsResult>(
-    QUESTIONS
-  );
-
-  const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useRecoilState<number>(questionPageState);
   const [questionType, setQuestionType] = useState<QuestionType>(
     QuestionType.CreatedAt
@@ -37,35 +32,31 @@ const useFetchQuestions = () => {
   );
   const [questions, setQuestions] = useRecoilState<IQuestion[]>(questionsState);
 
-  const isRecent = useMemo(() => sort === null, [sort]);
+  const { loading, data, error } = useQuery<IQuestionsResult>(QUESTIONS, {
+    variables: {
+      option: { page, limit: FETCH_QUESTIONS_LIMIT },
+      questionType,
+    },
+  });
+
+  const isRecent: boolean = useMemo(() => sort === null, [sort]);
 
   const fetchResultHandler = useCallback((): void => {
-    setLoading(true);
-
-    if (data) {
-      data.questions.map((question: IQuestion) =>
-        setQuestions((questions) => [...questions, question])
-      );
-      setLoading(false);
-      setQuestionCount(data.questionCount);
+    if (!loading && data) {
+      if (data.questions.length > 0) {
+        data.questions.map((question: IQuestion) =>
+          setQuestions((questions) => [...questions, question])
+        );
+        setQuestionCount(data.questionCount);
+      }
     }
 
     if (error) {
       addToast("질문 목록을 조회하는 중에 오류가 발생했어요...", {
         appearance: "error",
       });
-      setLoading(false);
     }
-  }, [data, error, setQuestions, setQuestionCount, addToast]);
-
-  useEffect(() => {
-    fetchQuestions({
-      variables: {
-        option: { page, limit: FETCH_QUESTIONS_LIMIT },
-        questionType,
-      },
-    });
-  }, [search, page, questionType, fetchQuestions]);
+  }, [loading, data, error, setQuestions, setQuestionCount, addToast]);
 
   useEffect(() => {
     fetchResultHandler();
@@ -83,16 +74,15 @@ const useFetchQuestions = () => {
   useEffect(() => {
     if (inView && !loading && questions.length < questionCount) {
       setPage((page) => page + 1);
-      setLoading(true);
     }
   }, [inView, loading, questions, questionCount, setPage]);
 
   useEffect(() => {
     return () => {
-      setLoading(false);
+      setQuestions([]);
       setPage(0);
     };
-  }, [setLoading, setPage]);
+  }, [setQuestions, setPage]);
 
   return {
     isRecent,
