@@ -1,13 +1,13 @@
 import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
-import { ReactComponent as Person } from "assets/images/person.svg";
-import { ReactComponent as Logo } from "assets/images/logo.svg";
 import { FiArrowRight } from "react-icons/fi";
 import useLogin from "hooks/auth/useLogin";
 import Input from "components/common/Input";
 import { GITHUB_OAUTH } from "config/config.json";
 import { GoMarkGithub } from "react-icons/go";
+import { Link } from "react-router-dom";
+import SignInSideBar from "./SignInSideBar";
 
 const styles = require("./SignIn.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
@@ -24,17 +24,7 @@ const SignIn = () => {
 
   return (
     <div className={cx("signin")}>
-      <div className={cx("signin-sidebar")}>
-        <div className={cx("signin-sidebar-header")}>
-          <Logo className={cx("signin-sidebar-header-logo")} />
-          <h1 className={cx("signin-sidebar-header-title")}>
-            Find the Problem,
-            <br />
-            Solve the Problem.
-          </h1>
-        </div>
-        <Person className={cx("signin-sidebar-picture")} />
-      </div>
+      <SignInSideBar />
       <div className={cx("signin-content")}>
         <div className={cx("signin-content-wrapper")}>
           <div className={cx("signin-content-wrapper-header")}>
@@ -81,6 +71,17 @@ const SignIn = () => {
                 className={cx("signin-content-wrapper-bottom-submit-icon")}
               />
             </button>
+          </div>
+          <div className={cx("signin-content-wrapper-signup")}>
+            <p className={cx("signin-content-wrapper-signup-text")}>
+              아직 회원이 아니신가요?
+            </p>
+            <Link
+              to="/signup"
+              className={cx("signin-content-wrapper-signup-link")}
+            >
+              회원가입
+            </Link>
           </div>
         </div>
       </div>
