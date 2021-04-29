@@ -25,6 +25,11 @@ class BaseUserInput {
 
   @Field(() => String)
   @IsString()
+  @MaxLength(30)
+  readonly id: string;
+
+  @Field(() => String)
+  @IsString()
   @MaxLength(255)
   readonly bio: string;
 }

@@ -29,6 +29,14 @@ export class User extends BaseEntity {
   })
   gitHubId: string;
 
+  @Field(() => String)
+  @Column({
+    length: 30,
+    nullable: false,
+    unique: true,
+  })
+  id: string;
+
   @Field(() => String, { nullable: true })
   @Column({
     length: 255,

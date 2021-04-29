@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { CODE_CHARS, CODE_LENGTH } from 'src/constants/verify-code';
 import { NodeMailerLib } from 'src/lib/nodemailer/nodemailer.lib';
+import { createRandomCode } from 'src/lib/random-code';
 import { User } from '../user/user.entity';
 import { UserRepository } from '../user/user.repository';
 import { Mailer } from './mailer.entity';
@@ -36,7 +37,7 @@ export class MailerService {
 
     const mailer: Mailer = this.mailerRepository.create();
 
-    const verifyCode: string = this.createVerifyCode();
+    const verifyCode: string = createRandomCode(CODE_LENGTH, CODE_CHARS);
     const expireDate: Date = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
 
@@ -78,14 +79,5 @@ export class MailerService {
     }
 
     return this.mailerRepository.findAllOrderByCreatedAtASC(page, limit);
-  }
-
-  createVerifyCode(): string {
-    let verifyCode: string = '';
-    for (let i = 0; i < CODE_LENGTH; i++) {
-      let random: number = Math.floor(Math.random() * CODE_CHARS.length);
-      verifyCode += CODE_CHARS.substring(random, random + 1);
-    }
-    return verifyCode;
   }
 }

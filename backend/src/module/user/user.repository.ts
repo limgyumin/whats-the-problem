@@ -26,6 +26,10 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder().where('idx = :idx', { idx }).getOne();
   }
 
+  findOneById(id: string): Promise<User> {
+    return this.createQueryBuilder().where('id = :id', { id }).getOne();
+  }
+
   findAllOrderByScoreDESC(page: number, limit: number): Promise<User[]> {
     return this.createQueryBuilder()
       .skip((page - 1) * limit)

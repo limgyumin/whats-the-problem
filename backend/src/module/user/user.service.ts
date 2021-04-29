@@ -41,9 +41,7 @@ export class UserService {
       throw new UnauthorizedException('Unverified email.');
     }
 
-    const existUser: User = await this.userRepository.findOneByEmail(
-      data.email,
-    );
+    const existUser: User = await this.userRepository.findOneById(data.id);
 
     if (existUser) {
       throw new ConflictException('User already exist.');
