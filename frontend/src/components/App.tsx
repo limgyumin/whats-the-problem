@@ -20,6 +20,11 @@ const App = () => {
           render={() => <Pages.Question />}
         />
         <RestrictRoute exact path="/write" render={() => <Pages.Write />} />
+        <RestrictRoute
+          exact
+          path="/write/question"
+          render={() => <Pages.WriteQuestion />}
+        />
       </Switch>
     </div>
   );
