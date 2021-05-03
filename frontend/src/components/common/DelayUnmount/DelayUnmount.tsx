@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import usePrevious from "hooks/util/usePrevious";
+import Portal from "../Portal";
 
 type DelayUnmountProps = {
-  component: React.FC;
+  children: React.ReactNode;
   isMount: boolean;
   delay: number;
-  mountHandler: () => void;
 };
 
 const DelayUnmount: React.FC<DelayUnmountProps> = ({
-  component: Component,
+  isMount,
+  children,
   delay,
-  ...props
 }) => {
-  const { isMount } = props;
-
   const [shouldRender, setShouldRender] = useState<boolean>(false);
 
   const prevIsMount = usePrevious<boolean>(isMount);
@@ -29,7 +27,7 @@ const DelayUnmount: React.FC<DelayUnmountProps> = ({
     }
   }, [prevIsMount, isMount, delay, setShouldRender]);
 
-  return shouldRender ? <Component {...props} /> : null;
+  return shouldRender ? <Portal>{children}</Portal> : null;
 };
 
 export default DelayUnmount;
