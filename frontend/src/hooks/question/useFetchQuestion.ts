@@ -5,6 +5,7 @@ import { useCallback, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import { useToasts } from "react-toast-notifications";
 import { useRecoilState } from "recoil";
+import { initialQuestion } from "types/question/question.initial-state";
 import { IQuestionResult } from "types/question/question.result.type";
 import { IQuestion } from "types/question/question.type";
 
@@ -48,7 +49,7 @@ const useFetchQuestion = () => {
 
   useEffect(() => {
     return () => {
-      setQuestion({} as IQuestion);
+      setQuestion(initialQuestion);
     };
   }, [setQuestion]);
 

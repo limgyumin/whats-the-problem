@@ -5,7 +5,7 @@ export const initialCreateQuestion: ICreateQuestion = {
   title: "",
   content: "",
   tags: [],
-  isTemp: true,
+  isTemp: false,
   url: "",
 };
 

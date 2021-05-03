@@ -8,3 +8,7 @@ export interface IQuestionsResult {
 export interface IQuestionResult {
   question: IQuestion;
 }
+
+export interface ICreateQuestionResult {
+  createQuestion: IQuestion;
+}

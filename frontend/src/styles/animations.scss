@@ -1,3 +1,51 @@
+@mixin fade-in {
+  animation: fade-in-animation ease 0.5s;
+  @keyframes fade-in-animation {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@mixin fade-out {
+  animation: fade-out-animation ease 0.5s;
+  @keyframes fade-out-animation {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+}
+
+@mixin rise-up($before) {
+  animation: rise-up-animation ease 0.5s;
+  @keyframes rise-up-animation {
+    from {
+      transform: translateY($before);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
+
+@mixin rise-down($after) {
+  animation: rise-down-animation ease 0.5s;
+  @keyframes rise-down-animation {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY($after);
+    }
+  }
+}
+
 @mixin fade-in-up($before, $after) {
   animation: fade-in-up-animation ease 1s;
   @keyframes fade-in-up-animation {
@@ -38,6 +86,18 @@
     }
     100% {
       transform: scale($before, $before);
+    }
+  }
+}
+
+@mixin size-up($start) {
+  animation: size-up-animation ease 0.1s;
+  @keyframes size-up-animation {
+    from {
+      transform: scale($start, $start);
+    }
+    to {
+      transform: scale(1, 1);
     }
   }
 }

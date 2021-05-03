@@ -1,4 +1,4 @@
-import { removeSpace } from "./space";
+import { removeSpace } from "./removeSpace";
 
 export const isEmpty = (string: string | undefined): boolean => {
   if (!string) {
