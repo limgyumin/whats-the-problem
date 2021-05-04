@@ -1,0 +1,29 @@
+.input-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &-insert {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 1.125rem;
+    font-weight: normal;
+    color: var(--main-point);
+    min-width: 12rem;
+    margin-bottom: 0.3rem;
+    line-height: 2rem;
+
+    &::placeholder {
+      font-size: 1.125rem;
+      font-weight: normal;
+      color: var(--main-point-3);
+    }
+  }
+}

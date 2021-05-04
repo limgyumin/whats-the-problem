@@ -3,28 +3,28 @@ import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
 import { ICreateTag } from "types/tag/tag.type";
 
-const styles = require("./WriteTagItem.scss");
+const styles = require("./InputTagItem.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
-type WriteTagItemProps = {
+type InputTagItemProps = {
   tag: ICreateTag;
   removeTagHandler: (tagName: string) => void;
 };
 
-const WriteTagItem: React.FC<WriteTagItemProps> = ({
+const InputTagItem: React.FC<InputTagItemProps> = ({
   tag,
   removeTagHandler,
 }) => {
   return (
     <div
-      className={cx("write-tag-item")}
+      className={cx("input-tag-item")}
       onClick={() => removeTagHandler(tag.name)}
     >
-      <p className={cx("write-create-header-tags-list-item-name")}>
+      <p className={cx("input-create-header-tags-list-item-name")}>
         {tag.name}
       </p>
     </div>
   );
 };
 
-export default WriteTagItem;
+export default InputTagItem;

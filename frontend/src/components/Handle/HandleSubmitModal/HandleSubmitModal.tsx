@@ -3,10 +3,10 @@ import { ClassNamesFn } from "classnames/types";
 import React from "react";
 import { ICreateTag } from "types/tag/tag.type";
 
-const styles = require("./WriteSubmitModal.scss");
+const styles = require("./HandleSubmitModal.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
-type WriteSubmitModalProps = {
+type HandleSubmitModalProps = {
   title: string;
   tags: ICreateTag[];
   url: string;
@@ -15,7 +15,7 @@ type WriteSubmitModalProps = {
   submitQuestionHandler: () => Promise<void>;
 };
 
-const WriteSubmitModal: React.FC<WriteSubmitModalProps> = ({
+const HandleSubmitModal: React.FC<HandleSubmitModalProps> = ({
   title,
   tags,
   url,
@@ -24,67 +24,71 @@ const WriteSubmitModal: React.FC<WriteSubmitModalProps> = ({
   submitQuestionHandler,
 }) => {
   return (
-    <div className={cx("write-submit-modal light")}>
+    <div className={cx("handle-submit-modal light")}>
       <div
-        className={cx("write-submit-modal-overlay", {
+        className={cx("handle-submit-modal-overlay", {
           appear: isMount,
           disappear: !isMount,
         })}
         onClick={() => mountHandler()}
       />
       <div
-        className={cx("write-submit-modal-box", {
+        className={cx("handle-submit-modal-box", {
           "rise-up": isMount,
           "rise-down": !isMount,
         })}
       >
-        <div className={cx("write-submit-modal-box-wrapper")}>
-          <div className={cx("write-submit-modal-box-wrapper-header")}>
-            <h3 className={cx("write-submit-modal-box-wrapper-header-text")}>
+        <div className={cx("handle-submit-modal-box-wrapper")}>
+          <div className={cx("handle-submit-modal-box-wrapper-header")}>
+            <h3 className={cx("handle-submit-modal-box-wrapper-header-text")}>
               작성 완료하기
             </h3>
-            <div className={cx("write-submit-modal-box-wrapper-header-line")} />
+            <div
+              className={cx("handle-submit-modal-box-wrapper-header-line")}
+            />
           </div>
-          <div className={cx("write-submit-modal-box-wrapper-content")}>
-            <div className={cx("write-submit-modal-box-wrapper-content-title")}>
+          <div className={cx("handle-submit-modal-box-wrapper-content")}>
+            <div
+              className={cx("handle-submit-modal-box-wrapper-content-title")}
+            >
               <p
                 className={cx(
-                  "write-submit-modal-box-wrapper-content-title-name"
+                  "handle-submit-modal-box-wrapper-content-title-name"
                 )}
               >
                 제목
               </p>
               <h1
                 className={cx(
-                  "write-submit-modal-box-wrapper-content-title-text"
+                  "handle-submit-modal-box-wrapper-content-title-text"
                 )}
               >
                 {title}
               </h1>
             </div>
-            <div className={cx("write-submit-modal-box-wrapper-content-tags")}>
+            <div className={cx("handle-submit-modal-box-wrapper-content-tags")}>
               <p
                 className={cx(
-                  "write-submit-modal-box-wrapper-content-tags-name"
+                  "handle-submit-modal-box-wrapper-content-tags-name"
                 )}
               >
                 태그
               </p>
               <div
                 className={cx(
-                  "write-submit-modal-box-wrapper-content-tags-list"
+                  "handle-submit-modal-box-wrapper-content-tags-list"
                 )}
               >
                 {tags.map((tag, idx) => (
                   <div
                     key={idx}
                     className={cx(
-                      "write-submit-modal-box-wrapper-content-tags-list-item"
+                      "handle-submit-modal-box-wrapper-content-tags-list-item"
                     )}
                   >
                     <p
                       className={cx(
-                        "write-submit-modal-box-wrapper-content-tags-list-item-name"
+                        "handle-submit-modal-box-wrapper-content-tags-list-item-name"
                       )}
                     >
                       {tag.name}
@@ -93,32 +97,32 @@ const WriteSubmitModal: React.FC<WriteSubmitModalProps> = ({
                 ))}
               </div>
             </div>
-            <div className={cx("write-submit-modal-box-wrapper-content-url")}>
+            <div className={cx("handle-submit-modal-box-wrapper-content-url")}>
               <p
                 className={cx(
-                  "write-submit-modal-box-wrapper-content-url-name"
+                  "handle-submit-modal-box-wrapper-content-url-name"
                 )}
               >
                 URL
               </p>
               <h1
                 className={cx(
-                  "write-submit-modal-box-wrapper-content-url-text"
+                  "handle-submit-modal-box-wrapper-content-url-text"
                 )}
               >
                 {url}
               </h1>
             </div>
           </div>
-          <div className={cx("write-submit-modal-box-wrapper-bottom")}>
+          <div className={cx("handle-submit-modal-box-wrapper-bottom")}>
             <button
-              className={cx("write-submit-modal-box-wrapper-bottom-cancel")}
+              className={cx("handle-submit-modal-box-wrapper-bottom-cancel")}
               onClick={() => mountHandler()}
             >
               취소
             </button>
             <button
-              className={cx("write-submit-modal-box-wrapper-bottom-submit")}
+              className={cx("handle-submit-modal-box-wrapper-bottom-submit")}
               onClick={() => submitQuestionHandler()}
             >
               작성 완료
@@ -130,4 +134,4 @@ const WriteSubmitModal: React.FC<WriteSubmitModalProps> = ({
   );
 };
 
-export default WriteSubmitModal;
+export default HandleSubmitModal;

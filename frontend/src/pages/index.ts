@@ -7,4 +7,4 @@ export { default as GitHubAuth } from "./Auth/GitHubAuth";
 export { default as LocalAuth } from "./Auth/LocalAuth";
 export { default as Question } from "./Question";
 export { default as Write } from "./Write";
-export { default as WriteQuestion } from "./Write/WriteQuestion";
+export { default as Handle } from "./Handle";

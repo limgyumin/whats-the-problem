@@ -1,0 +1,16 @@
+.handle-preview {
+  width: 50%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 3rem 2rem 1rem;
+  background-color: var(--main-bg);
+  border-left: 1px solid var(--main-point-border);
+
+  &-title {
+    word-break: break-all;
+    font-weight: bold;
+    font-size: 2.225rem;
+    color: var(--main-point);
+    margin-bottom: 2.5rem;
+  }
+}
