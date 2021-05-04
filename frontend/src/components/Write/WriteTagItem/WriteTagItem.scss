@@ -1,0 +1,21 @@
+@import "../../../styles/animations.scss";
+
+.write-tag-item {
+  border-radius: 2rem;
+  margin: 0 0.6rem 0.6rem 0;
+  background-color: var(--main-point-light-1);
+  padding: 0.3rem 0.55rem;
+  transition: background-color ease 0.1s;
+  cursor: pointer;
+  @include size-up(0.3);
+
+  &:hover {
+    background-color: var(--main-point-light-3);
+  }
+
+  &-name {
+    font-size: 0.915rem;
+    font-weight: normal;
+    color: var(--main-point-2);
+  }
+}

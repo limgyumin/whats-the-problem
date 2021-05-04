@@ -1,0 +1,44 @@
+.write-toolbar {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem 2rem 0;
+
+  &-divide {
+    height: auto;
+    border: 1px solid var(--main-point-border-1);
+    margin: 0.5rem 0.5rem;
+  }
+
+  &-button {
+    cursor: pointer;
+    padding: 0.8rem;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    border-radius: 0.2rem;
+
+    &:hover {
+      background-color: var(--main-point-light-1);
+    }
+
+    &-icon {
+      color: var(--main-point-3);
+      font-size: 1.125rem;
+    }
+
+    &-heading {
+      display: flex;
+
+      &-icon {
+        color: var(--main-point-3);
+        font-size: 1.125rem;
+      }
+
+      &-number {
+        font-weight: bold;
+        color: var(--main-point-3);
+      }
+    }
+  }
+}
