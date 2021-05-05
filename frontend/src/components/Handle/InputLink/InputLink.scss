@@ -1,0 +1,59 @@
+.input-link {
+  top: 3rem;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid var(--main-point-border-1);
+  background: var(--main-bg);
+  width: 20rem;
+  height: auto;
+  position: absolute;
+  border-radius: 0.2rem;
+  padding: 1rem 1.2rem;
+
+  &-title {
+    font-weight: bold;
+    font-size: 1.125rem;
+    color: var(--main-point);
+  }
+
+  &-insert {
+    width: 100%;
+    margin: 0.8rem 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 0.925rem;
+    font-weight: normal;
+    color: var(--main-point);
+    border-bottom: 1px solid var(--main-point-border);
+    padding: 0.5rem 0;
+
+    &::placeholder {
+      color: var(--main-point-4);
+      font-family: inherit;
+    }
+  }
+
+  &-submit {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    &-button {
+      border: none;
+      outline: none;
+      background-color: var(--main-point-1);
+      color: var(--main-point-0);
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.2rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--main-point-2);
+      }
+    }
+  }
+}
