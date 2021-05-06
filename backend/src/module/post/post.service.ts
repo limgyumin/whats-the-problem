@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { CREATE_POST, DELETE_POST } from 'src/constants/user-scores';
 import { PostType } from 'src/enum/post.enum';
-import { generateURL } from 'src/lib/url';
+import { generateURL, randomCodeURL } from 'src/lib/url';
 import { sliceURL } from 'src/lib/url';
+import { uuidCreate } from 'src/lib/uuid/uuid-random';
 import { User } from 'src/module/user/user.entity';
 import { Comment } from '../comment/comment.entity';
 import { CommentRepository } from '../comment/comment.repository';
@@ -36,28 +37,44 @@ export class PostService {
   ) {}
 
   async create(data: CreatePostInput, user: User): Promise<Post> {
-    const { title, content, thumbnail, isTemp, tags } = data;
+    const { thumbnail, url, tags } = data;
 
-    const post: Post = this.postRepository.create();
+    const post: Post = this.postRepository.create(data);
+
+    const existPost: Post = await this.postRepository.findOneWithUserByUrl(
+      url,
+      false,
+    );
+
+    if (existPost) {
+      post.url = randomCodeURL(url);
+    }
 
     const tagList: Tag[] = await this.findOrCreateTagsAndGet(tags);
 
-    post.title = title;
-    post.content = content;
-    post.isTemp = isTemp;
     post.thumbnail = sliceURL(thumbnail);
     post.tags = tagList;
     post.user = user;
+    post.uuid = uuidCreate();
 
     await this.userService.handleScore(user.idx, CREATE_POST);
 
     return await post.save();
   }
 
-  async update(idx: number, data: UpdatePostInput, user: User) {
-    const { title, content, thumbnail, tags, isTemp } = data;
+  async update(uuid: string, data: UpdatePostInput, user: User) {
+    const { title, content, thumbnail, tags, isTemp, url } = data;
 
-    const post: Post = await this.postRepository.findOneByIdx(idx, false);
+    const post: Post = await this.postRepository.findOneByUUID(uuid, false);
+
+    const existPost: Post = await this.postRepository.findOneWithUserByUrl(
+      url,
+      false,
+    );
+
+    if (existPost) {
+      post.url = randomCodeURL(url);
+    }
 
     if (!post) {
       throw new NotFoundException('Post not found.');
@@ -80,8 +97,8 @@ export class PostService {
     return await post.save();
   }
 
-  async delete(idx: number, user: User) {
-    const post: Post = await this.postRepository.findOneByIdx(idx, false);
+  async delete(uuid: string, user: User) {
+    const post: Post = await this.postRepository.findOneByUUID(uuid, false);
 
     if (!post) {
       throw new NotFoundException('Post not found.');
@@ -98,9 +115,9 @@ export class PostService {
     return await post.remove();
   }
 
-  async post(idx: number): Promise<Post> {
-    const post: Post = await this.postRepository.findOneWithUserByIdx(
-      idx,
+  async post(url: string): Promise<Post> {
+    const post: Post = await this.postRepository.findOneWithUserByUrl(
+      url,
       false,
     );
 

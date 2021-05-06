@@ -23,6 +23,13 @@ export class QuestionRepository extends Repository<Question> {
       .getOne();
   }
 
+  findOneByUrl(url: string, isTemp: boolean): Promise<Question> {
+    return this.createQueryBuilder()
+      .where('url = :url', { url })
+      .andWhere('isTemp = :isTemp', { isTemp })
+      .getOne();
+  }
+
   findOneWithUserByUrl(url: string, isTemp: boolean): Promise<Question> {
     return this.createQueryBuilder('question')
       .leftJoinAndSelect('question.user', 'user')

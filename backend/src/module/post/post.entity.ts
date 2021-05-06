@@ -58,6 +58,20 @@ export class Post extends BaseEntity {
   @Column({ nullable: true })
   userIdx: number;
 
+  @Field(() => String)
+  @Column('text', {
+    nullable: false,
+    unique: true,
+  })
+  url: string;
+
+  @Field(() => String)
+  @Column('text', {
+    nullable: false,
+    unique: true,
+  })
+  uuid: string;
+
   @Field(() => [Tag])
   @ManyToMany(() => Tag, (tag) => tag.posts, { onDelete: 'CASCADE' })
   @JoinTable()

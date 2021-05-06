@@ -30,6 +30,10 @@ export class CreatePostInput {
   @IsBoolean()
   readonly isTemp: boolean;
 
+  @Field(() => String)
+  @IsString()
+  readonly url: string;
+
   @Field(() => [PostTagInput], { nullable: true })
   @IsOptional()
   @IsArray()

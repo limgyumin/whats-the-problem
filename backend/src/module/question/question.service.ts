@@ -33,7 +33,7 @@ export class QuestionService {
 
     const question: Question = this.questionRepository.create(data);
 
-    const existQuestion: Question = await this.questionRepository.findOneWithUserByUrl(
+    const existQuestion: Question = await this.questionRepository.findOneByUrl(
       url,
       false,
     );
@@ -63,7 +63,7 @@ export class QuestionService {
       false,
     );
 
-    const existQuestion: Question = await this.questionRepository.findOneWithUserByUrl(
+    const existQuestion: Question = await this.questionRepository.findOneByUrl(
       url,
       false,
     );

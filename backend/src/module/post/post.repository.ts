@@ -18,6 +18,28 @@ export class PostRepository extends Repository<Post> {
       .getOne();
   }
 
+  findOneByUrl(url: string, isTemp: boolean): Promise<Post> {
+    return this.createQueryBuilder()
+      .where('url = :url', { url })
+      .andWhere('isTemp = :isTemp', { isTemp })
+      .getOne();
+  }
+
+  findOneWithUserByUrl(url: string, isTemp: boolean): Promise<Post> {
+    return this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .andWhere('post.url = :url', { url })
+      .andWhere('post.isTemp = :isTemp', { isTemp })
+      .getOne();
+  }
+
+  findOneByUUID(uuid: string, isTemp: boolean): Promise<Post> {
+    return this.createQueryBuilder()
+      .where('uuid = :uuid', { uuid })
+      .andWhere('isTemp = :isTemp', { isTemp })
+      .getOne();
+  }
+
   findAllWithUserByTagIdx(
     tagIdx: number,
     page: number,

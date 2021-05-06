@@ -28,8 +28,8 @@ export class PostResolver {
   constructor(private postService: PostService) {}
 
   @Query(() => Post)
-  async post(@Args() { idx }: GetPostArgs): Promise<Post> {
-    return await this.postService.post(idx);
+  async post(@Args() { url }: GetPostArgs): Promise<Post> {
+    return await this.postService.post(url);
   }
 
   @Query(() => [Post])
@@ -74,15 +74,15 @@ export class PostResolver {
   @UseGuards(AuthGuard)
   async updatePost(
     @GetUser() user: User,
-    @Args() { idx, post }: UpdatePostArgs,
+    @Args() { uuid, post }: UpdatePostArgs,
   ) {
-    return await this.postService.update(idx, post, user);
+    return await this.postService.update(uuid, post, user);
   }
 
   @Mutation(() => Post)
   @Roles('Client')
   @UseGuards(AuthGuard)
-  async deletePost(@GetUser() user: User, @Args() { idx }: DeletePostArgs) {
-    return await this.postService.delete(idx, user);
+  async deletePost(@GetUser() user: User, @Args() { uuid }: DeletePostArgs) {
+    return await this.postService.delete(uuid, user);
   }
 }

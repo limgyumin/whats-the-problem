@@ -100,6 +100,8 @@ type Post {
   isTemp: Boolean!
   user: User!
   userIdx: Int!
+  url: String!
+  uuid: String!
   tags: [Tag!]!
   likes: [Like!]!
   createdAt: DateTime!
@@ -149,7 +151,7 @@ type Query {
   user(idx: Float!): User!
   users(userType: UserType!, option: UserOption!): [User!]!
   mailers(option: MailerOption!): [Mailer!]!
-  post(idx: Int!): Post!
+  post(url: String!): Post!
   posts(postType: PostType!, option: PostOption!): [Post!]!
   comments(parentIdx: Int!, commentType: CommentType!): [Comment!]!
   replies(commentIdx: Int!): [Reply!]!
@@ -207,8 +209,8 @@ type Mutation {
   createMailer(email: String!): Mailer!
   verifyMailer(email: String!, verifyCode: String!): Mailer!
   createPost(post: CreatePostInput!): Post!
-  updatePost(idx: Int!, post: UpdatePostInput!): Post!
-  deletePost(idx: Int!): Post!
+  updatePost(uuid: String!, post: UpdatePostInput!): Post!
+  deletePost(uuid: String!): Post!
   createComment(parentIdx: Int!, commentType: CommentType!, content: String!): Comment!
   updateComment(idx: Int!, content: String!): Comment!
   deleteComment(idx: Int!): Comment!
@@ -257,6 +259,7 @@ input CreatePostInput {
   content: String!
   thumbnail: String
   isTemp: Boolean
+  url: String!
   tags: [PostTagInput!]
 }
 
@@ -269,6 +272,7 @@ input UpdatePostInput {
   content: String!
   thumbnail: String
   isTemp: Boolean
+  url: String!
   tags: [PostTagInput!]
 }
 
