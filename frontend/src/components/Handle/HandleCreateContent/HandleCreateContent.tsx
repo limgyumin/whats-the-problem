@@ -11,6 +11,7 @@ type HandleCreateContentProps = {
   contentFocusHandler: () => void;
   changeHandler: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   contentKeyDownHandler: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  scrollToolBarHandler: (e: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 };
 
 const HandleCreateContent: React.FC<HandleCreateContentProps> = ({
@@ -19,11 +20,13 @@ const HandleCreateContent: React.FC<HandleCreateContentProps> = ({
   contentFocusHandler,
   changeHandler,
   contentKeyDownHandler,
+  scrollToolBarHandler,
 }) => {
   return (
     <div
       className={cx("handle-create-content")}
       onClick={() => contentFocusHandler()}
+      onScroll={(e) => scrollToolBarHandler(e)}
     >
       <textarea
         ref={contentRef}

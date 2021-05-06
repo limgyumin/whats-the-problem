@@ -2,7 +2,8 @@
   display: flex;
   flex: 1 1 0%;
   height: 100%;
-  padding: 1.5rem 0;
+  padding: 1rem 0 1.5rem;
+  overflow-y: auto;
 
   &-textarea {
     padding: 0 2rem 1rem;

@@ -6,6 +6,10 @@
   background-color: var(--main-bg);
   border-left: 1px solid var(--main-point-border);
 
+  @media screen and (max-width: 860px) {
+    display: none;
+  }
+
   &-title {
     word-break: break-all;
     font-weight: bold;

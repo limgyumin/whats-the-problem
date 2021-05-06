@@ -13,6 +13,11 @@
   border-radius: 0.2rem;
   padding: 1rem 1.2rem;
 
+  @media screen and (max-width: 1044px) {
+    right: auto;
+    left: 0;
+  }
+
   &-title {
     font-weight: bold;
     font-size: 1.125rem;

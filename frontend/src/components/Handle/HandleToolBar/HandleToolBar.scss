@@ -2,12 +2,28 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  padding: 1rem 2rem 0;
+  padding: 0.2rem 2rem;
+  background-color: var(--main-bg);
 
   &-divide {
     height: auto;
     border: 1px solid var(--main-point-border-1);
     margin: 0.5rem 0.5rem;
+  }
+
+  & > input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  &-wrapper {
+    position: relative;
   }
 
   &-button {
@@ -41,4 +57,11 @@
       }
     }
   }
+}
+
+.passed {
+  top: 0;
+  border-bottom: 1px solid var(--main-point-border);
+  // box-shadow: 0 0 0.6rem 0 rgba(0, 0, 0, 0.15);
+  // -webkit-box-shadow: 0 0 0.6rem 0 rgba(0, 0, 0, 0.15);
 }

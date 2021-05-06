@@ -1,18 +1,23 @@
 import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
-import useCreateQuestion from "hooks/question/useCreateQuestion";
+
 import DelayUnmount from "components/common/DelayUnmount";
 import HandleSubmitModal from "./HandleSubmitModal";
-import InputTags from "./InputTags";
-import InputTitle from "./InputTitle";
-import HandleContent from "./HandleContent";
-import HandleCreate from "./HandleCreate";
-import HandleCreateHeader from "./HandleCreate/HandleCreateHeader";
+import HandleCreateHeader from "./HandleCreateHeader";
 import HandleToolBar from "./HandleToolBar";
-import HandleCreateContent from "./HandleCreate/HandleCreateContent";
+import HandleCreateContent from "./HandleCreateContent";
 import HandlePreview from "./HandlePreview";
 import HandleBottom from "./HandleBottom";
+
+import InputTags from "./InputTags";
+import InputTitle from "./InputTitle";
+import InputLink from "./InputLink";
+
+import useHandle from "hooks/handle/useHandle";
+import useToolBar from "hooks/handle/useToolBar";
+import useTag from "hooks/tag/useTag";
+import useModal from "hooks/util/useModal";
 
 const styles = require("./Handle.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
@@ -21,23 +26,37 @@ const Handle = () => {
   const {
     titleRef,
     contentRef,
-    isModalMount,
-    tagName,
     request,
     isValid,
     changeHandler,
     changeUrlHandler,
+    contentFocusHandler,
+    goBackHandler,
+    submitQuestionHandler,
+  } = useHandle();
+  const {
+    imageRef,
+    linkRef,
+    linkInputRef,
+    isInputMount,
+    isPassed,
+    link,
+    changeImageHandler,
+    changeLinkHandler,
+    submitLinkHandler,
+    scrollToolBarHandler,
+    linkKeyDownHandler,
+    toolsHandler,
+    contentKeyDownHandler,
+  } = useToolBar(contentRef);
+  const {
+    tagName,
     changeTagHandler,
     updateTagHandler,
     removeTagHandler,
-    contentFocusHandler,
-    goBackHandler,
-    modalMountHandler,
-    submitQuestionHandler,
-    headingToolsHandler,
-    toolsHandler,
-    contentKeyDownHandler,
-  } = useCreateQuestion();
+  } = useTag();
+  const { isModalMount, modalMountHandler } = useModal();
+
   const { title, content, tags, url } = request;
 
   return (
@@ -53,9 +72,9 @@ const Handle = () => {
         />
       </DelayUnmount>
       <div className={cx("handle")}>
-        <HandleContent>
-          <HandleCreate>
-            <HandleCreateHeader>
+        <div className={cx("handle-content")}>
+          <div className={cx("handle-content-wrapper")}>
+            <HandleCreateHeader isPassed={isPassed}>
               <InputTitle
                 titleRef={titleRef}
                 title={title}
@@ -71,8 +90,21 @@ const Handle = () => {
               />
             </HandleCreateHeader>
             <HandleToolBar
-              headingToolsHandler={headingToolsHandler}
+              isInputMount={isInputMount}
+              isPassed={isPassed}
+              imageRef={imageRef}
               toolsHandler={toolsHandler}
+              changeImageHandler={changeImageHandler}
+              inputLink={
+                <InputLink
+                  linkRef={linkRef}
+                  linkInputRef={linkInputRef}
+                  link={link}
+                  changeLinkHandler={changeLinkHandler}
+                  submitLinkHandler={submitLinkHandler}
+                  linkKeyDownHandler={linkKeyDownHandler}
+                />
+              }
             />
             <HandleCreateContent
               content={content}
@@ -80,10 +112,11 @@ const Handle = () => {
               changeHandler={changeHandler}
               contentFocusHandler={contentFocusHandler}
               contentKeyDownHandler={contentKeyDownHandler}
+              scrollToolBarHandler={scrollToolBarHandler}
             />
-          </HandleCreate>
+          </div>
           <HandlePreview title={title} content={content} />
-        </HandleContent>
+        </div>
         <HandleBottom
           isValid={isValid}
           goBackHandler={goBackHandler}
