@@ -1,122 +1,28 @@
-import React, { useRef } from "react";
-import { isEmpty } from "lib/isEmpty";
-import { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { initialCreateQuestion } from "types/question/question.initial-state";
-import { ICreateQuestion } from "types/question/question.type";
-import { ICreateTag } from "types/tag/tag.type";
-import { useRecoilValue } from "recoil";
-import { IUserShortInfo } from "types/user/user.type";
-import { myProfileState } from "atom/auth.atom";
-import { createURL } from "lib/createURL";
+import { createQuestionState } from "atom/question.atom";
+import useClose from "hooks/util/useClose";
 import { uploadImage } from "lib/image";
-import { ICreateQuestionResult } from "types/question/question.result.type";
-import { useMutation } from "@apollo/client";
-import { CREATE_QUESTION } from "graphql/question/question.mutation";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useToasts } from "react-toast-notifications";
+import { useRecoilState } from "recoil";
+import { ICreateQuestion } from "types/question/question.type";
 import { IUploadResult } from "types/upload/upload.result";
 
-const useHandle = () => {
-  const history = useHistory();
+const useToolBar = (
+  contentRef: React.MutableRefObject<HTMLTextAreaElement>
+) => {
   const { addToast } = useToasts();
 
-  const [request, setRequest] = useState<ICreateQuestion>(
-    initialCreateQuestion
+  const [request, setRequest] = useRecoilState<ICreateQuestion>(
+    createQuestionState
   );
-  const [tagName, setTagName] = useState<string>("");
+
   const [link, setLink] = useState<string>("");
-  const [isModalMount, setIsModalMount] = useState<boolean>(false);
   const [isInputMount, setIsInputMount] = useState<boolean>(false);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isPassed, setIsPassed] = useState<boolean>(false);
 
-  const titleRef = useRef<HTMLTextAreaElement>(null);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
-  const linkRef = useRef<HTMLInputElement>(null);
-
-  const profile = useRecoilValue<IUserShortInfo>(myProfileState);
-
-  const [createQuestion] = useMutation<ICreateQuestionResult>(CREATE_QUESTION);
-
-  const changeHandler = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const { value, name } = e.target;
-      setRequest({ ...request, [name]: value });
-    },
-    [request, setRequest]
-  );
-
-  const changeUrlHandler = useCallback(
-    (e: React.FocusEvent<HTMLTextAreaElement>): void => {
-      const { value } = e.target;
-
-      if (profile.id) {
-        const url = createURL(profile.id, value);
-        setRequest({ ...request, url });
-      }
-    },
-    [profile, request, setRequest]
-  );
-
-  const changeTagHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
-      const { value } = e.target;
-      setTagName(value);
-    },
-    [setTagName]
-  );
-
-  const findExistTag = useCallback(
-    (tagName): ICreateTag => {
-      const { tags } = request;
-
-      return tags.find((tag) => tag.name === tagName);
-    },
-    [request]
-  );
-
-  const updateTagHandler = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>): void => {
-      const pressed = e.key;
-
-      if ((pressed === "," || pressed === "Enter") && !isEmpty(tagName)) {
-        e.preventDefault();
-        const existTag: ICreateTag = findExistTag(tagName);
-
-        if (!existTag) {
-          setRequest({
-            ...request,
-            tags: [...request.tags, { name: tagName }],
-          });
-        }
-        setTagName("");
-      }
-
-      if (!tagName && pressed === "Backspace") {
-        const copiedTags: ICreateTag[] = [...request.tags];
-        copiedTags.pop();
-
-        setRequest({ ...request, tags: copiedTags });
-      }
-    },
-    [tagName, request, setTagName, setRequest, findExistTag]
-  );
-
-  const removeTagHandler = useCallback(
-    (tagName: string): void => {
-      const copiedTags: ICreateTag[] = [...request.tags];
-
-      const existTag: ICreateTag = findExistTag(tagName);
-      const tagIdx: number = copiedTags.indexOf(existTag);
-
-      if (tagIdx > -1) {
-        copiedTags.splice(tagIdx, 1);
-      }
-
-      setRequest({ ...request, tags: copiedTags });
-    },
-    [request, findExistTag, setRequest]
-  );
+  const linkInputRef = useRef<HTMLInputElement>(null);
+  const linkRef = useRef<HTMLDivElement>(null);
 
   const changeContentHandler = useCallback(
     (content: string): void => {
@@ -135,13 +41,16 @@ const useHandle = () => {
     [contentRef]
   );
 
+  const linkFocusHandler = useCallback((): void => {
+    setTimeout(() => {
+      linkInputRef.current.focus();
+    }, 0);
+  }, [linkInputRef]);
+
   const linkMountHandler = useCallback((): void => {
     setIsInputMount(true);
-
-    setTimeout(() => {
-      linkRef.current.focus();
-    }, 0);
-  }, [linkRef, setIsInputMount]);
+    linkFocusHandler();
+  }, [setIsInputMount, linkFocusHandler]);
 
   const changeLinkHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -151,7 +60,14 @@ const useHandle = () => {
     [setLink]
   );
 
-  const submitLinkHandler = useCallback(() => {
+  const closeLinkHandler = useCallback((): void => {
+    setIsInputMount(false);
+    setLink("");
+  }, [setLink, setIsInputMount]);
+
+  useClose<HTMLDivElement>(linkRef, closeLinkHandler);
+
+  const submitLinkHandler = useCallback((): void => {
     const current = contentRef.current;
 
     const startPos: number = current.selectionStart;
@@ -175,16 +91,36 @@ const useHandle = () => {
     setLink("");
     setIsInputMount(false);
   }, [
-    contentRef,
     link,
-    setIsInputMount,
+    contentRef,
     changeContentHandler,
     setSelectionPos,
+    setIsInputMount,
   ]);
+
+  const linkKeyDownHandler = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>): void => {
+      const pressed: string = e.key;
+
+      if (pressed === "Enter") {
+        e.preventDefault();
+        submitLinkHandler();
+      }
+    },
+    [submitLinkHandler]
+  );
 
   const initImageValue = useCallback((): void => {
     imageRef.current.value = "";
   }, [imageRef]);
+
+  const scrollToolBarHandler = useCallback(
+    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      const { scrollTop } = e.currentTarget;
+      setIsPassed(scrollTop > 0);
+    },
+    [setIsPassed]
+  );
 
   const changeImageHandler = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -211,7 +147,10 @@ const useHandle = () => {
         const imageText: string = `![](${url})`;
 
         changeContentHandler(`${textBefore}${imageText}${textAfter}`);
-        setSelectionPos(startPos, startPos + imageText.length);
+        setSelectionPos(
+          startPos + imageText.length,
+          startPos + imageText.length
+        );
 
         initImageValue();
       } catch (error) {
@@ -220,11 +159,17 @@ const useHandle = () => {
         });
       }
     },
-    [changeContentHandler, setSelectionPos, addToast, initImageValue]
+    [
+      contentRef,
+      changeContentHandler,
+      setSelectionPos,
+      addToast,
+      initImageValue,
+    ]
   );
 
   const toolsHandler = useCallback(
-    (mode: string, scale?: number) => {
+    (mode: string, scale?: number): void => {
       const current = contentRef.current;
 
       const startPos: number = current.selectionStart;
@@ -409,11 +354,11 @@ const useHandle = () => {
 
       handler();
     },
-    [changeContentHandler, setSelectionPos, linkMountHandler]
+    [contentRef, changeContentHandler, setSelectionPos, linkMountHandler]
   );
 
   const contentKeyDownHandler = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
       const pressed = e.key;
 
       if (pressed === "Tab") {
@@ -433,110 +378,28 @@ const useHandle = () => {
     [contentRef, changeContentHandler, setSelectionPos]
   );
 
-  const validate = useCallback((): boolean => {
-    const { title, content } = request;
-
-    const [emptyTitle, emptyContent] = [isEmpty(title), isEmpty(content)];
-
-    return !(emptyTitle || emptyContent);
-  }, [request]);
-
-  const modalMountHandler = useCallback((): void => {
-    setIsModalMount(!isModalMount);
-  }, [isModalMount, setIsModalMount]);
-
-  const submitQuestionHandler = useCallback(async (): Promise<void> => {
-    if (!validate()) return;
-
-    try {
-      const { data } = await createQuestion({
-        variables: { question: request },
-      });
-
-      if (data) {
-        addToast("성공적으로 질문 글을 작성했어요. 얼른 해답을 찾길 바라요!", {
-          appearance: "success",
-        });
-        history.push(`/question/${data.createQuestion.url}`);
-      }
-    } catch (error) {
-      addToast("질문 정보를 제출하는 중에 오류가 발생했어요...", {
-        appearance: "error",
-      });
-    }
-  }, [history, request, validate, createQuestion, addToast]);
-
-  const goBackHandler = useCallback((): void => {
-    history.push("/");
-  }, [history]);
-
-  const contentFocusHandler = useCallback((): void => {
-    contentRef.current.focus();
-  }, [contentRef]);
-
-  const increaseTitleScrollHandler = useCallback((): void => {
-    titleRef.current!.style.height = "0px";
-
-    const scrollHeight: number = titleRef.current!.scrollHeight;
-    titleRef.current!.style.height = scrollHeight + "px";
-  }, [titleRef]);
-
-  const increaseContentScrollHandler = useCallback((): void => {
-    contentRef.current!.style.height = "0px";
-
-    const scrollHeight: number = contentRef.current!.scrollHeight;
-    contentRef.current!.style.height = scrollHeight + "px";
-  }, [contentRef]);
-
-  useEffect(() => {
-    increaseTitleScrollHandler();
-  }, [request.title, increaseTitleScrollHandler]);
-
-  useEffect(() => {
-    increaseContentScrollHandler();
-  }, [request.content, increaseContentScrollHandler]);
-
-  useEffect(() => {
-    setIsValid(validate());
-  }, [request.title, request.content, validate, setIsValid]);
-
   useEffect(() => {
     return () => {
-      setRequest(initialCreateQuestion);
-      setTagName("");
+      setLink("");
       setIsInputMount(false);
-      setIsModalMount(false);
-      setIsValid(false);
     };
-  }, [setRequest]);
+  }, [setIsInputMount]);
 
   return {
-    profile,
-    titleRef,
-    contentRef,
     imageRef,
     linkRef,
-    isModalMount,
+    linkInputRef,
     isInputMount,
-    tagName,
+    isPassed,
     link,
-    request,
-    isValid,
-    changeHandler,
-    changeUrlHandler,
-    changeImageHandler,
     changeLinkHandler,
+    changeImageHandler,
     submitLinkHandler,
-    changeTagHandler,
-    updateTagHandler,
-    removeTagHandler,
-    contentFocusHandler,
-    goBackHandler,
-    modalMountHandler,
-    submitQuestionHandler,
+    scrollToolBarHandler,
+    linkKeyDownHandler,
     toolsHandler,
     contentKeyDownHandler,
   };
 };
 
-export default useHandle;
+export default useToolBar;
