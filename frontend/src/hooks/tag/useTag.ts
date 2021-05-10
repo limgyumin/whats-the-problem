@@ -1,14 +1,12 @@
-import { createQuestionState } from "atom/question.atom";
+import { createPostState } from "atom/post.atom";
 import { isEmpty } from "lib/isEmpty";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { ICreateQuestion } from "types/question/question.type";
+import { ICreatePost } from "types/post/post.type";
 import { ICreateTag } from "types/tag/tag.type";
 
 const useTag = () => {
-  const [request, setRequest] = useRecoilState<ICreateQuestion>(
-    createQuestionState
-  );
+  const [request, setRequest] = useRecoilState<ICreatePost>(createPostState);
 
   const [tagName, setTagName] = useState<string>("");
 

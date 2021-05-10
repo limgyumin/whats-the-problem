@@ -2,7 +2,7 @@ import axios from "axios";
 import { SERVER } from "config/config.json";
 import { IUploadResult } from "types/upload/upload.result";
 
-export const uploadImage = async (file: File): Promise<string> => {
+export const uploadImage = async (file: File): Promise<IUploadResult> => {
   try {
     const url: string = `${SERVER}/upload`;
 
@@ -11,9 +11,7 @@ export const uploadImage = async (file: File): Promise<string> => {
 
     const { data } = await axios.post<IUploadResult>(url, formData);
 
-    console.log(data);
-
-    return data.files[0];
+    return data;
   } catch (error) {
     throw new Error(`${error}`);
   }

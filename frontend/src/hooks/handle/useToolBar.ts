@@ -1,35 +1,18 @@
-import { createQuestionState } from "atom/question.atom";
-import useClose from "hooks/util/useClose";
-import { uploadImage } from "lib/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useToasts } from "react-toast-notifications";
-import { useRecoilState } from "recoil";
-import { ICreateQuestion } from "types/question/question.type";
-import { IUploadResult } from "types/upload/upload.result";
+import useClose from "hooks/util/useClose";
+import useUpload from "hooks/upload/useUpload";
 
 const useToolBar = (
-  contentRef: React.MutableRefObject<HTMLTextAreaElement>
+  contentRef: React.MutableRefObject<HTMLTextAreaElement>,
+  changeContentHandler: (content: string) => void
 ) => {
-  const { addToast } = useToasts();
-
-  const [request, setRequest] = useRecoilState<ICreateQuestion>(
-    createQuestionState
-  );
+  const { imageRef, uploadHandler } = useUpload();
 
   const [link, setLink] = useState<string>("");
   const [isInputMount, setIsInputMount] = useState<boolean>(false);
-  const [isPassed, setIsPassed] = useState<boolean>(false);
 
-  const imageRef = useRef<HTMLInputElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLDivElement>(null);
-
-  const changeContentHandler = useCallback(
-    (content: string): void => {
-      setRequest({ ...request, content });
-    },
-    [request, setRequest]
-  );
 
   const setSelectionPos = useCallback(
     (start: number, end: number): void => {
@@ -110,23 +93,9 @@ const useToolBar = (
     [submitLinkHandler]
   );
 
-  const initImageValue = useCallback((): void => {
-    imageRef.current.value = "";
-  }, [imageRef]);
-
-  const scrollToolBarHandler = useCallback(
-    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      const { scrollTop } = e.currentTarget;
-      setIsPassed(scrollTop > 0);
-    },
-    [setIsPassed]
-  );
-
   const changeImageHandler = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
       const { files } = e.target;
-
-      if (!files || !files.length) return;
 
       const current = contentRef.current;
 
@@ -138,34 +107,14 @@ const useToolBar = (
       const textBefore: string = content.substring(0, startPos);
       const textAfter: string = content.substring(endPos);
 
-      try {
-        const file: File = files[0];
+      const url: string = await uploadHandler(files);
 
-        const { data }: IUploadResult = await uploadImage(file);
-        const url: string = data.files[0];
+      const imageText: string = `![](${url})\n`;
 
-        const imageText: string = `![](${url})`;
-
-        changeContentHandler(`${textBefore}${imageText}${textAfter}`);
-        setSelectionPos(
-          startPos + imageText.length,
-          startPos + imageText.length
-        );
-
-        initImageValue();
-      } catch (error) {
-        addToast("이미지를 업로드하는 중에 오류가 발생했어요...", {
-          appearance: "error",
-        });
-      }
+      changeContentHandler(`${textBefore}${imageText}${textAfter}`);
+      setSelectionPos(startPos + imageText.length, startPos + imageText.length);
     },
-    [
-      contentRef,
-      changeContentHandler,
-      setSelectionPos,
-      addToast,
-      initImageValue,
-    ]
+    [contentRef, changeContentHandler, setSelectionPos, uploadHandler]
   );
 
   const toolsHandler = useCallback(
@@ -357,27 +306,6 @@ const useToolBar = (
     [contentRef, changeContentHandler, setSelectionPos, linkMountHandler]
   );
 
-  const contentKeyDownHandler = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
-      const pressed = e.key;
-
-      if (pressed === "Tab") {
-        e.preventDefault();
-        const current = contentRef.current;
-
-        const startPos: number = current.selectionStart;
-        const endPos: number = current.selectionEnd;
-
-        const startContent: string = current.value.substring(0, startPos);
-        const endContent: string = current.value.substring(startPos);
-
-        changeContentHandler(`${startContent}\t${endContent}`);
-        setSelectionPos(startPos + 1, endPos + 1);
-      }
-    },
-    [contentRef, changeContentHandler, setSelectionPos]
-  );
-
   useEffect(() => {
     return () => {
       setLink("");
@@ -390,15 +318,12 @@ const useToolBar = (
     linkRef,
     linkInputRef,
     isInputMount,
-    isPassed,
     link,
     changeLinkHandler,
     changeImageHandler,
     submitLinkHandler,
-    scrollToolBarHandler,
     linkKeyDownHandler,
     toolsHandler,
-    contentKeyDownHandler,
   };
 };
 
