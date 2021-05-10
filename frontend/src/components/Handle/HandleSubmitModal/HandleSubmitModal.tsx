@@ -1,27 +1,43 @@
+import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
-import React from "react";
 import { ICreateTag } from "types/tag/tag.type";
+import HandleSubmitTags from "./HandleSubmitTags";
+import HandleSubmitThumbnail from "./HandleSubmitThumbnail";
+import HandleSubmitTitle from "./HandleSubmitTitle";
+import HandleSubmitURL from "./HandleSubmitURL";
 
 const styles = require("./HandleSubmitModal.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
 type HandleSubmitModalProps = {
+  isPost: boolean;
   title: string;
+  thumbnail: string;
   tags: ICreateTag[];
+  imageRef: React.MutableRefObject<HTMLInputElement>;
   url: string;
   isMount: boolean;
   mountHandler: () => void;
-  submitQuestionHandler: () => Promise<void>;
+  submitHandler: () => Promise<void>;
+  changeThumbnailHandler: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => Promise<void>;
+  removeThumbnailHandler: () => void;
 };
 
 const HandleSubmitModal: React.FC<HandleSubmitModalProps> = ({
+  isPost,
   title,
+  thumbnail,
   tags,
+  imageRef,
   url,
   isMount,
   mountHandler,
-  submitQuestionHandler,
+  submitHandler,
+  changeThumbnailHandler,
+  removeThumbnailHandler,
 }) => {
   return (
     <div className={cx("handle-submit-modal light")}>
@@ -48,71 +64,25 @@ const HandleSubmitModal: React.FC<HandleSubmitModalProps> = ({
             />
           </div>
           <div className={cx("handle-submit-modal-box-wrapper-content")}>
-            <div
-              className={cx("handle-submit-modal-box-wrapper-content-title")}
-            >
-              <p
-                className={cx(
-                  "handle-submit-modal-box-wrapper-content-title-name"
-                )}
-              >
-                제목
-              </p>
-              <h1
-                className={cx(
-                  "handle-submit-modal-box-wrapper-content-title-text"
-                )}
-              >
-                {title}
-              </h1>
-            </div>
-            <div className={cx("handle-submit-modal-box-wrapper-content-tags")}>
-              <p
-                className={cx(
-                  "handle-submit-modal-box-wrapper-content-tags-name"
-                )}
-              >
-                태그
-              </p>
+            <div className={cx("handle-submit-modal-box-wrapper-content-area")}>
               <div
                 className={cx(
-                  "handle-submit-modal-box-wrapper-content-tags-list"
+                  "handle-submit-modal-box-wrapper-content-area-main"
                 )}
               >
-                {tags.map((tag, idx) => (
-                  <div
-                    key={idx}
-                    className={cx(
-                      "handle-submit-modal-box-wrapper-content-tags-list-item"
-                    )}
-                  >
-                    <p
-                      className={cx(
-                        "handle-submit-modal-box-wrapper-content-tags-list-item-name"
-                      )}
-                    >
-                      {tag.name}
-                    </p>
-                  </div>
-                ))}
+                <HandleSubmitTitle title={title} />
+                <HandleSubmitTags tags={tags} />
               </div>
+              {isPost && (
+                <HandleSubmitThumbnail
+                  imageRef={imageRef}
+                  thumbnail={thumbnail}
+                  changeThumbnailHandler={changeThumbnailHandler}
+                  removeThumbnailHandler={removeThumbnailHandler}
+                />
+              )}
             </div>
-            <div className={cx("handle-submit-modal-box-wrapper-content-url")}>
-              <p
-                className={cx(
-                  "handle-submit-modal-box-wrapper-content-url-name"
-                )}
-              >
-                URL
-              </p>
-              <h1
-                className={cx(
-                  "handle-submit-modal-box-wrapper-content-url-text"
-                )}
-              >
-                {url}
-              </h1>
-            </div>
+            <HandleSubmitURL url={url} />
           </div>
           <div className={cx("handle-submit-modal-box-wrapper-bottom")}>
             <button
@@ -123,7 +93,7 @@ const HandleSubmitModal: React.FC<HandleSubmitModalProps> = ({
             </button>
             <button
               className={cx("handle-submit-modal-box-wrapper-bottom-submit")}
-              onClick={() => submitQuestionHandler()}
+              onClick={() => submitHandler()}
             >
               작성 완료
             </button>

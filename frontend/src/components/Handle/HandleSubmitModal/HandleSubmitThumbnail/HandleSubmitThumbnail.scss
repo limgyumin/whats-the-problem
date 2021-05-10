@@ -1,0 +1,112 @@
+.handle-submit-thumbnail {
+  display: flex;
+  align-items: center;
+  width: 28rem;
+  border-left: 1px solid var(--main-point-border-1);
+  padding-left: 1.5rem;
+  margin-left: 1.5rem;
+
+  & > input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  &-wrapper {
+    width: 100%;
+    padding-top: 56%;
+    position: relative;
+
+    &-preview,
+    &-default {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+    }
+
+    &-preview {
+      &-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      &-buttons {
+        position: absolute;
+        bottom: 0.6rem;
+        right: 0.6rem;
+
+        &-change,
+        &-cancel {
+          padding: 0.4rem 0.7rem;
+          border-radius: 0.2rem;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          font-size: 0.875rem;
+          font-weight: bold;
+        }
+
+        &-change {
+          background-color: var(--main-point-3);
+          color: var(--main-point-0);
+          transition: background-color ease 0.1s;
+          margin-right: 0.4rem;
+
+          &:hover {
+            background-color: var(--main-point-5);
+          }
+        }
+
+        &-cancel {
+          background-color: var(--main-point-light-3);
+          color: var(--main-point-1);
+          transition: background-color ease 0.1s;
+
+          &:hover {
+            background-color: var(--main-point-light-4);
+          }
+        }
+      }
+    }
+
+    &-default {
+      background-color: var(--main-point-light-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &-icon {
+        font-size: 2.8rem;
+        color: var(--main-point-5);
+      }
+
+      &-upload {
+        position: absolute;
+        bottom: 0.6rem;
+        right: 0.6rem;
+        padding: 0.4rem 0.7rem;
+        border-radius: 0.2rem;
+        outline: none;
+        border: none;
+        background-color: var(--main-point-3);
+        color: var(--main-point-0);
+        cursor: pointer;
+        transition: background-color ease 0.1s;
+        font-size: 0.875rem;
+        font-weight: bold;
+
+        &:hover {
+          background-color: var(--main-point-5);
+        }
+      }
+    }
+  }
+}

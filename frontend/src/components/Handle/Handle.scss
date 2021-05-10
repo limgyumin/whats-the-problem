@@ -32,6 +32,15 @@
       @media screen and (max-width: 860px) {
         width: 100%;
       }
+
+      &-toolbar {
+        padding: 0 2rem;
+      }
     }
   }
+}
+
+.passed {
+  top: 0;
+  border-bottom: 1px solid var(--main-point-border);
 }

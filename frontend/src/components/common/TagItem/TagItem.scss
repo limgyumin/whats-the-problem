@@ -1,12 +1,12 @@
 .tag-item {
-  border-radius: 0.4rem;
+  border-radius: 2rem;
   margin: 0 0.6rem 0.6rem 0;
   background-color: var(--main-point-light-1);
   padding: 0.3rem 0.55rem;
 
   &-name {
-    font-size: 0.875rem;
+    font-size: 0.915rem;
     font-weight: normal;
-    color: var(--main-point-1);
+    color: var(--main-point-2);
   }
 }

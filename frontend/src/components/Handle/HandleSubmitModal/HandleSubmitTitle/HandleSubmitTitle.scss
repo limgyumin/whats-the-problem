@@ -1,0 +1,20 @@
+@import "../../../../styles/ellipsis.scss";
+
+.handle-submit-title {
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--main-point-border-1);
+
+  &-name {
+    font-weight: normal;
+    font-size: 1.025rem;
+    color: var(--main-point-5);
+    margin-bottom: 0.8rem;
+  }
+
+  &-text {
+    font-weight: bold;
+    font-size: 1.825rem;
+    color: var(--main-point-1);
+    @include ellipsis(1);
+  }
+}

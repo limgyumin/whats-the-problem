@@ -1,22 +1,16 @@
 import React from "react";
 import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
-
 import DelayUnmount from "components/common/DelayUnmount";
 import HandleSubmitModal from "./HandleSubmitModal";
 import HandleCreateHeader from "./HandleCreateHeader";
-import HandleToolBar from "./HandleToolBar";
+import HandleToolBar from "../common/ToolBar";
 import HandleCreateContent from "./HandleCreateContent";
 import HandlePreview from "./HandlePreview";
 import HandleBottom from "./HandleBottom";
-
 import InputTags from "./InputTags";
 import InputTitle from "./InputTitle";
-import InputLink from "./InputLink";
-
 import useHandle from "hooks/handle/useHandle";
-import useToolBar from "hooks/handle/useToolBar";
-import useTag from "hooks/tag/useTag";
 import useModal from "hooks/util/useModal";
 
 const styles = require("./Handle.scss");
@@ -24,37 +18,26 @@ const cx: ClassNamesFn = classNames.bind(styles);
 
 const Handle = () => {
   const {
+    isPost,
+    isValid,
+    isPassed,
+    thumbnail,
+    imageRef,
     titleRef,
     contentRef,
     request,
-    isValid,
     changeHandler,
     changeUrlHandler,
-    contentFocusHandler,
-    goBackHandler,
-    submitQuestionHandler,
-  } = useHandle();
-  const {
-    imageRef,
-    linkRef,
-    linkInputRef,
-    isInputMount,
-    isPassed,
-    link,
-    changeImageHandler,
-    changeLinkHandler,
-    submitLinkHandler,
+    changeThumbnailHandler,
+    changeContentHandler,
+    removeThumbnailHandler,
     scrollToolBarHandler,
-    linkKeyDownHandler,
-    toolsHandler,
+    contentFocusHandler,
     contentKeyDownHandler,
-  } = useToolBar(contentRef);
-  const {
-    tagName,
-    changeTagHandler,
-    updateTagHandler,
-    removeTagHandler,
-  } = useTag();
+    goBackHandler,
+    submitHandler,
+  } = useHandle();
+
   const { isModalMount, modalMountHandler } = useModal();
 
   const { title, content, tags, url } = request;
@@ -63,12 +46,17 @@ const Handle = () => {
     <React.Fragment>
       <DelayUnmount isMount={isModalMount} delay={500}>
         <HandleSubmitModal
+          isPost={isPost}
           title={title}
+          thumbnail={thumbnail}
           tags={tags}
           url={url}
+          imageRef={imageRef}
           isMount={isModalMount}
           mountHandler={modalMountHandler}
-          submitQuestionHandler={submitQuestionHandler}
+          submitHandler={submitHandler}
+          changeThumbnailHandler={changeThumbnailHandler}
+          removeThumbnailHandler={removeThumbnailHandler}
         />
       </DelayUnmount>
       <div className={cx("handle")}>
@@ -81,31 +69,18 @@ const Handle = () => {
                 changeHandler={changeHandler}
                 changeUrlHandler={changeUrlHandler}
               />
-              <InputTags
-                tagName={tagName}
-                tags={tags}
-                changeTagHandler={changeTagHandler}
-                updateTagHandler={updateTagHandler}
-                removeTagHandler={removeTagHandler}
-              />
+              <InputTags tags={tags} />
             </HandleCreateHeader>
-            <HandleToolBar
-              isInputMount={isInputMount}
-              isPassed={isPassed}
-              imageRef={imageRef}
-              toolsHandler={toolsHandler}
-              changeImageHandler={changeImageHandler}
-              inputLink={
-                <InputLink
-                  linkRef={linkRef}
-                  linkInputRef={linkInputRef}
-                  link={link}
-                  changeLinkHandler={changeLinkHandler}
-                  submitLinkHandler={submitLinkHandler}
-                  linkKeyDownHandler={linkKeyDownHandler}
-                />
-              }
-            />
+            <div
+              className={cx("handle-content-wrapper-toolbar", {
+                passed: isPassed,
+              })}
+            >
+              <HandleToolBar
+                contentRef={contentRef}
+                changeContentHandler={changeContentHandler}
+              />
+            </div>
             <HandleCreateContent
               content={content}
               contentRef={contentRef}

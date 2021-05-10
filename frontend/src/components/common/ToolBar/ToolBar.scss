@@ -1,9 +1,7 @@
-.handle-toolbar {
-  width: 100%;
+.toolbar {
   display: flex;
   flex-wrap: wrap;
-  padding: 0.2rem 2rem;
-  background-color: var(--main-bg);
+  padding: 0.2rem 0;
 
   &-divide {
     height: auto;
@@ -28,7 +26,7 @@
 
   &-button {
     cursor: pointer;
-    padding: 0.8rem;
+    padding: 0.65rem;
     border: none;
     outline: none;
     background-color: transparent;
@@ -40,7 +38,7 @@
 
     &-icon {
       color: var(--main-point-3);
-      font-size: 1.125rem;
+      font-size: 1.025rem;
     }
 
     &-heading {
@@ -48,7 +46,7 @@
 
       &-icon {
         color: var(--main-point-3);
-        font-size: 1.125rem;
+        font-size: 1.025rem;
       }
 
       &-number {
@@ -57,11 +55,4 @@
       }
     }
   }
-}
-
-.passed {
-  top: 0;
-  border-bottom: 1px solid var(--main-point-border);
-  // box-shadow: 0 0 0.6rem 0 rgba(0, 0, 0, 0.15);
-  // -webkit-box-shadow: 0 0 0.6rem 0 rgba(0, 0, 0, 0.15);
 }

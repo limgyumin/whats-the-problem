@@ -65,78 +65,12 @@
       &-content {
         margin: 0.5rem 0 3rem;
 
-        &-title,
-        &-tags,
-        &-url {
+        &-area {
           margin-top: 1.2rem;
-          padding-bottom: 0.6rem;
-          border-bottom: 1px solid var(--main-point-border-1);
-        }
+          display: flex;
 
-        &-title {
-          &-name {
-            font-weight: normal;
-            font-size: 1.025rem;
-            color: var(--main-point-5);
-            margin-bottom: 0.8rem;
-          }
-
-          &-text {
-            font-weight: bold;
-            font-size: 1.825rem;
-            color: var(--main-point-1);
-            @include ellipsis(1);
-          }
-        }
-
-        &-tags {
-          &-name {
-            font-weight: normal;
-            font-size: 1.025rem;
-            color: var(--main-point-5);
-            margin-bottom: 0.8rem;
-          }
-
-          &-list {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-
-            &-item {
-              border-radius: 2rem;
-              margin: 0 0.6rem 0.6rem 0;
-              background-color: var(--main-point-light-1);
-              padding: 0.3rem 0.55rem;
-              transition: background-color ease 0.1s;
-              cursor: pointer;
-              @include size-up(0.3);
-
-              &:hover {
-                background-color: var(--main-point-light-3);
-              }
-
-              &-name {
-                font-size: 0.915rem;
-                font-weight: normal;
-                color: var(--main-point-2);
-              }
-            }
-          }
-        }
-
-        &-url {
-          &-name {
-            font-weight: normal;
-            font-size: 1.025rem;
-            color: var(--main-point-5);
-            margin-bottom: 0.8rem;
-          }
-
-          &-text {
-            font-weight: normal;
-            font-size: 1.225rem;
-            color: var(--main-point-4);
-            @include ellipsis(1);
+          &-main {
+            width: 100%;
           }
         }
       }
@@ -152,7 +86,7 @@
           outline: none;
           font-size: 0.925rem;
           font-weight: normal;
-          border-radius: 0.4rem;
+          border-radius: 0.2rem;
           padding: 0.6rem 1.2rem;
           cursor: pointer;
           transition: background-color ease 0.1s;
@@ -161,7 +95,7 @@
         &-cancel {
           background-color: var(--main-point-light-3);
           color: var(--main-point-1);
-          margin-right: 0.5rem;
+          margin-right: 0.8rem;
 
           &:hover {
             background-color: var(--main-point-light-1);
