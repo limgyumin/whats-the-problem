@@ -1,13 +1,5 @@
 import { initialUser } from "types/user/user.initial-state";
-import { ICreateQuestion, IQuestion } from "./question.type";
-
-export const initialCreateQuestion: ICreateQuestion = {
-  title: "",
-  content: "",
-  tags: [],
-  isTemp: false,
-  url: "",
-};
+import { IQuestion } from "./question.type";
 
 export const initialQuestion: IQuestion = {
   idx: 0,

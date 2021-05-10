@@ -1,5 +1,5 @@
 import { IAnswer } from "../answer/answer.type";
-import { ICreateTag, ITag } from "../tag/tag.type";
+import { ITag } from "../tag/tag.type";
 import { IUser } from "../user/user.type";
 
 export interface IQuestion {
@@ -15,12 +15,4 @@ export interface IQuestion {
   answerCount: number;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface ICreateQuestion {
-  title: string;
-  content: string;
-  tags: ICreateTag[];
-  isTemp?: boolean;
-  url: string;
 }

@@ -1,3 +1,5 @@
 export interface IUploadResult {
-  files: string[];
+  data: {
+    files: string[];
+  };
 }
