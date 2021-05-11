@@ -1,9 +1,4 @@
-.create-answer {
-  border: 1px solid var(--main-point-border);
-  border-radius: 0.6rem;
-  overflow: hidden;
-  margin: 2.2rem 0;
-
+.handle-answer {
   &-container {
     min-height: 3.2rem;
     padding: 0 0.8rem;
@@ -72,20 +67,34 @@
       justify-content: flex-end;
       padding: 0.7rem 1rem;
 
-      &-submit {
+      &-submit,
+      &-cancel {
         outline: none;
         border: none;
         padding: 0.5rem 1rem;
         font-size: 0.925rem;
         font-weight: normal;
-        background-color: var(--main-point-1);
-        color: var(--main-point-0);
         border-radius: 0.2rem;
         transition: background-color ease 0.1s;
         cursor: pointer;
+      }
+
+      &-submit {
+        background-color: var(--main-point-1);
+        color: var(--main-point-0);
 
         &:hover {
           background-color: var(--main-point-2);
+        }
+      }
+
+      &-cancel {
+        margin-left: 0.6rem;
+        background-color: var(--main-point-light-3);
+        color: var(--main-point-1);
+
+        &:hover {
+          background-color: var(--main-point-light-1);
         }
       }
     }
