@@ -12,6 +12,7 @@ const useToolBar = (
   const [isInputMount, setIsInputMount] = useState<boolean>(false);
 
   const linkInputRef = useRef<HTMLInputElement>(null);
+  const clickRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<HTMLDivElement>(null);
 
   const setSelectionPos = useCallback(
@@ -48,7 +49,7 @@ const useToolBar = (
     setLink("");
   }, [setLink, setIsInputMount]);
 
-  useClose<HTMLDivElement>(linkRef, closeLinkHandler);
+  useClose<HTMLDivElement>(clickRef, linkRef, closeLinkHandler);
 
   const submitLinkHandler = useCallback((): void => {
     const current = contentRef.current;
@@ -315,6 +316,7 @@ const useToolBar = (
 
   return {
     imageRef,
+    clickRef,
     linkRef,
     linkInputRef,
     isInputMount,
