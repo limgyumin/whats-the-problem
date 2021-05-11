@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export const ANSWERS = gql`
   query answers($questionIdx: Int!) {
