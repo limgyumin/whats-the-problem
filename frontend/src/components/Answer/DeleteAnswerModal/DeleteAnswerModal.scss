@@ -1,0 +1,43 @@
+.delete-answer-modal {
+  &-title {
+    font-size: 1.225rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &-subtitle {
+    margin-bottom: 2rem;
+  }
+
+  &-buttons {
+    &-handle,
+    &-cancel {
+      outline: none;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 0.925rem;
+      font-weight: normal;
+      border-radius: 0.2rem;
+      transition: background-color ease 0.1s;
+      cursor: pointer;
+    }
+
+    &-handle {
+      background-color: var(--main-point-1);
+      color: var(--main-point-0);
+
+      &:hover {
+        background-color: var(--main-point-2);
+      }
+    }
+
+    &-cancel {
+      margin-left: 0.6rem;
+      background-color: var(--main-point-light-3);
+      color: var(--main-point-1);
+
+      &:hover {
+        background-color: var(--main-point-light-1);
+      }
+    }
+  }
+}
