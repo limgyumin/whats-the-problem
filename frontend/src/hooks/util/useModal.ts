@@ -8,6 +8,15 @@ const useModal = () => {
   }, [isModalMount, setIsModalMount]);
 
   useEffect(() => {
+    isModalMount
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "unset");
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isModalMount]);
+
+  useEffect(() => {
     return () => setIsModalMount(false);
   }, [setIsModalMount]);
 
