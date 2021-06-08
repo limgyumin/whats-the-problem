@@ -28,6 +28,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
 }) => {
   const {
     imageRef,
+    clickRef,
     linkRef,
     linkInputRef,
     isInputMount,
@@ -78,7 +79,7 @@ const ToolBar: React.FC<ToolBarProps> = ({
       >
         <FaQuoteRight className={cx("toolbar-button-icon")} />
       </button>
-      <div className={cx("toolbar-wrapper")}>
+      <div className={cx("toolbar-wrapper")} ref={clickRef}>
         <button
           className={cx("toolbar-button")}
           onClick={() => toolsHandler("link")}
