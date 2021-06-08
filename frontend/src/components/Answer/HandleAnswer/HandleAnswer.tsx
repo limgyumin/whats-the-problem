@@ -3,37 +3,40 @@ import classNames from "classnames";
 import { ClassNamesFn } from "classnames/types";
 import ToolBar from "components/common/ToolBar";
 import MarkDown from "components/common/MarkDown";
+import useHandleAnswer from "hooks/answer/useHandleAnswer";
 
 const styles = require("./HandleAnswer.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
 type HandleAnswerProps = {
   edit?: boolean;
-  preview: boolean;
   content: string;
   contentRef: React.MutableRefObject<HTMLTextAreaElement>;
-  cancelHandler?: () => void;
-  changeHandler: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   changeContentHandler: (content: string) => void;
-  writeModeHandler: () => void;
-  previewModeHandler: () => void;
-  contentKeyDownHandler: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   completeHandler: () => Promise<void>;
+  cancelHandler?: () => void;
 };
 
 const HandleAnswer: React.FC<HandleAnswerProps> = ({
   edit,
-  preview,
   content,
   contentRef,
-  cancelHandler,
-  changeHandler,
   changeContentHandler,
-  writeModeHandler,
-  previewModeHandler,
-  contentKeyDownHandler,
   completeHandler,
+  cancelHandler,
 }) => {
+  const {
+    preview,
+    writeModeHandler,
+    previewModeHandler,
+    contentKeyDownHandler,
+  } = useHandleAnswer(
+    content,
+    contentRef,
+    changeContentHandler,
+    completeHandler
+  );
+
   return (
     <div className={cx("handle-answer")}>
       <div className={cx("handle-answer-container")}>
@@ -73,7 +76,7 @@ const HandleAnswer: React.FC<HandleAnswerProps> = ({
             value={content}
             placeholder="답변을 작성해주세요"
             className={cx("handle-answer-wrapper-content")}
-            onChange={(e) => changeHandler(e)}
+            onChange={({ target: { value } }) => changeContentHandler(value)}
             onKeyDown={(e) => contentKeyDownHandler(e)}
           />
         )}
@@ -82,7 +85,7 @@ const HandleAnswer: React.FC<HandleAnswerProps> = ({
             className={cx("handle-answer-wrapper-button-submit")}
             onClick={() => completeHandler()}
           >
-            작성하기
+            {edit ? "수정하기" : "작성하기"}
           </button>
           {edit && (
             <button
