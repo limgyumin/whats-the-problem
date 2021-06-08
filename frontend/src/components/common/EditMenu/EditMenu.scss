@@ -1,0 +1,31 @@
+.edit-menu {
+  top: 2.8rem;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid var(--main-point-border);
+  background-color: var(--main-bg);
+  height: auto;
+  position: absolute;
+  border-radius: 0.2rem;
+
+  &-content {
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    &:hover {
+      background-color: var(--main-point-light-4);
+    }
+
+    &-text {
+      font-size: 0.955rem;
+      font-weight: normal;
+      color: var(--main-point-1);
+    }
+  }
+}
