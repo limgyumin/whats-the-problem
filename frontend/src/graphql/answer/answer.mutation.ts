@@ -19,7 +19,7 @@ export const UPDATE_ANSWER = gql`
 export const DELETE_ANSWER = gql`
   mutation deleteAnswer($idx: Int!) {
     deleteAnswer(idx: $idx) {
-      content
+      idx
     }
   }
 `;
