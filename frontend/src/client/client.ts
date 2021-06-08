@@ -9,23 +9,14 @@ import {
 import { SERVER } from "config/config.json";
 import { getToken } from "lib/token";
 
-const defaultOptions: DefaultOptions = {
-  watchQuery: {
-    fetchPolicy: "no-cache",
-    errorPolicy: "ignore",
-  },
-  query: {
-    fetchPolicy: "no-cache",
-    errorPolicy: "all",
-  },
-};
-
 const httpLink = new HttpLink({
-  uri: SERVER,
+  uri: `${SERVER}/graphql`,
   headers: {
     Authorization: `Bearer ${getToken()}`,
   },
 });
+
+const cache = new InMemoryCache();
 
 const authMiddleWare = new ApolloLink((operation, forward) => {
   operation.setContext({
@@ -37,10 +28,15 @@ const authMiddleWare = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
+const defaultOptions: DefaultOptions = {
+  watchQuery: {
+    fetchPolicy: "cache-and-network",
+    errorPolicy: "all",
+  },
+};
+
 export const client = new ApolloClient({
-  cache: new InMemoryCache({
-    addTypename: false,
-  }),
   link: concat(authMiddleWare, httpLink),
-  defaultOptions: defaultOptions,
+  cache,
+  defaultOptions,
 });
