@@ -39,9 +39,7 @@ const useFetchAnswers = () => {
   }, [fetchResultHandler]);
 
   useEffect(() => {
-    return () => {
-      setAnswers([]);
-    };
+    return () => setAnswers([]);
   }, [setAnswers]);
 
   return {

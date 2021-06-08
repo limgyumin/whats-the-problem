@@ -4,13 +4,14 @@
   overflow: hidden;
   margin: 2.2rem 0;
 
-  &-user {
+  &-header {
     padding: 0.7rem 0.8rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: var(--main-bg-1);
     border-bottom: 1px solid var(--main-point-border);
+    position: relative;
 
     &-container {
       display: flex;
@@ -35,17 +36,37 @@
       }
     }
 
-    &-role {
-      padding: 0.3rem 0.7rem;
-      border-radius: 1rem;
-      background-color: var(--main-point-light-3);
-      color: var(--main-point-1);
-      font-size: 0.825rem;
+    &-area {
+      display: flex;
+      align-items: center;
+
+      &-role {
+        padding: 0.3rem 0.7rem;
+        border-radius: 1rem;
+        background-color: var(--main-point-light-3);
+        color: var(--main-point-1);
+        font-size: 0.825rem;
+      }
+
+      &-more {
+        margin-left: 0.6rem;
+        cursor: pointer;
+
+        &-icon {
+          font-size: 1.525rem;
+          height: auto;
+          color: var(--main-point-3);
+
+          &:hover {
+            color: var(--main-point-5);
+          }
+        }
+      }
     }
   }
 
   &-wrapper {
-    padding: 0.4rem 0.8rem;
+    padding: 0.7rem 1.4rem;
     background-color: var(--main-bg);
   }
 }
