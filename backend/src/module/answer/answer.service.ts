@@ -78,11 +78,14 @@ export class AnswerService {
       throw new ForbiddenException('No permission.');
     }
 
+    await answer.remove();
+
+    answer.idx = idx;
     answer.user = user;
 
     await this.userService.handleScore(user.idx, DELETE_ANSWER);
 
-    return await answer.remove();
+    return answer;
   }
 
   async commentCount(idx: number): Promise<number> {
