@@ -6,21 +6,17 @@ import defaultProfile from "assets/images/profile.svg";
 import { GoTriangleDown } from "react-icons/go";
 import HeaderMenu from "../HeaderMenu";
 import { Link } from "react-router-dom";
+import useHeader from "hooks/header/useHeader";
 
 const styles = require("./HeaderProfile.scss");
 const cx: ClassNamesFn = classNames.bind(styles);
 
 type HeaderProfileProps = {
   profile: IUserShortInfo;
-  show: boolean;
-  showMenuHandler: (state: boolean) => void;
 };
 
-const HeaderProfile: React.FC<HeaderProfileProps> = ({
-  profile,
-  show,
-  showMenuHandler,
-}) => {
+const HeaderProfile: React.FC<HeaderProfileProps> = ({ profile }) => {
+  const { clickRef, menuRef, show, showMenuHandler } = useHeader();
   const { avatar, name, bio } = profile;
 
   return (
@@ -28,18 +24,28 @@ const HeaderProfile: React.FC<HeaderProfileProps> = ({
       <Link to="/write" className={cx("header-profile-write")}>
         <p className={cx("header-profile-write-text")}>글 쓰기</p>
       </Link>
-      <div
-        className={cx("header-profile-wrapper")}
-        onClick={() => showMenuHandler(true)}
-      >
-        <img
-          className={cx("header-profile-wrapper-avatar")}
-          src={avatar || defaultProfile}
-          alt="Profile"
-        />
-        <GoTriangleDown className={cx("header-profile-wrapper-arrow")} />
-        {show && <HeaderMenu avatar={avatar} name={name} bio={bio} />}
-      </div>
+      {profile && (
+        <div
+          ref={clickRef}
+          className={cx("header-profile-wrapper")}
+          onClick={() => showMenuHandler()}
+        >
+          <img
+            className={cx("header-profile-wrapper-avatar")}
+            src={avatar || defaultProfile}
+            alt="Profile"
+          />
+          <GoTriangleDown className={cx("header-profile-wrapper-arrow")} />
+          {show && (
+            <HeaderMenu
+              menuRef={menuRef}
+              avatar={avatar}
+              name={name}
+              bio={bio}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };
